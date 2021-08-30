@@ -1,0 +1,31 @@
+{
+    "compilerOptions": {
+        "baseUrl": "./src",
+        "sourceMap": true,
+        "strict": true,
+        "paths": {
+            "@configs/*": ["configs/*"],
+            "@theme/*": ["theme/*"],
+            
+            "@hooks/*": ["utils/hooks/*"],
+            "@utils/*": ["utils/*"],
+
+            "@common-ui/*": ["components/lib/*"],
+            "@common-components/*": ["components/common/*"],
+            "@components/*" : ["components/*"],
+
+            "@images/*": ["public/assets/images/*"],
+
+            "@services/*": ["services/*"],
+
+            "@redux/*": ["redux/*"],
+
+            "@navigation/*": ["navigation/*"]
+        }
+    },
+    "exclude": [
+        "node_modules"
+    ]
+}
+
+// node 14.16.0

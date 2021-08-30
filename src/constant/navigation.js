@@ -1,0 +1,7 @@
+export const NAVIGATION = {
+    HOME: "HOME",
+    TAB_HOME: "TAB_HOME",
+    TAB_USER: "TAB_USER",
+    TAB_NOTIFICATION: "TAB_NOTIFICATION",
+    TAB_FEEDS: "TAB_FEED",
+};
