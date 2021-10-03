@@ -3,7 +3,7 @@ import { View, Text, Button, ActivityIndicator, TouchableOpacity } from "react-n
 import { Color } from "../../theme/colors";
 import { FontSize } from "../../theme/fontSize";
 import { Space } from "../../theme/spacing";
-import AppText from "./AppText";
+import { AppText } from "./AppText";
 
 const LoadingIcon = ({ isIconAnimating }) => (
     <ActivityIndicator size="large" color={Color.blueModern_2} style={{ marginVertical: 5 }} animating={isIconAnimating} />

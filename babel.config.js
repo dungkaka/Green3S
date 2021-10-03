@@ -25,8 +25,10 @@ module.exports = function (api) {
                         "@services": "./src/services",
 
                         "@redux": "./src/redux",
-                        
-                        "@navigation": "./src/navigation"
+
+                        "@navigation": "./src/navigation",
+
+                        "@assets": "./src/assets",
                     },
                 },
             ],

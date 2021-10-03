@@ -2,9 +2,46 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5efe2e0e-1fcc-4772-96fc-c15c87248a4d" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.json" beforeDir="false" afterPath="$PROJECT_DIR$/app.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/babel.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/babel.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/jsconfig.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/lib/AppText.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/lib/AppText.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/lib/Modal/ButtonModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/lib/Modal/ButtonModal.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/lib/Modal/ModalAlert.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/lib/Modal/ModalAlert.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/lib/Modal/ModalCustom.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/lib/Modal/ModalVersion.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/lib/ReloadPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/lib/ReloadPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/lib/Tag.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/lib/Tag.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/lib/ToastNotify/ToastManager.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/lib/ToastNotify/ToastManager.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/configs/end-points-url.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/configs/end-points-url.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/constant/navigation.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/constant/navigation.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/navigation/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/navigation/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/redux/store.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/store.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/screen/Home/BookShelf/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/screen/Home/Explorer/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/screen/Home/Profile/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/screen/Home/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/screen/Home/navigation/BottomTab.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/screen/Home/navigation/ConfigContanst.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/screen/Home/navigation/Particular.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/screen/Home/navigation/Weave.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/screen/Home/navigation/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/auth.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/auth.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/categories.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/categories.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/theme/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/theme/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/theme/typography.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/theme/typography.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/exceptions/HttpException.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/helps/axios.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/helps/axios.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/helps/functions.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/helps/functions.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/helps/network-helps.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/helps/time.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/helps/time.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/hooks/useAPIFetcher.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/hooks/useAPIFetcher.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/local-file-sytem/cache-storage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/local-file-sytem/cache-storage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/local-file-sytem/document-storage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/local-file-sytem/document-storage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/local-file-sytem/local-file-system.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/local-file-sytem/local-file-system.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

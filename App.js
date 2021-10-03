@@ -1,57 +1,48 @@
-import { Toast, ToastManager } from "@common-ui/ToastNotify/ToastManager";
-import AppContainer from "@navigation/index";
-import { StatusBar } from "expo-status-bar";
-import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import React, { useCallback, useEffect, useState } from "react";
+import { View } from "react-native";
 import * as Font from "expo-font";
-import { GoogleSansFont, MontserratFont } from "@theme/typography";
+import { useLogin } from "@services/auth";
+import { appFont } from "@theme/typography";
+import * as SplashScreen from "expo-splash-screen";
+import { Provider } from "react-redux";
+import { store } from "@redux/store";
+let AppContainer = require("@navigation/index").default;
 
-const defaultErrorHandler = (ErrorUtils.getGlobalHandler && ErrorUtils.getGlobalHandler()) || ErrorUtils._globalHandler;
-let handledError = false;
-
-const globalErrorHandler = async (err, isFatal) => {
-    if (!handledError) {
-        handledError = true;
-        try {
-            console.log("KILL_APP", isFatal + err.message);
-        } catch (e) {}
-    }
-    return defaultErrorHandler(err, isFatal);
-};
-
-ErrorUtils.setGlobalHandler(globalErrorHandler);
-
-export function App() {
+function App() {
     const [isReady, setIsReady] = useState(false);
+    const { data, revalidateLocalUser } = useLogin();
+    const isLogin = !!data;
 
     useEffect(() => {
+        const prepareData = async () => {
+            await SplashScreen.preventAutoHideAsync();
+            // AppContainer = require("@navigation/index").default;
+            await Promise.all([await Font.loadAsync(appFont)]);
+            setIsReady(true);
+        };
         prepareData();
         return () => {};
     }, []);
 
-    const prepareData = async () => {
-        await Font.loadAsync({ ...GoogleSansFont, ...MontserratFont });
-        setIsReady(true);
-    };
+    const onLayoutRootView = useCallback(async () => {
+        if (isReady) {
+            await SplashScreen.hideAsync();
+        }
+    }, [isReady]);
 
-    if (!isReady) {
-        return null;
-    }
+    if (!isReady) return null;
 
     return (
-        <View style={{ flex: 1 }}>
-            <AppContainer />
-            <ToastManager />
+        <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
+            <AppContainer isLogin={isLogin} />
         </View>
     );
 }
 
 export default function AppLoaded() {
-    return <App />;
+    return (
+        <Provider store={store}>
+            <App />
+        </Provider>
+    );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-});

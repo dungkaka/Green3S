@@ -1,18 +1,30 @@
-import HttpException from "@utils/exception/HttpException";
-import { Request } from "@utils/helps/axios";
+import { API_GREEN3S } from "@configs/end-points-url";
+import { useAPIFetcher } from "@hooks/useAPIFetcher";
+import { delay } from "@utils/helps/functions";
+import { fileRequester, requester, requestSyncCache } from "@utils/helps/request";
+import { useEffect } from "react";
 
-export const socialLogin = async (socialName, data) => {
-    const res = await Request.ServerTruyen.post("http://192.168.1.104:5000/api/v1/login/social", {
-        socialName: socialName,
-        ...data,
-    });
+export const useLogin = ({ station_name, firm } = {}) => {
+    const key = "LOGIN";
+    const res = useAPIFetcher(
+        key,
+        {
+            revalidateOnMount: false,
+            errorRetryCount: 0,
+        },
+        requestSyncCache()
+    );
 
-    if (res.data?.status) {
-        return {
-            accessTokenAPI: res.data.access_token,
-            user: res.data.user,
-        };
-    } else {
-        throw new HttpException(400, "Can not login with " + socialName);
-    }
+    useEffect(() => {}, []);
+
+    const revalidateRemoteUser = async () => {
+        await delay(2000);
+        // const data = await requester()(key);
+        const data = {};
+        await res.mutate(data, false);
+    };
+
+    res.revalidateRemoteUser = revalidateRemoteUser;
+    res.revalidateLocalUser = res.mutate;
+    return res;
 };

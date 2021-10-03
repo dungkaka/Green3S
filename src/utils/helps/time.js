@@ -1,4 +1,4 @@
-import { isString } from "./helps";
+import { isString } from "./functions";
 
 class STimer {
     static now() {
@@ -15,7 +15,6 @@ class STimer {
                 return originTime + value * 60000;
             case "h":
             case "hours":
-                console.log("AAA", new Date(originTime + value * 3600000));
                 return originTime + value * 3600000;
             case "d":
             case "days":
@@ -64,6 +63,10 @@ class Timer {
 
     get() {
         return this.time;
+    }
+
+    getTime() {
+        return this.time.getTime();
     }
 
     validateTime(time) {

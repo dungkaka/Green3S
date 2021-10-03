@@ -1,5 +1,4 @@
 import { createStore, combineReducers, applyMiddleware } from "redux";
-import { createWrapper } from "next-redux-wrapper";
 import { plainReducer } from "./reducers/rootReducer";
 class StoreManagement {
     constructor() {

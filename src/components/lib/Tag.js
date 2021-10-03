@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { Space } from "../../theme/spacing";
 import { random_color } from "../../utils";
-import AppText from "./AppText";
+import { AppText } from "./AppText";
 
 const Tag = React.memo(({ style, title, styleItem, touchable = true, onPress = null }) => {
     const randomColor = random_color();

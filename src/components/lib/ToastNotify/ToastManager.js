@@ -1,4 +1,4 @@
-import AppText from "@common-ui/AppText";
+import { AppText } from "@common-ui/AppText";
 import { Color } from "@theme/colors";
 import { fontUnit, rem, unit } from "@theme/styleContants";
 import { GoogleSansFontType } from "@theme/typography";
@@ -19,7 +19,7 @@ import Animated, {
 } from "react-native-reanimated";
 
 const width = Dimensions.get("window").width;
-const TRANSLATE_X_THRESHOLD = -width * 0.3;
+const TRANSLATE_X_THRESHOLD = -width * 0.25;
 
 const contextClass = {
     success: {
@@ -132,7 +132,7 @@ const AnimatedItem = React.memo(
         return (
             <PanGestureHandler onGestureEvent={panGesture}>
                 <Animated.View style={[styles.singleItemView, animatedContainer]}>
-                    <View style={styles.singleItemContainer}>
+                    <View style={[styles.singleItemContainer, { borderLeftColor: context.title }]}>
                         <View style={styles.singleItemContentContainer}>
                             <context.IconFamily name={context.iconName} size={24} color={context.title} />
                         </View>
@@ -152,7 +152,7 @@ const AnimatedItem = React.memo(
     (prevProps, nextProps) => prevProps.item.id == nextProps.item.id
 );
 
-export const ToastManager = () => {
+export const ToastManager = ({ position = "bottom" }) => {
     const [valueArray, setValueArray] = useState([]);
     const scrollViewRef = useRef();
     const transitionRef = useRef();
@@ -165,10 +165,10 @@ export const ToastManager = () => {
             const newToast = {
                 id: Date.now().toString(),
                 type,
-                title,
+                title: title,
                 description,
             };
-            return [...arrayToast, newToast];
+            return [newToast, ...arrayToast];
         });
     }, []);
 
@@ -183,7 +183,22 @@ export const ToastManager = () => {
     Toast.showToast = showToast;
 
     return (
-        <Transitioning.View ref={transitionRef} transition={transition} style={styles.container}>
+        <Transitioning.View
+            ref={transitionRef}
+            transition={transition}
+            style={[
+                styles.container,
+                position == "bottom"
+                    ? {
+                          bottom: 0,
+                          marginBottom: 2 * rem,
+                      }
+                    : {
+                          top: 0,
+                          marginTop: 1.5 * rem,
+                      },
+            ]}
+        >
             <FlatList
                 data={valueArray}
                 ref={scrollViewRef}
@@ -206,18 +221,16 @@ export const showToast = ({ type, title, description } = {}) => {
 const styles = StyleSheet.create({
     container: {
         position: "absolute",
-        bottom: 0,
         left: 0,
         zIndex: 99999,
         justifyContent: "center",
         backgroundColor: "transparent",
-        marginBottom: 2.5 * rem,
     },
 
     flatlistContainer: {
         flex: 1,
         flexGrow: 1,
-        paddingBottom: 2,
+        paddingVertical: rem / 2,
         paddingRight: 2 * rem,
         flexDirection: "column-reverse",
         justifyContent: "flex-start",
@@ -236,12 +249,16 @@ const styles = StyleSheet.create({
         alignItems: "flex-start",
         justifyContent: "center",
         borderRadius: 4 * unit,
-        elevation: 1,
+        elevation: 1.5,
+        overflow: "hidden",
+        // borderTopWidth: 1,
+        // borderColor: Color.gray_0,
     },
 
     singleItemContainer: {
         flex: 1,
         padding: 1 * rem,
+        borderLeftWidth: 4 * unit,
         flexDirection: "row",
         justifyContent: "flex-start",
     },
@@ -276,14 +293,14 @@ const styles = StyleSheet.create({
     closeButton: {
         position: "absolute",
         right: 0,
-        margin: 10 * unit,
-        width: 25,
-        height: 25,
+        padding: 10 * unit,
+        width: 45,
+        height: 45,
     },
 
     deleteIcon: {
         width: "100%",
-        color: Color.gray_10,
-        fontSize: 28 * unit,
+        color: Color.gray_8,
+        fontSize: 30 * unit,
     },
 });

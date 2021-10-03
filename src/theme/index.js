@@ -1,6 +1,8 @@
+import { Color } from "./colors";
+
 export const ColorDefault = {
-    primary: "rgb(0, 122, 255)",
-    background: "rgb(242, 242, 242)",
+    primary: Color.greenBlueDark,
+    background: "rgb(245, 245, 245)",
     card: "rgb(255, 255, 255)",
     text: "rgb(28, 28, 30)",
     border: "rgb(216, 216, 216)",
