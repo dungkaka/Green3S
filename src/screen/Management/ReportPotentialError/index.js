@@ -3,7 +3,7 @@ import { JumpLogoPage } from "@common-ui/Loading/JumpLogo";
 import MyModal from "@common-ui/Modal/MyModal";
 import TableStickBasicTemplate from "@common-ui/Table/TableStickBasicTemplate";
 import { useRoute } from "@react-navigation/native";
-import { useReportPlantLogRepair, useReportPlantPotentialError } from "@services/report";
+import { useReportPlantPotentialError } from "@services/report";
 import { Color } from "@theme/colors";
 import { rem, unit } from "@theme/styleContants";
 import React, { useMemo, useRef } from "react";

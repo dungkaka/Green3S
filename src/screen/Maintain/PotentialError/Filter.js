@@ -12,65 +12,20 @@ import { useListPlants } from "@services/factory";
 
 const Filter = ({ filter, handleFilter = () => {} }) => {
     const { data } = useListPlants();
-    const dataPlants = [{ stationCode: "", stationName: "Tất cả" }, ...(data?.plants || [])];
+    const dataPlants = [{ stationCode: "-1", stationName: "Tất cả" }, ...(data?.plants || [])];
     const dataSelectPlants = dataPlants.map((plant) => ({ key: plant.stationCode, value: plant }));
-    const dataSelectStatus = useRef([
-        {
-            key: -1,
-            value: "Tất cả",
-        },
-        {
-            key: 0,
-            value: "Chưa sửa",
-        },
-        {
-            key: 1,
-            value: "Đã sửa",
-        },
-        {
-            key: 2,
-            value: "Đang sửa",
-        },
-        {
-            key: 3,
-            value: "Đợi vật tư",
-        },
-    ]).current;
-    const dataSelectError = useRef([
-        { key: "", value: "Tất cả" },
-        {
-            key: "grid low",
-            value: "Điện áp lưới thấp",
-        },
-        {
-            key: "grid high",
-            value: "Điện áp lưới cao",
-        },
-        {
-            key: "miss",
-            value: "Mất điện lưới",
-        },
-        {
-            key: "phase_unbalance",
-            value: "Mất cân bẳng pha",
-        },
-    ]).current;
 
     const modalStartDatePickerRef = useRef();
     const modalEndDatePickerRef = useRef();
     const selectPlantRef = useRef();
-    const selectStatusRef = useRef();
-    const selectErrorRef = useRef();
-    const [startDate, setStartDate] = useState(filter.startDate);
-    const [endDate, setEndDate] = useState(filter.endDate);
+    const [startDate, setStartDate] = useState({ day: 1, month: filter.month, year: filter.year });
     const [plant, setPlant] = useState(dataSelectPlants[0]);
-    const [status, setStatus] = useState(dataSelectStatus[0]);
 
     return (
         <View style={{ elevation: 0.5, backgroundColor: "white" }}>
             <ScrollView horizontal contentContainerStyle={styles.dateSelectionContainer} showsHorizontalScrollIndicator={false}>
                 <View style={styles.dateContainer}>
-                    <AppTextMedium>Từ :</AppTextMedium>
+                    <AppTextMedium>Chọn tháng :</AppTextMedium>
                     <Pressable
                         onPress={() => {
                             modalStartDatePickerRef.current.open(startDate);
@@ -79,22 +34,7 @@ const Filter = ({ filter, handleFilter = () => {} }) => {
                     >
                         <AntDesign name="calendar" size={18} color={Color.gray_8} />
                         <AppTextMedium style={styles.textDateDisplay}>
-                            {startDate.day}/{startDate.month}/{startDate.year}
-                        </AppTextMedium>
-                    </Pressable>
-                </View>
-
-                <View style={styles.dateContainer}>
-                    <AppTextMedium>Đến:</AppTextMedium>
-                    <Pressable
-                        onPress={() => {
-                            modalEndDatePickerRef.current.open(endDate);
-                        }}
-                        style={styles.displayDate}
-                    >
-                        <AntDesign name="calendar" size={18} color={Color.gray_8} />
-                        <AppTextMedium style={styles.textDateDisplay}>
-                            {endDate.day}/{endDate.month}/{endDate.year}
+                            {startDate.month}/{startDate.year}
                         </AppTextMedium>
                     </Pressable>
                 </View>
@@ -111,23 +51,11 @@ const Filter = ({ filter, handleFilter = () => {} }) => {
                     </Pressable>
                 </View>
 
-                <View style={styles.selectPlantConatainer}>
-                    <AppTextMedium>Trạng thái</AppTextMedium>
-                    <Pressable
-                        onPress={() => {
-                            selectStatusRef.current.open(status.key);
-                        }}
-                        style={styles.displayDate}
-                    >
-                        <AppTextMedium style={styles.textDateDisplay}>{status?.value}</AppTextMedium>
-                    </Pressable>
-                </View>
-
                 <View style={styles.dateContainer}>
                     <AppTextMedium> </AppTextMedium>
                     <Pressable
                         onPress={() => {
-                            handleFilter({ startDate, endDate, plant: plant.value, status });
+                            handleFilter({ month: startDate.month, year: startDate.year, plant: plant.value });
                         }}
                         style={styles.search}
                     >
@@ -156,35 +84,14 @@ const Filter = ({ filter, handleFilter = () => {} }) => {
                 title="Chọn nhà máy"
             />
 
-            <Select
-                required
-                itemHeight={42}
-                options={dataSelectStatus}
-                ref={selectStatusRef}
-                onOk={() => {
-                    selectStatusRef.current.close();
-                    setStatus(selectStatusRef.current.getSelection());
-                }}
-                title="Trạng thái"
-            />
-
             <ModalDatePicker
+                mode="month"
                 ref={modalStartDatePickerRef}
                 initialDate={startDate}
                 delayRender={300}
                 onOk={() => {
                     modalStartDatePickerRef.current.close();
                     setStartDate(modalStartDatePickerRef.current.getData().date);
-                }}
-            />
-
-            <ModalDatePicker
-                ref={modalEndDatePickerRef}
-                initialDate={endDate}
-                delayRender={500}
-                onOk={() => {
-                    modalEndDatePickerRef.current.close();
-                    setEndDate(modalEndDatePickerRef.current.getData().date);
                 }}
             />
         </View>

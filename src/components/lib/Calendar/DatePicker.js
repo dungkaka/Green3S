@@ -32,13 +32,8 @@ const validateDate = (year, month, day) => {
 
 const MemoWheelPicker = React.memo(WheelPicker, () => true);
 
-const DatePicker = ({
-    mode = "day",
-    value = {},
-    inititalValue = { day: 1, month: 1, year: 2021 },
-    onDateChange = () => {},
-}) => {
-    const valueRef = useRef({ ...inititalValue });
+const DatePicker = ({ mode = "day", value = {}, inititalValue, onDateChange = () => {} }) => {
+    const valueRef = useRef({ ...{ day: 1, month: 1, year: 2021 }, ...inititalValue });
 
     const dayWheelRef = useRef();
     const monthWheelRef = useRef();

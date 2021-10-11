@@ -77,3 +77,25 @@ export const useFetchPerformance = ({ startDate, endDate, stationCode, status })
         rIsValidating: isReady ? res.isValidating : true,
     };
 };
+
+export const useFetchPotentialError = ({ month, year, stationCode, name }) => {
+    const [isReady, setIsReady] = useState(false);
+
+    const res = useAPIFetcher(API_GREEN3S.POTENTIAL_ERROR(`${(month < 10 ? "0" : "") + month}`, year, stationCode, name), {
+        revalidateIfStale: true,
+        dedupingInterval: 60000,
+        use: [noCache],
+    });
+
+    useEffect(() => {
+        setTimeout(() => {
+            setIsReady(true);
+        }, 300);
+    }, []);
+
+    return {
+        ...res,
+        rData: isReady ? res.data : undefined,
+        rIsValidating: isReady ? res.isValidating : true,
+    };
+};
