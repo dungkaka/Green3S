@@ -55,7 +55,13 @@ const BottomTabItem = React.memo(
             isActive.value ? interpolate(transitionProcess_Scale.value, [0, 0.1, 0.4, 1], [0.95, 0.85, 0.95, 1]) : 0.95
         );
 
-        const itemStyle = useAnimatedStyle(() => {
+        const inActiveStyle = useAnimatedStyle(() => {
+            return {
+                height: (1 - transitionProcess_Height.value) * size,
+            };
+        });
+
+        const activeStyle = useAnimatedStyle(() => {
             return {
                 height: transitionProcess_Height.value * size,
             };
@@ -77,10 +83,10 @@ const BottomTabItem = React.memo(
             <AnimatePressable onPress={onPress} style={[styles.tabContainer, styleDirection]}>
                 <Animated.View style={[styles.tabContentContainer]}>
                     <View style={{ width: size, height: size }}>
-                        <View style={StyleSheet.absoluteFill}>
+                        <Animated.View style={[{ ...StyleSheet.absoluteFill, overflow: "hidden" }, inActiveStyle]}>
                             <Icon size={size} color={Colors.border} />
-                        </View>
-                        <Animated.View style={[styles.icon, itemStyle]}>
+                        </Animated.View>
+                        <Animated.View style={[styles.icon, activeStyle]}>
                             <Icon size={size} active={true} colorActive={Colors.primary} />
                         </Animated.View>
                     </View>
@@ -128,7 +134,7 @@ const styles = StyleSheet.create({
     title: {
         fontFamily: GoogleSansFontType.regular,
         fontSize: 10 * unit,
-        paddingBottom: PADDING,
-        paddingTop: PADDING / 2,
+        paddingBottom: PADDING + 1,
+        paddingTop: PADDING / 2 + 1,
     },
 });

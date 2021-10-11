@@ -19,6 +19,7 @@ export const handleKillApp = () => {
 
 export const ignoreLogs = () => {
     LogBox.ignoreLogs(["Setting a timer for a long period of time"]);
+    LogBox.ignoreLogs(["VirtualizedLists should never be nested"]);
 };
 
 export const enableAnimationExperimental = () => {

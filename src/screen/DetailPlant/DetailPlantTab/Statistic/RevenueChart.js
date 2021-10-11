@@ -1,6 +1,6 @@
 import { AppText, AppTextMedium } from "@common-ui/AppText";
 import EchartsWebView from "@common-ui/EchartsWebView";
-import { ModalDatePicker } from "@common-ui/Wheel/DatePicker";
+import { ModalDatePicker } from "@common-ui/Calendar/DatePicker";
 import { ColorDefault } from "@theme/";
 import { Color } from "@theme/colors";
 import { unit } from "@theme/styleContants";

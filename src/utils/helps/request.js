@@ -8,7 +8,7 @@ import md5 from "md5";
 // API REQUESTER
 // requester(config)(url)
 export const requester =
-    ({ requestFunc = (url) => Request.ServerGreen3S.get(url), boundedTime = 0, ignoreStatus = false } = {}) =>
+    ({ requestFunc = (url) => Request.Server.get(url), boundedTime = 0, ignoreStatus = false } = {}) =>
     async (url) => {
         try {
             const beforeTime = Date.now();
@@ -24,7 +24,7 @@ export const requester =
         }
     };
 
-export const fetcher = requester({ requestFunc: (url) => Request.ServerGreen3S.get(url), boundedTime: 200 });
+export const fetcher = requester({ requestFunc: (url) => Request.Server.get(url), boundedTime: 200 });
 
 // FILE REQUESTER
 export const fileRequester =
@@ -42,26 +42,29 @@ export const fileRequester =
         }
     };
 
-// REQUEST SYNC BETWEEN API AND FILE (AS CACHE)
-export const requestSyncCache =
+// REQUEST SYNC BETWEEN API AND FILE
+export const requestSyncFile =
     ({
-        cache = false,
-        expiredTime = 1,
+        sync = false,
+        expiredTime = 999,
         unit = "d",
-        cacheFetcher = fileRequester({ requestFunc: (fileName) => CacheStorage.readAsync("API", md5(fileName)) }),
+        fileFetcher = (fileName) => DocumentStorage.readAsync("TEMP", fileName),
+        fileWriter = (fileName, data) => DocumentStorage.writeAsync("TEMP", fileName, data),
         requester = fetcher,
     } = {}) =>
     async (url) => {
-        if (cache) {
+        if (sync) {
             let data;
             try {
-                data = await cacheFetcher(url);
-                if (time().isBefore(data.expiredTime)) return data;
+                data = await fileRequester({ requestFunc: () => fileFetcher(md5(url)) })();
+                if (time().isBefore(data.expiredTime)) {
+                    return data;
+                }
             } catch (e) {}
 
             try {
                 const remoteData = await requester(url);
-                CacheStorage.writeAsync("API", md5(url), {
+                fileWriter(md5(url), {
                     ...remoteData,
                     expiredTime: time().add(expiredTime, unit).get(),
                 });
@@ -75,3 +78,42 @@ export const requestSyncCache =
             return data;
         }
     };
+
+// REQUEST SYNC BETWEEN API AND FILE CACHE
+export const requestSyncCache = ({ cache = false, expiredTime = 1, unit = "d", requester = fetcher } = {}) =>
+    requestSyncFile({
+        sync: cache,
+        expiredTime: expiredTime,
+        unit: unit,
+        requester: requester,
+        fileFetcher: (fileName) => CacheStorage.readAsync("API", fileName),
+        fileWriter: (fileName, data) => CacheStorage.writeAsync("API", fileName, data),
+    });
+
+// REQUEST SYNC BETWEEN API AND FILE CACHE
+// export const requestSyncCache =
+//     ({ cache = false, expiredTime = 1, unit = "d", requester = fetcher } = {}) =>
+//     async (url) => {
+//         if (cache) {
+//             let data;
+//             try {
+//                 data = await fileRequester({ requestFunc: () => CacheStorage.readAsync("API", md5(url)) })();
+//                 if (time().isBefore(data.expiredTime)) return data;
+//             } catch (e) {}
+
+//             try {
+//                 const remoteData = await requester(url);
+//                 CacheStorage.writeAsync("API", md5(url), {
+//                     ...remoteData,
+//                     expiredTime: time().add(expiredTime, unit).get(),
+//                 });
+//                 return remoteData;
+//             } catch (error) {
+//                 if (data) return data;
+//                 throw error;
+//             }
+//         } else {
+//             const data = await requester(url);
+//             return data;
+//         }
+//     };

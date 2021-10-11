@@ -9,15 +9,12 @@ import { Constants } from "react-native-unimodules";
 import ErrorsPage from "./ErrorsPage";
 import FactoriesPage from "./FactoriesPage";
 
-const Test = () => null;
-
 const Home = () => {
     const [state, setState] = useState({
         index: 1,
         routes: [
             { key: "errors", title: "Tổng quan lỗi" },
             { key: "factories", title: "Nhà máy" },
-            { key: "albums", title: "Albums" },
         ],
     });
 
@@ -25,7 +22,6 @@ const Home = () => {
         SceneMap({
             errors: ErrorsPage,
             factories: FactoriesPage,
-            albums: Test,
         }),
         []
     );
@@ -57,7 +53,6 @@ const Home = () => {
             renderScene={renderScene}
             renderTabBar={renderTabBar}
             onIndexChange={(index) => setState({ ...state, index: index })}
-            
         />
     );
 };
@@ -78,7 +73,7 @@ const styles = StyleSheet.create({
         backgroundColor: Color.greenBlueDark,
         overflow: "hidden",
         elevation: 0,
-        height: 48,
+        height: 50,
     },
     indicator: {
         backgroundColor: "white",

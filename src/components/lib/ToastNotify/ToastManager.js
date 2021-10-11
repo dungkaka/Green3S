@@ -3,7 +3,7 @@ import { Color } from "@theme/colors";
 import { fontUnit, rem, unit } from "@theme/styleContants";
 import { GoogleSansFontType } from "@theme/typography";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Button, Dimensions, FlatList, Image, Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Dimensions, FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Ionicons, Feather } from "@expo/vector-icons";
 import { PanGestureHandler } from "react-native-gesture-handler";
 import Animated, {
@@ -17,6 +17,7 @@ import Animated, {
     withSpring,
     withTiming,
 } from "react-native-reanimated";
+import Constants from "expo-constants";
 
 const width = Dimensions.get("window").width;
 const TRANSLATE_X_THRESHOLD = -width * 0.25;
@@ -94,8 +95,8 @@ const AnimatedItem = React.memo(
             }, 3000);
         };
 
-        const deleteItem = () => {
-            animatedItem.value = withTiming(-1, null, () => {
+        const deleteItem = (duration = 400) => {
+            animatedItem.value = withTiming(-1, { duration: duration }, () => {
                 runOnJS(removeToast)(id);
             });
         };
@@ -110,7 +111,7 @@ const AnimatedItem = React.memo(
             onEnd: () => {
                 const shouldDeleteItem = animatedItem.value * width < TRANSLATE_X_THRESHOLD;
                 if (shouldDeleteItem) {
-                    runOnJS(deleteItem)();
+                    runOnJS(deleteItem)(400 + animatedItem.value * 400);
                 } else {
                     animatedItem.value = withTiming(0, null, () => {
                         runOnJS(deleteItemDelay)();
@@ -180,7 +181,13 @@ export const ToastManager = ({ position = "bottom" }) => {
         });
     }, []);
 
+    const clearAllToast = useCallback(() => {
+        transitionRef.current.animateNextTransition();
+        setValueArray([]);
+    });
+
     Toast.showToast = showToast;
+    Toast.clearAllToast = clearAllToast;
 
     return (
         <Transitioning.View
@@ -195,7 +202,7 @@ export const ToastManager = ({ position = "bottom" }) => {
                       }
                     : {
                           top: 0,
-                          marginTop: 1.5 * rem,
+                          marginTop: Constants.statusBarHeight,
                       },
             ]}
         >
@@ -216,6 +223,9 @@ const Toast = {};
 
 export const showToast = ({ type, title, description } = {}) => {
     Toast.showToast && Toast.showToast({ type, title, description });
+};
+export const clearAllToast = () => {
+    Toast.clearAllToast && Toast.clearAllToast();
 };
 
 const styles = StyleSheet.create({

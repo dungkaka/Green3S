@@ -1,15 +1,18 @@
 import { Color } from "@theme/colors";
 import * as React from "react";
+import { Image } from "react-native";
 import Svg, { Path } from "react-native-svg";
 
-function HomeIcon({ active, color = Color.gray_8, colorActive, size }) {
+function HomeIcon({ active = false, color = Color.gray_8, colorActive, size }) {
     if (active)
         return (
-            <Svg width={size} height={size} fill={colorActive} viewBox="0 0 512 512" style={{ backgroundColor: "white" }}>
-                <Path d="M256 152.96L79.894 288.469v181.549h141.507V336.973h75.175v133.045h135.531V288.469z" />
-                <Path d="M439.482 183.132V90.307h-74.166v35.77L256 41.982 0 238.919l35.339 45.936L256 115.062l220.662 169.794L512 238.92z" />
-            </Svg>
+            // <Svg width={size} height={size} fill={colorActive} viewBox="0 0 512 512" style={{ backgroundColor: "white" }}>
+            //     <Path d="M256 152.96L79.894 288.469v181.549h141.507V336.973h75.175v133.045h135.531V288.469z" />
+            //     <Path d="M439.482 183.132V90.307h-74.166v35.77L256 41.982 0 238.919l35.339 45.936L256 115.062l220.662 169.794L512 238.92z" />
+            // </Svg>
+            <Image source={require("@assets/icons/home-color.png")} style={{ width: size - 1, height: size - 1 }} />
         );
+    else return <Image source={require("@assets/icons/home-outline.png")} style={{ width: size - 1, height: size - 1 }} />;
 
     return (
         <Svg fill={color} width={size} height={size} viewBox="0 0 512 512">

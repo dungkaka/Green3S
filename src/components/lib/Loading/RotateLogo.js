@@ -22,6 +22,10 @@ export const RotateLogo = ({ size = 4 * rem, showDes = true, des = "Đang tải 
         ],
     }));
 
+    useEffect(() => {
+        animatedIcon.value = withRepeat(withTiming(1, { duration: 6000, easing: Easing.bezier(1, 1, 0, 0) }), -1);
+    }, []);
+
     return (
         <View style={{ alignItems: "center" }}>
             <View style={{ justifyContent: "flex-end" }}>
@@ -54,12 +58,6 @@ export const RotateLogo = ({ size = 4 * rem, showDes = true, des = "Đang tải 
                         },
                         rotateStyle,
                     ]}
-                    onLoadEnd={() => {
-                        animatedIcon.value = withRepeat(
-                            withTiming(1, { duration: 6000, easing: Easing.bezier(1, 1, 0, 0) }),
-                            -1
-                        );
-                    }}
                 />
             </View>
 

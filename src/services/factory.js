@@ -2,7 +2,12 @@ import { requester, requestSyncCache } from "@utils/helps/request";
 const { API_GREEN3S } = require("@configs/end-points-url");
 const { useAPIFetcher, saveActiveData } = require("@hooks/useAPIFetcher");
 
-export const useFetchFactory = ({ station_name, firm } = {}) => {
+export const keyListPlants = API_GREEN3S.LIST_PLANTS();
+export const useListPlants = () => {
+    return useAPIFetcher(keyListPlants);
+};
+
+export const useSearchFactory = ({ station_name, firm } = {}) => {
     const key = API_GREEN3S.SEARCH_FACTORY(station_name, firm);
     const res = useAPIFetcher(
         key,
@@ -12,8 +17,8 @@ export const useFetchFactory = ({ station_name, firm } = {}) => {
         }
         // requestSyncCache({
         //     cache: true,
-        //     expiredTime: 1,
-        //     unit: "d",
+        //     expiredTime: 35,
+        //     unit: "s",
         // })
     );
 

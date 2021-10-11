@@ -9,70 +9,76 @@ import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import Svg, { Circle } from "react-native-svg";
 import ModalRealTimeDevice from "./ModalRealtimeDevice";
 
+const Factory = React.memo(({ item = {}, index, navigation, showDetailPlant }) => {
+    const {
+        stationName,
+        stationAddr,
+        capacity,
+        stationCode,
+        factory_info_real_time: [realTimeData = {}],
+    } = item;
+
+    return (
+        <Pressable style={styles.itemContainer} onPress={() => showDetailPlant(item)}>
+            <Pressable
+                style={styles.itemImage}
+                onPress={() => {
+                    navigation.navigate(NAVIGATION.DETAIL_PLANT, {
+                        stationName,
+                        stationCode,
+                    });
+                }}
+            />
+            <View style={{ flex: 1, marginLeft: 12 * unit }}>
+                <View style={styles.itemTitleContainer}>
+                    <Svg viewBox="0 0 24 24" height={8} width={8}>
+                        <Circle cx="12" cy="12" r="12" stroke-width="3" fill={Color.greenBlue} />
+                    </Svg>
+                    <AppTextMedium style={styles.itemTitle}>{stationName}</AppTextMedium>
+                </View>
+
+                <AppText numberOfLines={1} style={styles.itemAddr}>
+                    {stationAddr}
+                </AppText>
+
+                <View style={styles.itemStateContainer}>
+                    <AppTextBold style={{ fontSize: 13, color: Color.purple }}>C: </AppTextBold>
+                    <AppText style={{ fontSize: 13, paddingRight: rem, color: Color.purple }}>
+                        {round2(realTimeData.capacity_today / 1000)} MWP
+                    </AppText>
+
+                    <AppTextBold style={{ fontSize: 13, color: Color.blueModern_2 }}>P: </AppTextBold>
+                    <AppText style={{ fontSize: 13, paddingRight: rem, color: Color.blueModern_2 }}>
+                        {round2(realTimeData.yield_today / 1000)} MWH
+                    </AppText>
+
+                    <AppTextBold style={{ fontSize: 13, color: Color.redOrange }}>S: </AppTextBold>
+                    <AppText style={{ fontSize: 13, paddingRight: rem, color: Color.redOrange }}>
+                        {round2(realTimeData.yield_total / 1000000)} GWH
+                    </AppText>
+                </View>
+            </View>
+        </Pressable>
+    );
+});
+
 const Factories = ({ plants = [] }) => {
     const modalRef = useRef();
     const navigation = useNavigation();
 
-    const renderItem = useCallback(({ item, index }) => {
-        const {
-            stationName,
-            stationAddr,
-            capacity,
-            stationCode,
-            factory_info_real_time: [realTimeData],
-        } = item;
+    const renderItem = ({ item, index }) => (
+        <Factory item={item} index={index} key={index} showDetailPlant={showDetailPlant} navigation={navigation} />
+    );
 
-        return (
-            <Pressable style={styles.itemContainer} onPress={() => showDetailPlant(item)}>
-                <Pressable
-                    style={styles.itemImage}
-                    onPress={() => {
-                        navigation.navigate(NAVIGATION.DETAIL_PLANT, {
-                            stationName,
-                            stationCode,
-                        });
-                    }}
-                />
-                <View style={{ flex: 1, marginLeft: 12 * unit }}>
-                    <View style={styles.itemTitleContainer}>
-                        <Svg viewBox="0 0 24 24" height={8} width={8}>
-                            <Circle cx="12" cy="12" r="12" stroke-width="3" fill={Color.greenBlue} />
-                        </Svg>
-                        <AppTextMedium style={styles.itemTitle}>{stationName}</AppTextMedium>
-                    </View>
-
-                    <AppText numberOfLines={1} style={styles.itemAddr}>
-                        {stationAddr}
-                    </AppText>
-
-                    <View style={styles.itemStateContainer}>
-                        <AppTextBold style={{ fontSize: 13, color: Color.purple }}>C: </AppTextBold>
-                        <AppText style={{ fontSize: 13, paddingRight: rem, color: Color.purple }}>
-                            {round2(realTimeData.capacity_today / 1000)} MWP
-                        </AppText>
-
-                        <AppTextBold style={{ fontSize: 13, color: Color.blueModern_2 }}>P: </AppTextBold>
-                        <AppText style={{ fontSize: 13, paddingRight: rem, color: Color.blueModern_2 }}>
-                            {round2(realTimeData.yield_today / 1000)} MWH
-                        </AppText>
-
-                        <AppTextBold style={{ fontSize: 13, color: Color.redOrange }}>S: </AppTextBold>
-                        <AppText style={{ fontSize: 13, paddingRight: rem, color: Color.redOrange }}>
-                            {round2(realTimeData.yield_total / 1000000)} GWH
-                        </AppText>
-                    </View>
-                </View>
-            </Pressable>
-        );
-    }, []);
-
-    const showDetailPlant = (plant) => {
+    const showDetailPlant = useCallback((plant) => {
         modalRef.current.open({ plant });
-    };
+    }, []);
 
     return (
         <Fragment>
             <FlatList
+                windowSize={5}
+                initialNumToRender={6}
                 style={{ paddingBottom: rem, paddingHorizontal: rem }}
                 data={plants}
                 keyExtractor={(plant, i) => plant.stationCode}

@@ -1,5 +1,5 @@
 import { AppText, AppTextBold, AppTextMedium } from "@common-ui/AppText";
-import { ModalDatePicker } from "@common-ui/Wheel/DatePicker";
+import { ModalDatePicker } from "@common-ui/Calendar/DatePicker";
 import WheelPicker from "@common-ui/Wheel/WheelPicker";
 import { Color, PairColor } from "@theme/colors";
 import { rem, unit } from "@theme/styleContants";

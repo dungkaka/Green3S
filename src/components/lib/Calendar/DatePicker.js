@@ -1,12 +1,10 @@
 import { AppText, AppTextBold, AppTextMedium } from "@common-ui/AppText";
-import MyModal from "@common-ui/Modal/MyModal";
 import WheelPicker from "@common-ui/Wheel/WheelPicker";
-import { ColorDefault } from "@theme/index";
 import { Color } from "@theme/colors";
 import { rem, unit } from "@theme/styleContants";
 import { GoogleSansFontType } from "@theme/typography";
 import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
-import { Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { FontAwesome, AntDesign } from "@expo/vector-icons";
 import ModalPortal from "@common-ui/Modal/ModalPortal";
 import { useOnlyDidUpdateEffect } from "@hooks/useOnlyDidUpdateEffect";
@@ -157,7 +155,9 @@ const _ModalDatePicker = forwardRef(
         useEffect(() => {
             if (!date)
                 setTimeout(() => {
-                    setDate(initialDate);
+                    requestAnimationFrame(() => {
+                        setDate(initialDate);
+                    });
                 }, delayRender);
         }, []);
 
@@ -165,6 +165,9 @@ const _ModalDatePicker = forwardRef(
             open: (date) => {
                 if (date) setDate(date);
                 modalRef.current?.open();
+            },
+            close: () => {
+                modalRef.current.close();
             },
             getData: () => ({ date: date, isValid: isValidDate }),
         }));

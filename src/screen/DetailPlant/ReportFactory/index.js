@@ -1,7 +1,7 @@
 import { AppText, AppTextMedium } from "@common-ui/AppText";
 import TableStickBasicTemplate from "@common-ui/Table/TableStickBasicTemplate";
 import TableStickColumn from "@common-ui/Table/TableStickColumn";
-import { ModalDatePicker } from "@common-ui/Wheel/DatePicker";
+import { ModalDatePicker } from "@common-ui/Calendar/DatePicker";
 import { ColorDefault } from "@theme/index";
 import { Color } from "@theme/colors";
 import { rem, unit } from "@theme/styleContants";
@@ -11,6 +11,7 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { useDispatch } from "react-redux";
 import { closeIconLoadingOverlay, openIconLoadingOverlay } from "@redux/actions/app";
+import { useRoute } from "@react-navigation/core";
 
 const data = new Array(500).fill({
     order: "1",
@@ -35,6 +36,11 @@ const options = [
 const left = [0, 1];
 
 const ReportFactory = ({}) => {
+    const { params } = useRoute();
+    const { stationCode } = params ? params : {};
+
+    console.log("PARAMS", stationCode);
+
     const modalDatePickerRef = useRef();
     const [mode, setMode] = useState("day");
     const [date, setDate] = useState({ day: 1, month: 1, year: 2021 });

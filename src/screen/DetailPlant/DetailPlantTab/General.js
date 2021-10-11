@@ -17,15 +17,16 @@ import Inverter from "@components/icon/Inverter";
 import AC from "@components/icon/AC";
 import Circuit from "@components/icon/Circuit";
 import { NAVIGATION } from "constant/navigation";
-import { ModalDatePicker } from "@common-ui/Wheel/DatePicker";
+import { ModalDatePicker } from "@common-ui/Calendar/DatePicker";
+import { round2 } from "@utils/helps/functions";
 
-const Item = ({ title, icon, textColor }) => {
+const Item = ({ title, icon, textColor, value }) => {
     return (
         <View style={styles.itemContainer}>
             <View style={styles.iconItem}>{icon}</View>
             <View style={styles.contentContainer}>
                 <AppTextMedium style={{ fontSize: 20 * unit, color: textColor, paddingBottom: 4 * unit }}>
-                    1.61 kWh
+                    {value}
                 </AppTextMedium>
                 <AppText style={styles.titleItem}>{title}</AppText>
             </View>
@@ -43,7 +44,6 @@ const ItemReport = ({ icon, title, onPress }) => {
 };
 
 const General = () => {
-    console.log("REN");
     const { params } = useRoute();
     const navigation = useNavigation();
     const { stationCode } = params ? params : {};
@@ -53,7 +53,7 @@ const General = () => {
     if (isValidating) return <JumpLogoPage />;
     if (error || !data) return null;
 
-    const info = data?.data || {};
+    const { yield_today, yield_month, yield_year, yield_total } = data?.data || {};
 
     return (
         <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
@@ -64,11 +64,13 @@ const General = () => {
                         title="Tổng sản lượng"
                         icon={<EcoLight size={42 * unit} color={PairColor.purple.dark} />}
                         textColor="rgba(192, 142, 70, 0.9)"
+                        value={round2(yield_total / 1000000) + " GWh"}
                     />
                     <Item
                         title="Sản lượng hôm nay"
                         icon={<ThunderBolt size={42 * unit} color="#d6980f" />}
                         textColor="rgba(200, 84, 37, 0.9)"
+                        value={round2(yield_today) + " kWh"}
                     />
                 </View>
                 <View style={{ flexDirection: "row", paddingHorizontal: 8 * unit }}>
@@ -76,11 +78,13 @@ const General = () => {
                         title="Sản lượng tháng này"
                         icon={<SolarEnergy size={42 * unit} color={PairColor.red.dark} />}
                         textColor="rgba(42, 154, 42, 0.9)"
+                        value={round2(yield_month / 1000) + " MWh"}
                     />
                     <Item
                         title="Sản lượng năm nay"
                         icon={<SolarPanel size={42 * unit} color={PairColor.blue.dark} />}
                         textColor="rgba(34, 100, 180, 0.9)"
+                        value={round2(yield_year / 1000000) + " GWh"}
                     />
                 </View>
             </View>
@@ -90,7 +94,9 @@ const General = () => {
                 <View style={styles.itemRow}>
                     <ItemReport
                         onPress={() => {
-                            navigation.push(NAVIGATION.REPORT_FACTORY);
+                            navigation.push(NAVIGATION.REPORT_FACTORY, {
+                                stationCode,
+                            });
                         }}
                         backgroundColor="rgba(159, 51, 171, 0.1)"
                         title="Nhà máy"
@@ -98,7 +104,9 @@ const General = () => {
                     />
                     <ItemReport
                         onPress={() => {
-                            navigation.push(NAVIGATION.REPORT_INVERTER);
+                            navigation.push(NAVIGATION.REPORT_INVERTER, {
+                                stationCode,
+                            });
                         }}
                         backgroundColor="rgba(204, 151, 61, 0.15)"
                         title="Inverter"
@@ -106,7 +114,9 @@ const General = () => {
                     />
                     <ItemReport
                         onPress={() => {
-                            navigation.push(NAVIGATION.REPORT_AC);
+                            navigation.push(NAVIGATION.REPORT_AC, {
+                                stationCode,
+                            });
                         }}
                         backgroundColor="rgba(232, 58, 78, 0.1)"
                         title="Lỗi AC"
@@ -114,7 +124,9 @@ const General = () => {
                     />
                     <ItemReport
                         onPress={() => {
-                            navigation.push(NAVIGATION.REPORT_DC);
+                            navigation.push(NAVIGATION.REPORT_DC, {
+                                stationCode,
+                            });
                         }}
                         backgroundColor="rgba(56, 110, 199, 0.1)"
                         title="Lỗi DC & hiệu suất"

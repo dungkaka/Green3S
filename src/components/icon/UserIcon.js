@@ -8,8 +8,8 @@ export default ({ active, color = Color.gray_8, colorActive, size }) => {
             <G
                 transform="translate(1 1)"
                 stroke={active ? colorActive : color}
-                strokeWidth={1.5}
                 fill={active ? colorActive : "none"}
+                strokeWidth={1.5}
                 fillRule="evenodd"
                 strokeLinecap="round"
                 strokeLinejoin="round"

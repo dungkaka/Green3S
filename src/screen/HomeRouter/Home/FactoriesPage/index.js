@@ -4,7 +4,7 @@ import React, { useLayoutEffect, useRef, useState } from "react";
 import { LayoutAnimation, Pressable, ScrollView, StyleSheet, View } from "react-native";
 import { rem, unit } from "@theme/styleContants";
 import FilterDrawer from "./FilterDrawer";
-import { useFetchFactory } from "@services/factory";
+import { useSearchFactory } from "@services/factory";
 import Factories from "./Factories";
 import { FontAwesome } from "@expo/vector-icons";
 import { ColorDefault } from "@theme/index";
@@ -26,7 +26,7 @@ const FactoriesPage = () => {
     const drawerRef = useRef();
     const [filter, setFilter] = useState({});
 
-    const { data, activeData, error, isValidating, mutate } = useFetchFactory({
+    const { data, activeData, error, isValidating, mutate } = useSearchFactory({
         station_name: filter.station_name?.key || "",
         firm: filter.firm?.key || "",
     });

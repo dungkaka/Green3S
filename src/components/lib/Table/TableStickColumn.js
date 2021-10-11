@@ -1,4 +1,7 @@
-import React from "react";
+import { AppText, AppTextMedium } from "@common-ui/AppText";
+import { Color } from "@theme/colors";
+import { rem } from "@theme/styleContants";
+import React, { Fragment } from "react";
 import { FlatList, ScrollView, StyleSheet, View } from "react-native";
 import Animated, {
     interpolate,
@@ -14,11 +17,12 @@ const MemoRow = React.memo(
     ({ children = null, heightRow }) => {
         return <View style={{ height: heightRow, overflow: "hidden" }}>{children}</View>;
     },
-    () => true
+    (prev, next) => prev.data == next.data
 );
 
 const TableStickColumn = ({
     data = [],
+    keyItem = "key",
     leftHeader = null,
     rightHeader = null,
     LeftRow = ({ item, index }) => null,
@@ -30,6 +34,7 @@ const TableStickColumn = ({
     heightHeader = 50,
     leftWidth = 100,
     stickPosition = 100,
+    EmptyDataComponent = null,
 }) => {
     const allowScroll = useSharedValue(0);
     const rightARef = useAnimatedRef();
@@ -72,79 +77,95 @@ const TableStickColumn = ({
     }));
 
     const renderLeftRow = ({ item, index }) => (
-        <MemoRow key={index} heightRow={heightRow}>
+        <MemoRow heightRow={heightRow} data={data}>
             <LeftRow index={index} item={item} />
         </MemoRow>
     );
 
     const renderRightRow = ({ item, index }) => (
-        <MemoRow key={index} heightRow={heightRow}>
+        <MemoRow heightRow={heightRow} data={data}>
             <RightRow index={index} item={item} />
         </MemoRow>
     );
 
     return (
-        <View style={[styles.container, containerStyle]}>
-            <View style={[styles.rightContainer, rightContainerStyle]}>
-                <Animated.ScrollView horizontal scrollEventThrottle={16} onScroll={onRightHorizontalScroll}>
-                    <View>
-                        <View style={{ height: heightHeader, paddingLeft: leftWidth, overflow: "hidden" }}>{rightHeader}</View>
-                        <FlatListAnimated
-                            ref={rightARef}
-                            getItemLayout={(data, index) => ({
-                                length: heightRow,
-                                offset: heightRow * index,
-                                index,
-                            })}
-                            contentContainerStyle={{ paddingLeft: leftWidth }}
-                            windowSize={7}
-                            bounces={false}
-                            keyExtractor={(_, i) => i.toString()}
-                            data={data}
-                            scrollEventThrottle={16}
-                            onScroll={onRightScroll}
-                            renderItem={renderRightRow}
-                            decelerationRate={0.9}
-                        />
-                    </View>
-                </Animated.ScrollView>
+        <Fragment>
+            <View style={[styles.container, data.length == 0 ? { flex: 0 } : undefined, containerStyle]}>
+                <View style={[styles.rightContainer, rightContainerStyle]}>
+                    <Animated.ScrollView horizontal scrollEventThrottle={16} onScroll={onRightHorizontalScroll}>
+                        <View>
+                            <View style={{ height: heightHeader, paddingLeft: leftWidth, overflow: "hidden" }}>
+                                {rightHeader}
+                            </View>
+                            <FlatListAnimated
+                                ref={rightARef}
+                                getItemLayout={(data, index) => ({
+                                    length: heightRow,
+                                    offset: heightRow * index,
+                                    index,
+                                })}
+                                contentContainerStyle={{ paddingLeft: leftWidth }}
+                                windowSize={7}
+                                bounces={false}
+                                keyExtractor={(item, index) => item?.[keyItem] || index.toString()}
+                                data={data}
+                                scrollEventThrottle={16}
+                                onScroll={onRightScroll}
+                                renderItem={renderRightRow}
+                                decelerationRate={0.9}
+                                nestedScrollEnabled
+                            />
+                        </View>
+                    </Animated.ScrollView>
+                </View>
+                <Animated.View style={[{ width: leftWidth }, leftContainerStyleAnimated, leftContainerStyle]}>
+                    <View style={{ height: heightHeader, overflow: "hidden" }}>{leftHeader}</View>
+                    <FlatListAnimated
+                        ref={leftARef}
+                        getItemLayout={(data, index) => ({
+                            length: heightRow,
+                            offset: heightRow * index,
+                            index,
+                        })}
+                        windowSize={7}
+                        showsVerticalScrollIndicator={false}
+                        keyExtractor={(item, index) => item?.[keyItem] || index.toString()}
+                        data={data}
+                        renderItem={renderLeftRow}
+                        onScroll={onLeftScroll}
+                        scrollEventThrottle={16}
+                        bounces={false}
+                        decelerationRate={0.9}
+                        nestedScrollEnabled
+                    />
+                </Animated.View>
             </View>
-            <Animated.View style={[{ width: leftWidth }, leftContainerStyleAnimated, leftContainerStyle]}>
-                <View style={{ height: heightHeader, overflow: "hidden" }}>{leftHeader}</View>
-
-                <FlatListAnimated
-                    ref={leftARef}
-                    getItemLayout={(data, index) => ({
-                        length: heightRow,
-                        offset: heightRow * index,
-                        index,
-                    })}
-                    windowSize={7}
-                    showsVerticalScrollIndicator={false}
-                    keyExtractor={(_, i) => i.toString()}
-                    data={data}
-                    renderItem={renderLeftRow}
-                    onScroll={onLeftScroll}
-                    scrollEventThrottle={16}
-                    bounces={false}
-                    decelerationRate={0.9}
-                />
-            </Animated.View>
-        </View>
+            {data.length == 0 ? (
+                EmptyDataComponent ? (
+                    EmptyDataComponent
+                ) : (
+                    <View style={styles.centerEmptyData}>
+                        <AppTextMedium style={{ color: Color.gray_8 }}>Dữ liệu trống</AppTextMedium>
+                    </View>
+                )
+            ) : null}
+        </Fragment>
     );
 };
 
 export default TableStickColumn;
 
 const styles = StyleSheet.create({
-    padding: {
-        padding: 12,
-    },
     container: {
         flex: 1,
         flexDirection: "row",
     },
     rightContainer: {
         ...StyleSheet.absoluteFill,
+    },
+    centerEmptyData: {
+        justifyContent: "center",
+        alignItems: "center",
+        padding: rem,
     },
 });

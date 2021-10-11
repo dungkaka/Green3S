@@ -30,6 +30,7 @@ const LoadingOverlay = () => {
                 ref={modalRef}
                 onPressBackdrop={emptyFunc}
                 lazyLoad={false}
+                unmountOnHide={true}
                 animationTimeIn={100}
                 animationTimeOut={50}
             >

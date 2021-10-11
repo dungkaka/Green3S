@@ -5,6 +5,7 @@
         "strict": true,
         "paths": {
             "@configs/*": ["configs/*"],
+            "@theme": ["theme/index"],
             "@theme/*": ["theme/*"],
             
             "@hooks/*": ["utils/hooks/*"],

@@ -2,7 +2,7 @@ import { AppText, AppTextMedium } from "@common-ui/AppText";
 import TableStickColumn from "@common-ui/Table/TableStickColumn";
 import { Color } from "@theme/colors";
 import { rem } from "@theme/styleContants";
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, Fragment } from "react";
 import { render } from "react-dom";
 import { StyleSheet, Text, View } from "react-native";
 
@@ -26,6 +26,7 @@ const _left = [0, 1];
 
 const TableStickBasicTemplate = ({
     data = _data,
+    keyItem = "key",
     options = _options,
     left = _left,
     heightHeader = 64,
@@ -37,8 +38,9 @@ const TableStickBasicTemplate = ({
     containerStyle,
     leftContainerStyle = styles.sideContainer,
     rightContainerStyle = styles.sideContainer,
-    headerContainer = styles.headerContainer,
+    headerContainerStyle = styles.headerContainer,
     textHeaderStyle,
+    numberLinesContentCell = 3,
 }) => {
     const right = options.map((_, i) => i).filter((_, i) => !left.includes(i));
 
@@ -51,7 +53,7 @@ const TableStickBasicTemplate = ({
     );
 
     const leftHeader = (
-        <View style={headerContainer}>
+        <View style={headerContainerStyle}>
             {left.map((i) => {
                 if (options[i].renderHeader) {
                     return <View style={{ width: options[i].width }}>{options[i].renderHeader()}</View>;
@@ -66,7 +68,7 @@ const TableStickBasicTemplate = ({
     );
 
     const rightHeader = (
-        <View style={headerContainer}>
+        <View style={headerContainerStyle}>
             {right.map((i) => {
                 if (options[i].renderHeader) {
                     return <View style={{ width: options[i].width }}>{options[i].renderHeader()}</View>;
@@ -80,14 +82,16 @@ const TableStickBasicTemplate = ({
         </View>
     );
 
-    const LeftRow = ({ item, index }) => {
+    const LeftRow = ({ item = {}, index }) => {
         return (
             <View style={rowStyle}>
                 {left.map((i) => {
-                    if (options[i].render) return options[i].render({ item, index });
+                    if (options[i].render) return options[i].render({ item, index, defaultBlockStyle: tableStyles[i] });
                     return (
                         <View key={i} style={tableStyles[i]}>
-                            <AppText style={styles.textCenter}>{item[options[i].key]}</AppText>
+                            <AppText numberOfLines={numberLinesContentCell} style={styles.textCenter}>
+                                {item[options[i].key]}
+                            </AppText>
                         </View>
                     );
                 })}
@@ -95,13 +99,15 @@ const TableStickBasicTemplate = ({
         );
     };
 
-    const RightRow = ({ item, index }) => (
+    const RightRow = ({ item = {}, index }) => (
         <View style={rowStyle}>
             {right.map((i) => {
-                if (options[i].render) return options[i].render({ item, index });
+                if (options[i].render) return options[i].render({ item, index, defaultBlockStyle: tableStyles[i] });
                 return (
                     <View key={i} style={tableStyles[i]}>
-                        <AppText style={styles.textCenter}>{item[options[i].key]}</AppText>
+                        <AppText numberOfLines={numberLinesContentCell} style={styles.textCenter}>
+                            {item[options[i].key]}
+                        </AppText>
                     </View>
                 );
             })}
@@ -109,24 +115,27 @@ const TableStickBasicTemplate = ({
     );
 
     return (
-        <TableStickColumn
-            data={data}
-            leftHeader={leftHeader}
-            rightHeader={rightHeader}
-            RightRow={RightRow}
-            LeftRow={LeftRow}
-            heightHeader={heightHeader}
-            heightRow={heightRow}
-            stickPosition={stickPosition}
-            leftWidth={left.reduce((sum, i) => sum + options[i].width, 0)}
-            leftContainerStyle={leftContainerStyle}
-            rightContainerStyle={rightContainerStyle}
-            containerStyle={containerStyle}
-        />
+        <Fragment>
+            <TableStickColumn
+                data={data}
+                leftHeader={leftHeader}
+                rightHeader={rightHeader}
+                RightRow={RightRow}
+                LeftRow={LeftRow}
+                heightHeader={heightHeader}
+                heightRow={heightRow}
+                stickPosition={stickPosition}
+                leftWidth={left.reduce((sum, i) => sum + options[i].width, 0)}
+                leftContainerStyle={leftContainerStyle}
+                rightContainerStyle={rightContainerStyle}
+                containerStyle={containerStyle}
+                keyItem={keyItem}
+            />
+        </Fragment>
     );
 };
 
-export default React.memo(TableStickBasicTemplate, () => true);
+export default React.memo(TableStickBasicTemplate, (prev, next) => prev.data == next.data && prev.options == next.options);
 
 const styles = StyleSheet.create({
     padding: {

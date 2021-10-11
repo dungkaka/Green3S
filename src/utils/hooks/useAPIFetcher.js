@@ -1,6 +1,7 @@
 import { fetcher } from "@utils/helps/request";
 import { useEffect, useRef } from "react";
-import useSWR from "swr";
+import useSWR, { useSWRConfig } from "swr";
+import { usePrevious } from "./usePrevious";
 
 export const useAPIFetcher = (key, options, _fetcher) => {
     return useSWR(key, _fetcher ? _fetcher : fetcher, {
@@ -52,4 +53,16 @@ export const saveActiveData = (useSWRNext) => (key, fetcher, config) => {
         activeData: swr.data ? swr.data : lastWorkData.current,
         data: swr.data,
     };
+};
+
+// Hook for middleware sure that cache is not avaiable when change key, but dedupingInterval still work;
+export const noCache = (useSWRNext) => (key, fetcher, config) => {
+    const { cache } = useSWRConfig();
+    const preKey = usePrevious(key);
+
+    if (key != preKey) cache.delete(key);
+
+    const swr = useSWRNext(key, fetcher, config);
+
+    return swr;
 };

@@ -1,7 +1,7 @@
 import { AppText, AppTextMedium } from "@common-ui/AppText";
 import TableStickBasicTemplate from "@common-ui/Table/TableStickBasicTemplate";
 import TableStickColumn from "@common-ui/Table/TableStickColumn";
-import { ModalDatePicker } from "@common-ui/Wheel/DatePicker";
+import { ModalDatePicker } from "@common-ui/Calendar/DatePicker";
 import { ColorDefault } from "@theme/index";
 import { Color } from "@theme/colors";
 import { rem, unit } from "@theme/styleContants";
@@ -27,7 +27,11 @@ const data = new Array(500).fill({
 });
 
 const options = [
-    { key: "order", title: "TT", width: 3 * rem },
+    {
+        key: "order",
+        title: "TT",
+        width: 3 * rem,
+    },
     { key: "factory", title: "Nhà máy", width: 8 * rem },
     { key: "device", title: "Thiết bị", width: 6 * rem },
     { key: "error_name", title: "Tên lỗi", width: 7 * rem },

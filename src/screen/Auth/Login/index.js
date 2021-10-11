@@ -14,9 +14,10 @@ import { closeIconLoadingOverlay, openIconLoadingOverlay } from "@redux/actions/
 import ModalAlert from "@common-ui/Modal/ModalAlert";
 import { delay } from "@utils/helps/functions";
 import { showToast } from "@common-ui/ToastNotify/ToastManager";
+import { CacheStorage } from "@utils/local-file-sytem";
 
 const Login = () => {
-    const res = useLogin();
+    const { revalidateRemoteUser } = useLogin();
     const dispatch = useDispatch();
     const modalAlertRef = useRef();
 
@@ -134,8 +135,9 @@ const Login = () => {
                             onPress={async () => {
                                 try {
                                     dispatch(openIconLoadingOverlay());
-                                    await res.revalidateRemoteUser();
-                                    dispatch(closeIconLoadingOverlay);
+                                    await revalidateRemoteUser(null, () => {
+                                        dispatch(closeIconLoadingOverlay);
+                                    });
                                 } catch (e) {
                                     showToast({ type: "error" });
                                 }

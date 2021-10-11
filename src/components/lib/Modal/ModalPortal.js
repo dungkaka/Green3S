@@ -1,7 +1,15 @@
 import { HEIGHT } from "@theme/scale";
 import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useLayoutEffect, useRef, useState } from "react";
 import { BackHandler, InteractionManager, Pressable, StyleSheet, TouchableWithoutFeedback, View } from "react-native";
-import Animated, { Easing, interpolate, runOnJS, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
+import Animated, {
+    Easing,
+    interpolate,
+    runOnJS,
+    useAnimatedStyle,
+    useSharedValue,
+    withDelay,
+    withTiming,
+} from "react-native-reanimated";
 import Portal from "@burstware/react-native-portal";
 import { useOnlyDidUpdateLayoutEffect } from "@hooks/useOnlyDidUpdateLayoutEffetct";
 
@@ -64,10 +72,14 @@ const ModalPortal = forwardRef(
         };
 
         const animatedCloseModal = () => {
-            animateModal.value = withTiming(0, { duration: animationTimeout }, () => {
-                displayModal.value = 0;
-                unmountOnHide && runOnJS(setIsReady)(false);
-            });
+            // When close right after open, maybe overlay still show, need that to sure close completely run !
+            animateModal.value = withDelay(
+                2,
+                withTiming(0, { duration: animationTimeout }, () => {
+                    displayModal.value = 0;
+                    unmountOnHide && runOnJS(setIsReady)(false);
+                })
+            );
             BackHandler.removeEventListener("hardwareBackPress", onBackPress);
         };
 

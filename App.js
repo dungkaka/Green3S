@@ -10,14 +10,14 @@ let AppContainer = require("@navigation/index").default;
 
 function App() {
     const [isReady, setIsReady] = useState(false);
-    const { data, revalidateLocalUser } = useLogin();
-    const isLogin = !!data;
+    const { data, error, revalidateLocalUser } = useLogin();
+    const isLogin = !!data && !error;
 
     useEffect(() => {
         const prepareData = async () => {
             await SplashScreen.preventAutoHideAsync();
             // AppContainer = require("@navigation/index").default;
-            await Promise.all([await Font.loadAsync(appFont)]);
+            await Promise.all([revalidateLocalUser(), Font.loadAsync(appFont)]);
             setIsReady(true);
         };
         prepareData();

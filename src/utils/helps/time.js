@@ -57,7 +57,7 @@ class STimer {
 }
 
 class Timer {
-    constructor(time = new Date()) {
+    constructor(time) {
         this.time = this.validateTime(time);
     }
 
@@ -69,7 +69,7 @@ class Timer {
         return this.time.getTime();
     }
 
-    validateTime(time) {
+    validateTime(time = new Date()) {
         if (isString(time)) return new Date(time);
         return time;
     }
@@ -98,6 +98,14 @@ class Timer {
 
     valueOf() {
         return this.get();
+    }
+
+    toDateObject() {
+        return {
+            day: this.time.getDate(),
+            month: this.time.getMonth() + 1,
+            year: this.time.getFullYear(),
+        };
     }
 }
 

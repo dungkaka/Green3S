@@ -1,7 +1,7 @@
 {
     "expo": {
-        "name": "project-electronic",
-        "slug": "project-electronic",
+        "name": "Green 3S",
+        "slug": "green3s",
         "version": "1.0.0",
         "orientation": "portrait",
         "icon": "./assets/icon.png",
@@ -25,9 +25,6 @@
                 "backgroundColor": "#FFFFFF"
             },
             "package": "com.dungkaka.projectelectronic"
-        },
-        "web": {
-            "favicon": "./assets/favicon.png"
         }
     }
 }
