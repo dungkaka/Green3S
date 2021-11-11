@@ -2,10 +2,11 @@ import { AppText, AppTextBold, AppTextMedium } from "@common-ui/AppText";
 import { useNavigation } from "@react-navigation/native";
 import { Color } from "@theme/colors";
 import { rem, unit } from "@theme/styleContants";
+import { GoogleSansFontType } from "@theme/typography";
 import { round2 } from "@utils/helps/functions";
 import { NAVIGATION } from "constant/navigation";
 import React, { Fragment, useCallback, useRef } from "react";
-import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
+import { FlatList, Image, Pressable, StyleSheet, Text, View } from "react-native";
 import Svg, { Circle } from "react-native-svg";
 import ModalRealTimeDevice from "./ModalRealtimeDevice";
 
@@ -18,6 +19,29 @@ const Factory = React.memo(({ item = {}, index, navigation, showDetailPlant }) =
         factory_info_real_time: [realTimeData = {}],
     } = item;
 
+    const toStatus = () => {
+        switch (realTimeData.real_health_state) {
+            case 3:
+                return {
+                    title: "Hoạt động",
+                    color: Color.greenBlue,
+                };
+            case -1:
+                return {
+                    title: "Không xác định",
+                    color: Color.orangeDark,
+                };
+            default:
+                return {
+                    title: "Ngoại tuyến",
+                    color: Color.gray_7,
+                };
+        }
+    };
+
+    const status = toStatus();
+
+    const image = Math.floor(Math.random() * 2) + 1;
     return (
         <Pressable style={styles.itemContainer} onPress={() => showDetailPlant(item)}>
             <Pressable
@@ -28,13 +52,24 @@ const Factory = React.memo(({ item = {}, index, navigation, showDetailPlant }) =
                         stationCode,
                     });
                 }}
-            />
+            >
+                <Image
+                    source={
+                        image == 1 ? require("@assets/images/factory_thumb.jpg") : require("@assets/images/factory_thumb_1.jpg")
+                    }
+                    style={styles.facImage}
+                    resizeMode="cover"
+                />
+            </Pressable>
             <View style={{ flex: 1, marginLeft: 12 * unit }}>
                 <View style={styles.itemTitleContainer}>
+                    <AppTextMedium style={styles.itemTitle} numberOfLines={2}>
+                        {stationName}
+                    </AppTextMedium>
                     <Svg viewBox="0 0 24 24" height={8} width={8}>
-                        <Circle cx="12" cy="12" r="12" stroke-width="3" fill={Color.greenBlue} />
+                        <Circle cx="11" cy="11" r="11" stroke-width="3" fill={status.color} />
                     </Svg>
-                    <AppTextMedium style={styles.itemTitle}>{stationName}</AppTextMedium>
+                    <Text style={[styles.titleStatus, { color: status.color }]}>{status.title}</Text>
                 </View>
 
                 <AppText numberOfLines={1} style={styles.itemAddr}>
@@ -101,17 +136,29 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
     },
     itemImage: {
-        height: 64,
-        width: 64,
+        height: 60,
+        width: 60,
         backgroundColor: "#ddd",
         borderRadius: 6 * unit,
+        overflow: "hidden",
+        elevation: 1,
+    },
+    facImage: {
+        width: "100%",
+        height: "100%",
     },
     itemTitleContainer: {
         flexDirection: "row",
         alignItems: "center",
     },
     itemTitle: {
-        paddingHorizontal: 12 * unit,
+        flex: 1,
+        paddingRight: 12 * unit,
+    },
+    titleStatus: {
+        paddingLeft: 5 * unit,
+        fontSize: 12 * unit,
+        fontFamily: GoogleSansFontType.italic,
     },
     itemAddr: {
         flex: 1,

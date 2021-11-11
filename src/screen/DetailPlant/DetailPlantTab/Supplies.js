@@ -1,7 +1,7 @@
 import { AppText, AppTextMedium } from "@common-ui/AppText";
 import TableStickBasicTemplate from "@common-ui/Table/TableStickBasicTemplate";
 import TableStickColumn from "@common-ui/Table/TableStickColumn";
-import { ModalDatePicker } from "@common-ui/Calendar/DatePicker";
+import { ModalDatePicker } from "@common-ui/Calendar/DatePickerModal";
 import { ColorDefault } from "@theme/index";
 import { Color } from "@theme/colors";
 import { rem, unit } from "@theme/styleContants";

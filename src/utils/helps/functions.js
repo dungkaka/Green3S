@@ -4,8 +4,12 @@ export function randomItem(items) {
     return items[Math.floor(Math.random() * items.length)];
 }
 
-export function numberWithCommas(x) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+export function numberWithCommas(x, character = ".") {
+    return x?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, character);
+}
+
+export function round(x) {
+    return Math.round(x);
 }
 
 export function round2(x) {

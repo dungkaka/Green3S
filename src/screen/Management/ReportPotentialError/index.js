@@ -53,26 +53,29 @@ const ReportPotentialError = () => {
                 key: "image",
                 title: "Ảnh",
                 width: 8 * rem,
-                render: ({ item, index, defaultBlockStyle }) => (
-                    <Pressable
-                        key={4}
-                        onPress={() =>
-                            imageLogViewerRef.current.open(
-                                `https://green3s.vn/uploads/errors/${plant.stationCode}/${item.image}`
-                            )
-                        }
-                        style={defaultBlockStyle}
-                    >
-                        <Image
-                            source={{
-                                uri: `https://green3s.vn/uploads/errors/${plant.stationCode}/${item.image}`,
-                                width: "100%",
-                                height: "100%",
-                            }}
-                            resizeMode="contain"
-                        />
-                    </Pressable>
-                ),
+                render: ({ item, index, defaultBlockStyle }) => {
+                    if (!item.image) return <View key={4} style={defaultBlockStyle} />;
+                    return (
+                        <Pressable
+                            key={4}
+                            onPress={() =>
+                                imageLogViewerRef.current.open(
+                                    `https://green3s.vn/uploads/errors/${plant.stationCode}/${item.image}`
+                                )
+                            }
+                            style={defaultBlockStyle}
+                        >
+                            <Image
+                                source={{
+                                    uri: `https://green3s.vn/uploads/errors/${plant.stationCode}/${item.image}`,
+                                    width: "100%",
+                                    height: "100%",
+                                }}
+                                resizeMode="contain"
+                            />
+                        </Pressable>
+                    );
+                },
             },
 
             {
@@ -108,7 +111,7 @@ const ReportPotentialError = () => {
                 width: 8 * rem,
                 render: ({ item, index, defaultBlockStyle }) => (
                     <View key={9} style={defaultBlockStyle}>
-                        <AppText style={styles.contentCell}>{item.date_repair.slice(0, 10)}</AppText>
+                        <AppText style={styles.contentCell}>{item.date_repair?.slice(0, 10)}</AppText>
                     </View>
                 ),
             },
@@ -162,6 +165,7 @@ export default ReportPotentialError;
 const styles = StyleSheet.create({
     container: { flex: 1, backgroundColor: "white" },
     contentCell: {
+        fontSize: 13 * unit,
         textAlign: "center",
         color: Color.gray_11,
     },

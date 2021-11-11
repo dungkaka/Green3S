@@ -105,11 +105,45 @@ class Timer {
             day: this.time.getDate(),
             month: this.time.getMonth() + 1,
             year: this.time.getFullYear(),
+            hour: this.time.getHours(),
+            minute: this.time.getMinutes(),
+            second: this.time.getSeconds(),
         };
     }
 }
 
-export const time = () => new Timer();
+export const time = (time) => new Timer(time);
 
-export const convertDateAndTime = (d) =>
-    d.getDate() + "/" + (d.getMonth() + 1) + "/" + d.getFullYear() + " - " + d.getHours() + ":" + d.getMinutes();
+export const format = (date = time().toDateObject(), form = "YYYY-MM-DD") => {
+    let dateObject = date;
+    if (date instanceof Date || isString(date)) dateObject = time(date).toDateObject();
+    const { day = 1, month = 1, year = 2000, hour = 0, minute = 0, second = 0 } = dateObject;
+
+    switch (form) {
+        case "YYYY-MM-DD": {
+            return year + "-" + ((month < 10 ? "0" : "") + month) + "-" + ((day < 10 ? "0" : "") + day);
+        }
+        case "YYYY-MM-DD H:M:S": {
+            const time =
+                (hour < 10 ? "0" + hour : hour) +
+                ":" +
+                (minute < 10 ? "0" + minute : minute) +
+                ":" +
+                (second < 10 ? "0" + second : second);
+            return year + "-" + ((month < 10 ? "0" : "") + month) + "-" + ((day < 10 ? "0" : "") + day) + " " + time;
+        }
+        case "DD/MM/YYYY":
+            return `${(day < 10 ? "0" : "") + day}/${(month < 10 ? "0" : "") + month}/${year}`;
+        case "H:M:S": {
+            const time =
+                (hour < 10 ? "0" + hour : hour) +
+                ":" +
+                (minute < 10 ? "0" + minute : minute) +
+                ":" +
+                (second < 10 ? "0" + second : second);
+            return time;
+        }
+        default:
+            return undefined;
+    }
+};

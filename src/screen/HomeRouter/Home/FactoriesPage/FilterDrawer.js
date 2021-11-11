@@ -13,8 +13,8 @@ import { debounce, throttle } from "@utils/helps/functions";
 
 const firms = [
     { key: "", value: "Tất cả" },
-    { key: "HUAWEI", value: "HUAWEI" },
-    { key: "SMA", value: "SMA" },
+    { key: "1", value: "HUAWEI" },
+    { key: "2", value: "SMA" },
 ];
 
 const Tag = React.memo(
@@ -169,9 +169,6 @@ const FilterDrawer = ({ drawerRef, onConfirm, onReset }) => {
                             <Controller
                                 control={control}
                                 name="firm"
-                                rules={{
-                                    required: { value: true, message: "Cần chọn ít nhất 1 giới tính!" },
-                                }}
                                 render={({
                                     field: { onChange, onBlur, value, name, ref },
                                     fieldState: { invalid, isTouched, isDirty, error },

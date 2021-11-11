@@ -1,10 +1,9 @@
 import { AppText, AppTextMedium } from "@common-ui/AppText";
 import TableStickColumn from "@common-ui/Table/TableStickColumn";
 import { Color } from "@theme/colors";
-import { rem } from "@theme/styleContants";
-import React, { useEffect, useState, useMemo, Fragment } from "react";
-import { render } from "react-dom";
-import { StyleSheet, Text, View } from "react-native";
+import { rem, unit } from "@theme/styleContants";
+import React, { Fragment } from "react";
+import { StyleSheet, View } from "react-native";
 
 const _data = new Array(20).fill({
     column1: 1,
@@ -41,6 +40,9 @@ const TableStickBasicTemplate = ({
     headerContainerStyle = styles.headerContainer,
     textHeaderStyle,
     numberLinesContentCell = 3,
+    showPagination = false,
+    paginationInfo = { total: 0, page: 0, pageSize: 20, currentPageSize: 0, onChangePage: (page) => {} },
+    paginationContainerStyle,
 }) => {
     const right = options.map((_, i) => i).filter((_, i) => !left.includes(i));
 
@@ -130,6 +132,9 @@ const TableStickBasicTemplate = ({
                 rightContainerStyle={rightContainerStyle}
                 containerStyle={containerStyle}
                 keyItem={keyItem}
+                showPagination={showPagination}
+                paginationInfo={paginationInfo}
+                paginationContainerStyle={paginationContainerStyle}
             />
         </Fragment>
     );
@@ -143,10 +148,12 @@ const styles = StyleSheet.create({
     },
     headerContainer: { flex: 1, flexDirection: "row", backgroundColor: Color.blueModern_2 },
     textHeader: {
+        fontSize: 13 * unit,
         textAlign: "center",
         color: "white",
     },
     textCenter: {
+        fontSize: 13 * unit,
         textAlign: "center",
         color: Color.gray_11,
     },
@@ -160,15 +167,14 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         borderRightWidth: 1,
-        borderRightColor: Color.gray_2,
-        overflow: "hidden",
+        borderBottomWidth: 1,
+        borderColor: Color.gray_2,
+        // overflow: "hidden",
     },
     row: {
         flex: 1,
         flexDirection: "row",
-        borderBottomWidth: 1,
-        borderColor: Color.gray_2,
-        overflow: "hidden",
+        // overflow: "hidden",
     },
     sideContainer: {
         backgroundColor: "white",

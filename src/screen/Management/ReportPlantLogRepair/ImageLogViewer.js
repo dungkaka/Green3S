@@ -10,15 +10,11 @@ const ImageLogViewer = forwardRef((props, ref) => {
     useImperativeHandle(ref, () => ({
         open: (image) => {
             requestAnimationFrame(() => {
-                Image.getSize(image, (w, h) =>
-                    setImages([
-                        {
-                            url: image,
-                            width: w * 2,
-                            height: h * 2,
-                        },
-                    ])
-                );
+                setImages([
+                    {
+                        url: image,
+                    },
+                ]);
 
                 modalRef.current.open();
             });

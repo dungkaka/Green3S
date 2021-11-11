@@ -1,15 +1,33 @@
-import { AppText, AppTextBold, AppTextMedium } from "@common-ui/AppText";
-import { ModalDatePicker } from "@common-ui/Calendar/DatePicker";
-import WheelPicker from "@common-ui/Wheel/WheelPicker";
+import { AppTextMedium } from "@common-ui/AppText";
+import { useFetchPreViewAllError } from "@services/error";
 import { Color, PairColor } from "@theme/colors";
 import { rem, unit } from "@theme/styleContants";
-import React, { useRef } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import React, { Fragment, useRef } from "react";
+import { Pressable, StyleSheet, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
-import ModalError from "./ModalError";
+import ModalErrorDisconnect from "./ModalErrorDisconnect";
+import ModalErrorDC from "./ModalErrorDC";
+import ModalPerformance from "./ModalPerformance";
+import ModalErrorResistor from "./ModalResistor";
+import ModalPhaseUnbalance from "./ModalPhaseUnbalance";
+import ModalGridHigh from "./ModalGridHigh";
+import ModalGridLow from "./ModalGridLow";
+import ModalMiss from "./ModalMiss";
+import { JumpLogoPage } from "@common-ui/Loading/JumpLogo";
+import ErrorPage from "@common-components/ErrorPage";
 
 const ErrorsPage = () => {
-    const modalErrorRef = useRef();
+    const modalErrorDisconnectRef = useRef();
+    const modalErrorDCRef = useRef();
+    const modalErrorResistorRef = useRef();
+    const modalErrorPerformanceRef = useRef();
+    const modalPhaseUnbalanceRef = useRef();
+    const modalGrigHighRef = useRef();
+    const modalGridLowRef = useRef();
+    const modalMissRef = useRef();
+
+    const { rData, rIsValidating, error, mutate } = useFetchPreViewAllError();
+    const datas = rData?.datas || [];
 
     return (
         <ScrollView style={styles.container}>
@@ -17,84 +35,114 @@ const ErrorsPage = () => {
                 Tổng quan lỗi trong ngày
             </AppTextMedium>
 
-            <View style={{ flexDirection: "row" }}>
-                <Pressable style={styles.blockFlex} onPress={() => modalErrorRef.current.open({})}>
-                    <View style={styles.blockContainer}>
-                        <View style={[styles.lineDiv, { backgroundColor: PairColor.red.dark }]} />
-                        <AppTextMedium style={[styles.title, { color: PairColor.red.dark }]}>Lỗi Dc (0)</AppTextMedium>
-                    </View>
-                </Pressable>
-
-                <View style={styles.blockFlex}>
-                    <View style={styles.blockContainer}>
-                        <View style={[styles.lineDiv, { backgroundColor: PairColor.blue.dark }]} />
-                        <AppTextMedium style={[styles.title, { color: PairColor.blue.dark }]}>
-                            Hiệu suất thấp (14)
-                        </AppTextMedium>
-                    </View>
+            {rIsValidating ? (
+                <View style={{ height: 360 }}>
+                    <JumpLogoPage />
                 </View>
-            </View>
-
-            <View style={{ flexDirection: "row" }}>
-                <View style={styles.blockFlex}>
-                    <View style={styles.blockContainer}>
-                        <View style={[styles.lineDiv, { backgroundColor: PairColor.green.dark }]} />
-                        <AppTextMedium style={[styles.title, { color: PairColor.green.dark }]}>
-                            Điện áp lưới thấp (0)
-                        </AppTextMedium>
-                    </View>
+            ) : error ? (
+                <View style={{ height: 360 }}>
+                    <ErrorPage />
                 </View>
-                <View style={styles.blockFlex}>
-                    <View style={styles.blockContainer}>
-                        <View style={[styles.lineDiv, { backgroundColor: PairColor.purple.dark }]} />
-                        <AppTextMedium style={[styles.title, { color: PairColor.purple.dark }]}>
-                            Điện áp lưới cao (0)
-                        </AppTextMedium>
-                    </View>
-                </View>
-            </View>
+            ) : (
+                <Fragment>
+                    <View style={{ flexDirection: "row" }}>
+                        <Pressable onPress={() => modalErrorDCRef.current.open()} style={styles.blockFlex}>
+                            <View style={styles.blockContainer}>
+                                <View style={[styles.lineDiv, { backgroundColor: PairColor.red.dark }]} />
+                                <AppTextMedium style={[styles.title, { color: PairColor.red.dark }]}>
+                                    Lỗi Dc ({datas.count_dc || 0})
+                                </AppTextMedium>
+                            </View>
+                        </Pressable>
 
-            <View style={{ flexDirection: "row" }}>
-                <View style={styles.blockFlex}>
-                    <View style={styles.blockContainer}>
-                        <View style={[styles.lineDiv, { backgroundColor: PairColor.orange.dark }]} />
-                        <AppTextMedium style={[styles.title, { color: PairColor.orange.dark }]}>
-                            Mất điện lưới (0)
-                        </AppTextMedium>
+                        <Pressable onPress={() => modalErrorPerformanceRef.current.open()} style={styles.blockFlex}>
+                            <View style={styles.blockContainer}>
+                                <View style={[styles.lineDiv, { backgroundColor: PairColor.blue.dark }]} />
+                                <AppTextMedium style={[styles.title, { color: PairColor.blue.dark }]}>
+                                    Hiệu suất thấp ({datas.count_performance || 0})
+                                </AppTextMedium>
+                            </View>
+                        </Pressable>
                     </View>
-                </View>
 
-                <View style={styles.blockFlex}>
-                    <View style={styles.blockContainer}>
-                        <View style={[styles.lineDiv, { backgroundColor: PairColor.indigo.dark }]} />
-                        <AppTextMedium style={[styles.title, { color: PairColor.indigo.dark }]}>
-                            Mât cân bằng pha (0)
-                        </AppTextMedium>
+                    <View style={{ flexDirection: "row" }}>
+                        <Pressable onPress={() => modalGridLowRef.current.open()} style={styles.blockFlex}>
+                            <View style={styles.blockContainer}>
+                                <View style={[styles.lineDiv, { backgroundColor: PairColor.green.dark }]} />
+                                <AppTextMedium style={[styles.title, { color: PairColor.green.dark }]}>
+                                    Điện áp lưới thấp ({datas.ac?.["grid low"]?.length || 0})
+                                </AppTextMedium>
+                            </View>
+                        </Pressable>
+                        <Pressable onPress={() => modalGrigHighRef.current.open()} style={styles.blockFlex}>
+                            <View style={styles.blockContainer}>
+                                <View style={[styles.lineDiv, { backgroundColor: PairColor.purple.dark }]} />
+                                <AppTextMedium style={[styles.title, { color: PairColor.purple.dark }]}>
+                                    Điện áp lưới cao ({datas.ac?.["grid high"]?.length || 0})
+                                </AppTextMedium>
+                            </View>
+                        </Pressable>
                     </View>
-                </View>
-            </View>
 
-            <View style={{ flexDirection: "row" }}>
-                <View style={styles.blockFlex}>
-                    <View style={styles.blockContainer}>
-                        <View style={[styles.lineDiv, { backgroundColor: PairColor.gray.dark }]} />
-                        <AppTextMedium style={[styles.title, { color: PairColor.gray.dark }]}>
-                            Mất tín hiệu (Real Time) - 0
-                        </AppTextMedium>
+                    <View style={{ flexDirection: "row" }}>
+                        <Pressable onPress={() => modalMissRef.current.open()} style={styles.blockFlex}>
+                            <View style={styles.blockContainer}>
+                                <View style={[styles.lineDiv, { backgroundColor: PairColor.orange.dark }]} />
+                                <AppTextMedium style={[styles.title, { color: PairColor.orange.dark }]}>
+                                    Mất điện lưới ({datas.ac?.miss?.length || 0})
+                                </AppTextMedium>
+                            </View>
+                        </Pressable>
+
+                        <Pressable onPress={() => modalPhaseUnbalanceRef.current.open()} style={styles.blockFlex}>
+                            <View style={styles.blockContainer}>
+                                <View style={[styles.lineDiv, { backgroundColor: PairColor.indigo.dark }]} />
+                                <AppTextMedium style={[styles.title, { color: PairColor.indigo.dark }]}>
+                                    Mât cân bằng pha ({datas.ac?.phase_unbalance?.length || 0})
+                                </AppTextMedium>
+                            </View>
+                        </Pressable>
                     </View>
-                </View>
-            </View>
 
-            <ModalError ref={modalErrorRef} />
+                    <View style={{ flexDirection: "row" }}>
+                        <Pressable onPress={() => modalErrorDisconnectRef.current.open()} style={styles.blockFlex}>
+                            <View style={styles.blockContainer}>
+                                <View style={[styles.lineDiv, { backgroundColor: PairColor.gray.dark }]} />
+                                <AppTextMedium style={[styles.title, { color: PairColor.gray.dark }]}>
+                                    Mất tín hiệu (Real Time) ({datas.disconnect?.length || 0})
+                                </AppTextMedium>
+                            </View>
+                        </Pressable>
+                        <Pressable onPress={() => modalErrorResistorRef.current.open()} style={styles.blockFlex}>
+                            <View style={styles.blockContainer}>
+                                <View style={[styles.lineDiv, { backgroundColor: PairColor.red.dark }]} />
+                                <AppTextMedium style={[styles.title, { color: PairColor.red.dark }]}>
+                                    Điện trở cách điện thấp ({datas.count_resistor || 0})
+                                </AppTextMedium>
+                            </View>
+                        </Pressable>
+                    </View>
+                </Fragment>
+            )}
+
+            <ModalErrorDisconnect ref={modalErrorDisconnectRef} data={datas.disconnect} />
+            <ModalErrorDC ref={modalErrorDCRef} data={datas.error_dc} />
+            <ModalPerformance ref={modalErrorPerformanceRef} data={datas.error_performance} />
+            <ModalErrorResistor ref={modalErrorResistorRef} data={datas.resistor} />
+            <ModalPhaseUnbalance ref={modalPhaseUnbalanceRef} data={datas.ac?.phase_unbalance} />
+            <ModalGridHigh ref={modalGrigHighRef} data={datas.ac?.["grid high"]} />
+            <ModalGridLow ref={modalGridLowRef} data={datas.ac?.["grid low"]} />
+            <ModalMiss ref={modalMissRef} data={datas.ac?.miss} />
         </ScrollView>
     );
 };
 
-export default React.memo(ErrorsPage);
+export default React.memo(ErrorsPage, () => true);
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        flexGrow: 1,
         paddingHorizontal: rem / 2,
         paddingVertical: rem,
         backgroundColor: "white",

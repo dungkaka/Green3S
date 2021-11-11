@@ -3,7 +3,7 @@ import React, { useRef, useState } from "react";
 import { Pressable, StyleSheet, ScrollView, View } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { Color } from "@theme/colors";
-import { ModalDatePicker } from "@common-ui/Calendar/DatePicker";
+import { ModalDatePicker } from "@common-ui/Calendar/DatePickerModal";
 import { unit } from "@theme/styleContants";
 import { ColorDefault } from "@theme";
 import Select from "@common-ui/Form/Select";
@@ -36,31 +36,11 @@ const Filter = ({ filter, handleFilter = () => {} }) => {
             value: "Đợi vật tư",
         },
     ]).current;
-    const dataSelectError = useRef([
-        { key: "", value: "Tất cả" },
-        {
-            key: "grid low",
-            value: "Điện áp lưới thấp",
-        },
-        {
-            key: "grid high",
-            value: "Điện áp lưới cao",
-        },
-        {
-            key: "miss",
-            value: "Mất điện lưới",
-        },
-        {
-            key: "phase_unbalance",
-            value: "Mất cân bẳng pha",
-        },
-    ]).current;
 
     const modalStartDatePickerRef = useRef();
     const modalEndDatePickerRef = useRef();
     const selectPlantRef = useRef();
     const selectStatusRef = useRef();
-    const selectErrorRef = useRef();
     const [startDate, setStartDate] = useState(filter.startDate);
     const [endDate, setEndDate] = useState(filter.endDate);
     const [plant, setPlant] = useState(dataSelectPlants[0]);
@@ -171,7 +151,7 @@ const Filter = ({ filter, handleFilter = () => {} }) => {
             <ModalDatePicker
                 ref={modalStartDatePickerRef}
                 initialDate={startDate}
-                delayRender={300}
+                delayRender={500}
                 onOk={() => {
                     modalStartDatePickerRef.current.close();
                     setStartDate(modalStartDatePickerRef.current.getData().date);

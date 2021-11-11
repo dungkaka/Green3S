@@ -8,6 +8,7 @@ import HomeIcon from "@components/icon/HomeIcon";
 import Maintenance from "@components/icon/Maintenance";
 import User from "@components/icon/User";
 import Management from "@components/icon/Management";
+import Alarm from "@components/icon/Alarm";
 
 const numberOfIcons = 4;
 
@@ -30,6 +31,12 @@ export const bottomTabs = {
     [NAVIGATION.TAB_HOME]: {
         label: "Trang chủ",
         Icon: HomeIcon,
+        size: ICON_SIZE,
+        colorActive: Colors.primary,
+    },
+    [NAVIGATION.TAB_ALARM]: {
+        label: "Báo động",
+        Icon: Alarm,
         size: ICON_SIZE,
         colorActive: Colors.primary,
     },

@@ -3,7 +3,7 @@ import React, { useRef, useState } from "react";
 import { Pressable, StyleSheet, ScrollView, View } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { Color } from "@theme/colors";
-import { ModalDatePicker } from "@common-ui/Calendar/DatePicker";
+import { ModalDatePicker } from "@common-ui/Calendar/DatePickerModal";
 import { unit } from "@theme/styleContants";
 import { ColorDefault } from "@theme";
 import Select from "@common-ui/Form/Select";
@@ -16,7 +16,6 @@ const Filter = ({ filter, handleFilter = () => {} }) => {
     const dataSelectPlants = dataPlants.map((plant) => ({ key: plant.stationCode, value: plant }));
 
     const modalStartDatePickerRef = useRef();
-    const modalEndDatePickerRef = useRef();
     const selectPlantRef = useRef();
     const [startDate, setStartDate] = useState({ day: 1, month: filter.month, year: filter.year });
     const [plant, setPlant] = useState(dataSelectPlants[0]);

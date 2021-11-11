@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 import { View, Text, Image, StyleSheet } from "react-native";
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from "react-native-reanimated";
 
-export const JumpLogo = ({ size = 4 * rem, showDes = true, des = "Đang tải ...", desColor = "#1484b6" }) => {
+export const JumpLogo = ({ size = 3.5 * rem, showDes = true, des = "Đang tải ...", desColor = "#1484b6" }) => {
     const animatedIcon = useSharedValue(0);
 
     const jumpStyle = useAnimatedStyle(() => ({

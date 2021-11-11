@@ -19,17 +19,13 @@ const ModalAlert = ({
     textCancel = "Cancel",
     onOk,
     onCancel,
-    onBackButtonPress,
+    onBackHandler,
     onBackdropPress,
 }) => {
     const mount = useRef(true);
-    const modalCustomRef = useRef();
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        setTimeout(() => {
-            modalAlertRef.current = modalCustomRef.current;
-        }, 50);
         return () => {
             mount.current = false;
         };
@@ -37,14 +33,14 @@ const ModalAlert = ({
 
     const otherProps = () => {
         const otherProps = {};
-        if (onBackButtonPress) otherProps.onBackButtonPress = onBackButtonPress;
+        if (onBackHandler) otherProps.onBackHandler = onBackHandler;
         if (onBackdropPress) otherProps.onBackdropPress = onBackdropPress;
 
         return otherProps;
     };
 
     return (
-        <ModalPortal ref={modalCustomRef} modalStyle={styles.modalContainer} {...otherProps()}>
+        <ModalPortal ref={modalAlertRef} modalStyle={styles.modalContainer} {...otherProps()}>
             <View style={styles.modal}>
                 {/* Title */}
                 <View>
@@ -65,7 +61,7 @@ const ModalAlert = ({
                                 ? onCancel(() => {
                                       if (mount.current) setLoading(false);
                                   })
-                                : modalCustomRef.current.close()
+                                : modalAlertRef.current.close()
                         }
                     >
                         <AppText style={styles.textButtonFooterModal}> {textCancel} </AppText>
@@ -84,10 +80,10 @@ const ModalAlert = ({
                                           if (mount.current) setLoading(false);
                                       },
                                       () => {
-                                          if (mount.current) modalCustomRef.current.close();
+                                          if (mount.current) modalAlertRef.current.close();
                                       }
                                   )
-                                : modalCustomRef.current.close();
+                                : modalAlertRef.current.close();
                         }}
                     >
                         <Text style={styles.textButtonFooterModal}> {textOK} </Text>

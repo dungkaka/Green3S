@@ -2,8 +2,6 @@ import { WIDTH } from "@theme/scale";
 import React, { Fragment, useRef } from "react";
 import { FlatList, StyleSheet, Text, View } from "react-native";
 import Animated, {
-    Extrapolate,
-    interpolate,
     runOnJS,
     useAnimatedScrollHandler,
     useAnimatedStyle,
@@ -67,7 +65,7 @@ const WheelPicker = ({
     });
 
     return (
-        <View style={{ height: n * h }}>
+        <View style={{ height: n * h, width: "100%" }}>
             <MaskedView
                 pointerEvents={"none"}
                 style={styles.maskedView}

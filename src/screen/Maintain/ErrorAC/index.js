@@ -13,15 +13,15 @@ import TableStickBasicTemplate from "@common-ui/Table/TableStickBasicTemplate";
 const renderStatus = (code) => {
     switch (code) {
         case 0:
-            return "Chưa sửa";
+            return <AppText style={[styles.contentCellTag, { backgroundColor: Color.redPastelDark }]}>Chưa sửa</AppText>;
         case 1:
-            return "Đã sửa";
+            return <AppText style={[styles.contentCellTag, { backgroundColor: Color.greenBlueDark }]}>Đã sửa</AppText>;
         case 2:
-            return "Đang sửa";
+            return <AppText style={[styles.contentCellTag, { backgroundColor: Color.blueModern_1 }]}>Đang sửa</AppText>;
         case 3:
-            return "Đợi vật tư";
+            return <AppText style={[styles.contentCellTag, { backgroundColor: Color.purpleDark }]}>Đợi vật tư</AppText>;
         case -1:
-            return "Toàn bộ trạng thái";
+            return <AppText style={[styles.contentCellTag, { backgroundColor: Color.gray_10 }]}>Toàn bộ trạng thái</AppText>;
         default:
             return null;
     }
@@ -79,7 +79,7 @@ const options = [
         width: 7 * rem,
         render: ({ item, index, defaultBlockStyle }) => (
             <View key={6} style={defaultBlockStyle}>
-                <AppText style={styles.contentCell}>{renderStatus(item.status)}</AppText>
+                {renderStatus(item.status)}
             </View>
         ),
     },
@@ -108,6 +108,7 @@ const ErrorAC = () => {
         stationCode: "",
         status: -1,
         error: "",
+        page: 1,
     });
     const { rData, rIsValidating, mutate } = useFetchErrorAC({ ...filter });
     const datas = rData?.datas || [];
@@ -119,6 +120,7 @@ const ErrorAC = () => {
             stationCode: filter.plant.stationCode,
             status: filter.status.key,
             error: filter.error.key,
+            page: 1,
         });
     };
 
@@ -140,6 +142,16 @@ const ErrorAC = () => {
                     headerContainerStyle={styles.tableHeaderContainer}
                     textHeaderStyle={styles.tableTextHeader}
                     numberLinesContentCell={5}
+                    showPagination={true}
+                    paginationInfo={{
+                        total: rData.total_page * 20 || 0,
+                        page: filter.page,
+                        pageSize: 20,
+                        currentPageSize: datas.length,
+                        onChangePage: (page) => {
+                            setFilter({ ...filter, page: page });
+                        },
+                    }}
                 />
             ) : null}
         </View>
@@ -155,9 +167,18 @@ const styles = StyleSheet.create({
     },
 
     contentCell: {
+        fontSize: 13 * unit,
         textAlign: "center",
-        color: Color.gray_11,
     },
+    contentCellTag: {
+        fontSize: 13 * unit,
+        textAlign: "center",
+        color: "white",
+        borderRadius: 4,
+        paddingHorizontal: 6,
+        paddingVertical: 2,
+    },
+
     loading: {
         justifyContent: "center",
         alignItems: "center",

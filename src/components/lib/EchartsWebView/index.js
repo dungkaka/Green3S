@@ -3,6 +3,7 @@ import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } f
 import { ActivityIndicator, StyleSheet, TouchableWithoutFeedback, View } from "react-native";
 import WebView from "react-native-webview";
 import { getJavascriptSource } from "./utils";
+import { useOnlyDidUpdateEffect } from "@utils/hooks/useOnlyDidUpdateEffect";
 let minifiedEChartsFramework;
 let html = null;
 
@@ -60,6 +61,10 @@ const EchartsWebView = forwardRef(
                 });
             }, delayRender);
         }, []);
+
+        useOnlyDidUpdateEffect(() => {
+            _onLoadEnd();
+        }, [option]);
 
         const callbacks = useRef({}).current;
 

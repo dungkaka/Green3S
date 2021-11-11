@@ -3,7 +3,7 @@ import React, { useMemo, useRef, useState } from "react";
 import { Pressable, StyleSheet, ScrollView, View } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { Color } from "@theme/colors";
-import { ModalDatePicker } from "@common-ui/Calendar/DatePicker";
+import { ModalDatePicker } from "@common-ui/Calendar/DatePickerModal";
 import { unit } from "@theme/styleContants";
 import { ColorDefault } from "@theme";
 import Select from "@common-ui/Form/Select";
@@ -103,7 +103,7 @@ const Filter = ({ filter, handleFilter = () => {}, plants = [] }) => {
             <ModalDatePicker
                 ref={modalStartDatePickerRef}
                 initialDate={startDate}
-                delayRender={300}
+                delayRender={600}
                 onOk={() => {
                     modalStartDatePickerRef.current.close();
                     setStartDate(modalStartDatePickerRef.current.getData().date);
@@ -113,7 +113,7 @@ const Filter = ({ filter, handleFilter = () => {}, plants = [] }) => {
             <ModalDatePicker
                 ref={modalEndDatePickerRef}
                 initialDate={endDate}
-                delayRender={500}
+                delayRender={600}
                 onOk={() => {
                     modalEndDatePickerRef.current.close();
                     setEndDate(modalEndDatePickerRef.current.getData().date);

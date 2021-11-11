@@ -9,6 +9,7 @@ import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } f
 import { View, Text, StyleSheet, FlatList } from "react-native";
 import { Octicons } from "@expo/vector-icons";
 import { JumpLogo } from "@common-ui/Loading/JumpLogo";
+import { round2 } from "@utils/helps/functions";
 
 const ModalRealTimeDevice = forwardRef(({}, ref) => {
     const mount = useRef(true);
@@ -56,9 +57,13 @@ const ModalRealTimeDevice = forwardRef(({}, ref) => {
                     <AppText style={{ fontSize: 13 * unit }}>{devName}</AppText>
                 </View>
                 <View style={{ flex: 4, flexDirection: "row", flexWrap: "wrap" }}>
-                    <AppTextMedium style={{ color: Color.redPastel, fontSize: 13 * unit }}>{active_power}</AppTextMedium>
+                    <AppTextMedium style={{ color: Color.redPastel, fontSize: 13 * unit }}>
+                        {round2(active_power)}
+                    </AppTextMedium>
                     <Text> / </Text>
-                    <AppTextMedium style={{ color: Color.blueModernDark, fontSize: 13 * unit }}>{day_cap}</AppTextMedium>
+                    <AppTextMedium style={{ color: Color.blueModernDark, fontSize: 13 * unit }}>
+                        {round2(day_cap)}
+                    </AppTextMedium>
                 </View>
 
                 <View style={{ flex: 3 }}>

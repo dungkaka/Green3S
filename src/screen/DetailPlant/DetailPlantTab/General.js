@@ -1,4 +1,4 @@
-import { AppText, AppTextBold, AppTextMedium } from "@common-ui/AppText";
+import { AppText, AppTextMedium } from "@common-ui/AppText";
 import { JumpLogoPage } from "@common-ui/Loading/JumpLogo";
 import EcoLight from "@components/icon/EcoLight";
 import SolarEnergy from "@components/icon/SolarEnergy";
@@ -8,16 +8,17 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { useFetchDetailPlant } from "@services/factory";
 import { ColorDefault } from "@theme/index";
 import { Color, PairColor } from "@theme/colors";
-import { rem, unit } from "@theme/styleContants";
-import { GoogleSansFontType, MontserratFontType } from "@theme/typography";
+import { unit } from "@theme/styleContants";
+import { GoogleSansFontType } from "@theme/typography";
 import React, { useRef } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import Factory from "@components/icon/Factory";
 import Inverter from "@components/icon/Inverter";
 import AC from "@components/icon/AC";
 import Circuit from "@components/icon/Circuit";
+import Unknown from "@components/icon/Unknown";
+import Performance from "@components/icon/Performance";
 import { NAVIGATION } from "constant/navigation";
-import { ModalDatePicker } from "@common-ui/Calendar/DatePicker";
 import { round2 } from "@utils/helps/functions";
 
 const Item = ({ title, icon, textColor, value }) => {
@@ -91,48 +92,68 @@ const General = () => {
 
             <View style={styles.reportBlock}>
                 <Text style={styles.title}>Báo cáo</Text>
-                <View style={styles.itemRow}>
+                <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.itemRow}>
                     <ItemReport
                         onPress={() => {
-                            navigation.push(NAVIGATION.REPORT_FACTORY, {
+                            navigation.push(NAVIGATION.DP_REPORT_FACTORY, {
                                 stationCode,
                             });
                         }}
                         backgroundColor="rgba(159, 51, 171, 0.1)"
                         title="Nhà máy"
-                        icon={<Factory size={32 * unit} color={Color.gray_10} />}
+                        icon={<Factory size={32 * unit} />}
                     />
                     <ItemReport
                         onPress={() => {
-                            navigation.push(NAVIGATION.REPORT_INVERTER, {
+                            navigation.push(NAVIGATION.DP_REPORT_INVERTER, {
                                 stationCode,
                             });
                         }}
                         backgroundColor="rgba(204, 151, 61, 0.15)"
                         title="Inverter"
-                        icon={<Inverter size={32 * unit} color={Color.gray_10} />}
+                        icon={<Inverter size={32 * unit} c />}
                     />
                     <ItemReport
                         onPress={() => {
-                            navigation.push(NAVIGATION.REPORT_AC, {
+                            navigation.push(NAVIGATION.DP_REPORT_AC, {
                                 stationCode,
                             });
                         }}
                         backgroundColor="rgba(232, 58, 78, 0.1)"
                         title="Lỗi AC"
-                        icon={<AC size={32 * unit} color={Color.gray_10} />}
+                        icon={<AC size={32 * unit} />}
                     />
                     <ItemReport
                         onPress={() => {
-                            navigation.push(NAVIGATION.REPORT_DC, {
+                            navigation.push(NAVIGATION.DP_REPORT_DC, {
                                 stationCode,
                             });
                         }}
                         backgroundColor="rgba(56, 110, 199, 0.1)"
-                        title="Lỗi DC & hiệu suất"
-                        icon={<Circuit size={32 * unit} color={Color.gray_10} />}
+                        title="Lỗi DC"
+                        icon={<Circuit size={32 * unit} />}
                     />
-                </View>
+                    <ItemReport
+                        onPress={() => {
+                            navigation.push(NAVIGATION.DP_REPORT_PERFORMANCE, {
+                                stationCode,
+                            });
+                        }}
+                        backgroundColor="rgba(56, 110, 199, 0.1)"
+                        title="Hiệu suất thấp"
+                        icon={<Performance size={32 * unit} />}
+                    />
+                    <ItemReport
+                        onPress={() => {
+                            navigation.push(NAVIGATION.DP_REPORT_POTENTIAL_ERROR, {
+                                stationCode,
+                            });
+                        }}
+                        backgroundColor="rgba(56, 110, 199, 0.1)"
+                        title="Lỗi tiềm ẩn"
+                        icon={<Unknown size={32 * unit} />}
+                    />
+                </ScrollView>
             </View>
         </ScrollView>
     );
@@ -153,6 +174,7 @@ const styles = StyleSheet.create({
         color: Color.gray_10,
     },
     itemRow: {
+        flexGrow: 1,
         flexDirection: "row",
         paddingHorizontal: 8 * unit,
     },

@@ -1,3 +1,4 @@
+import { isString } from "@utils/helps/functions";
 import { Platform } from "react-native";
 
 export const convertToPostMessageString = (obj) => JSON.stringify(obj);
@@ -76,7 +77,7 @@ export const getJavascriptSource = ({ option, additionalCode } = {}) => {
             ${additionalCode}
 
             setTimeout(() => {
-                chart.setOption(${JSON.stringify(option)});
+                chart.setOption(${isString(option) ? option : JSON.stringify(option)});
             }, 1);
             
             true;

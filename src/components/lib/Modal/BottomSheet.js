@@ -1,5 +1,5 @@
 import { HEIGHT } from "@theme/scale";
-import React, { forwardRef, useCallback, useEffect, useImperativeHandle } from "react";
+import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useLayoutEffect, useRef, useState } from "react";
 import { BackHandler, Pressable, StyleSheet, TouchableWithoutFeedback } from "react-native";
 import Animated, { Easing, interpolate, runOnJS, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import Portal from "@burstware/react-native-portal";
@@ -17,20 +17,47 @@ const springConfig = {
 };
 
 const BottomSheet = forwardRef(
-    ({ bottomSheetStyle = {}, onPressBackdrop, onAnimatedOpenEnd, onAnimatedCloseEnd, children }, ref) => {
+    (
+        {
+            lazyLoad = true,
+            unmountOnHide = false,
+            animationTimeIn = 500,
+            animationTimeOut = 400,
+            bottomSheetStyle = {},
+            onPressBackdrop,
+            onAnimatedOpenEnd = () => {},
+            onAnimatedCloseEnd = () => {},
+            children,
+        },
+        ref
+    ) => {
+        const [isReady, setIsReady] = useState(!lazyLoad && !unmountOnHide);
         const animateModal = useSharedValue(1);
         const displayModal = useSharedValue(0);
+        const willOpenModal = useRef(false);
 
         useEffect(() => {
             return () => BackHandler.removeEventListener("hardwareBackPress", onBackPress);
         }, []);
 
+        useLayoutEffect(() => {
+            if (isReady && willOpenModal.current) {
+                requestAnimationFrame(() => animatedOpenModal());
+            }
+            willOpenModal.current = false;
+        }, [isReady]);
+
         useImperativeHandle(ref, () => ({
             open: () => {
-                animatedOpenModal();
+                if (!isReady) {
+                    willOpenModal.current = true;
+                    setIsReady(true);
+                    return;
+                }
+                requestAnimationFrame(() => animatedOpenModal());
             },
             close: () => {
-                animatedCloseModal();
+                requestAnimationFrame(() => animatedCloseModal());
             },
         }));
 
@@ -41,16 +68,21 @@ const BottomSheet = forwardRef(
 
         const animatedOpenModal = () => {
             displayModal.value = "100%";
-            animateModal.value = withTiming(0, { easing: Easing.bezier(0.51, 0.13, 0.05, 1.13), duration: 500 }, () => {
-                onAnimatedOpenEnd && runOnJS(onAnimatedOpenEnd)();
-            });
+            animateModal.value = withTiming(
+                0,
+                { easing: Easing.bezier(0.51, 0.13, 0.05, 1.13), duration: animationTimeIn },
+                () => {
+                    runOnJS(onAnimatedOpenEnd)();
+                }
+            );
             BackHandler.addEventListener("hardwareBackPress", onBackPress);
         };
 
         const animatedCloseModal = () => {
-            animateModal.value = withTiming(1, { duration: 400 }, () => {
+            animateModal.value = withTiming(1, { duration: animationTimeOut }, () => {
                 displayModal.value = 0;
-                onAnimatedCloseEnd && runOnJS(onAnimatedCloseEnd)();
+                runOnJS(onAnimatedCloseEnd)();
+                unmountOnHide && runOnJS(setIsReady)(false);
             });
             BackHandler.removeEventListener("hardwareBackPress", onBackPress);
         };
@@ -83,7 +115,7 @@ const BottomSheet = forwardRef(
                             onPressBackdrop ? onPressBackdrop : animatedCloseModal();
                         }}
                     />
-                    <Animated.View style={[styles.modal, bottomSheetStyle, modalAnimated]}>{children}</Animated.View>
+                    <Animated.View style={[styles.modal, bottomSheetStyle, modalAnimated]}>{isReady && children}</Animated.View>
                 </Animated.View>
             </Portal>
         );
@@ -110,10 +142,3 @@ const styles = StyleSheet.create({
         width: "100%",
     },
 });
-
-{
-    /* <TouchableWithoutFeedback onPress={animatedCloseModal}>
-                <Animated.View style={[styles.backdrop, backDropAnimated]} />
-            </TouchableWithoutFeedback>
-            <Animated.View style={[styles.modal, bottomSheetStyle, modalAnimated]}>{children}</Animated.View> */
-}

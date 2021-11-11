@@ -1,4 +1,5 @@
 import { AppText, AppTextMedium } from "@common-ui/AppText";
+import Pagination from "@common-ui/Pagination/TabPagination";
 import { Color } from "@theme/colors";
 import { rem } from "@theme/styleContants";
 import React, { Fragment } from "react";
@@ -10,12 +11,13 @@ import Animated, {
     useAnimatedScrollHandler,
     useAnimatedStyle,
     useSharedValue,
+    withTiming,
 } from "react-native-reanimated";
 const FlatListAnimated = Animated.createAnimatedComponent(FlatList);
 
 const MemoRow = React.memo(
     ({ children = null, heightRow }) => {
-        return <View style={{ height: heightRow, overflow: "hidden" }}>{children}</View>;
+        return <View style={{ height: heightRow }}>{children}</View>;
     },
     (prev, next) => prev.data == next.data
 );
@@ -35,14 +37,28 @@ const TableStickColumn = ({
     leftWidth = 100,
     stickPosition = 100,
     EmptyDataComponent = null,
+    showPagination = false,
+    paginationInfo = { total: 0, page: 0, pageSize: 20, currentPageSize: 0, onChangePage: (page) => {} },
+    paginationContainerStyle,
 }) => {
     const allowScroll = useSharedValue(0);
     const rightARef = useAnimatedRef();
     const leftARef = useAnimatedRef();
     const leftContainerAnimated = useSharedValue(0);
+    const currentDragScroll = useSharedValue(0);
+    const paginationAnimated = useSharedValue(0);
+
+    const changeStatusPagination = (dif) => {
+        "worklet";
+        if (Math.abs(dif) < 25) {
+        } else if (dif < 0) {
+            paginationAnimated.value = withTiming(0);
+        } else paginationAnimated.value = withTiming(80);
+    };
 
     const onRightScroll = useAnimatedScrollHandler({
-        onBeginDrag: () => {
+        onBeginDrag: (event) => {
+            currentDragScroll.value = event.contentOffset.y;
             allowScroll.value = 2;
         },
         onScroll: (event) => {
@@ -50,16 +66,23 @@ const TableStickColumn = ({
             scrollTo(leftARef, 0, event.contentOffset.y, false);
             allowScroll.value = 0;
         },
+        onEndDrag: (event) => {
+            changeStatusPagination(event.contentOffset.y - currentDragScroll.value);
+        },
     });
 
     const onLeftScroll = useAnimatedScrollHandler({
-        onBeginDrag: () => {
+        onBeginDrag: (event) => {
+            currentDragScroll.value = event.contentOffset.y;
             allowScroll.value = 1;
         },
         onScroll: (event) => {
             if (allowScroll.value == 2) return;
             scrollTo(rightARef, 0, event.contentOffset.y, false);
             allowScroll.value = 0;
+        },
+        onEndDrag: (event) => {
+            changeStatusPagination(event.contentOffset.y - currentDragScroll.value);
         },
     });
 
@@ -72,6 +95,14 @@ const TableStickColumn = ({
         transform: [
             {
                 translateX: leftContainerAnimated.value,
+            },
+        ],
+    }));
+
+    const paginationStyleAnimated = useAnimatedStyle(() => ({
+        transform: [
+            {
+                translateY: paginationAnimated.value,
             },
         ],
     }));
@@ -104,6 +135,7 @@ const TableStickColumn = ({
                                     offset: heightRow * index,
                                     index,
                                 })}
+                                initialNumToRender={10}
                                 contentContainerStyle={{ paddingLeft: leftWidth }}
                                 windowSize={7}
                                 bounces={false}
@@ -128,6 +160,7 @@ const TableStickColumn = ({
                             index,
                         })}
                         windowSize={7}
+                        initialNumToRender={10}
                         showsVerticalScrollIndicator={false}
                         keyExtractor={(item, index) => item?.[keyItem] || index.toString()}
                         data={data}
@@ -149,6 +182,17 @@ const TableStickColumn = ({
                     </View>
                 )
             ) : null}
+            {showPagination ? (
+                <Animated.View style={[styles.paginationBlock, paginationContainerStyle, paginationStyleAnimated]}>
+                    <Pagination
+                        total={paginationInfo.total}
+                        page={paginationInfo.page}
+                        limit={paginationInfo.pageSize}
+                        numberShow={paginationInfo.currentPageSize}
+                        onChangePage={paginationInfo.onChangePage}
+                    />
+                </Animated.View>
+            ) : null}
         </Fragment>
     );
 };
@@ -167,5 +211,22 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         padding: rem,
+    },
+    paginationBlock: {
+        position: "absolute",
+        bottom: 0,
+        left: 0,
+        right: 0,
+        justifyContent: "center",
+        alignItems: "center",
+        marginVertical: 6,
+        marginHorizontal: 8,
+        paddingVertical: 6,
+        paddingHorizontal: 8,
+        backgroundColor: "white",
+        opacity: 0.9,
+        borderRadius: 8,
+        borderWidth: 1,
+        borderColor: Color.gray_2,
     },
 });

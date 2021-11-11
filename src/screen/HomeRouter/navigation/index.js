@@ -9,6 +9,8 @@ import Management from "../Management";
 import Maintain from "../Maintain";
 import { ColorDefault } from "@theme";
 import { GoogleSansFontType } from "@theme/typography";
+import Alarm from "../Home/Alarm";
+import { Color } from "@theme/colors";
 
 const Tab = createBottomTabNavigator();
 
@@ -40,6 +42,16 @@ function TabNavigation() {
                 />
                 <Tab.Screen
                     options={{
+                        title: "Báo động",
+                        headerStyle: {
+                            backgroundColor: Color.redPastelDark,
+                        },
+                    }}
+                    name={NAVIGATION.TAB_ALARM}
+                    component={Alarm}
+                />
+                <Tab.Screen
+                    options={{
                         title: "Quản lý",
                     }}
                     name={NAVIGATION.TAB_MANAGEMENT}
@@ -52,7 +64,13 @@ function TabNavigation() {
                     name={NAVIGATION.TAB_MAINTAIN}
                     component={Maintain}
                 />
-                <Tab.Screen name={NAVIGATION.TAB_USER} component={Profile} />
+                <Tab.Screen
+                    options={{
+                        headerShown: false,
+                    }}
+                    name={NAVIGATION.TAB_USER}
+                    component={Profile}
+                />
             </Tab.Navigator>
         </Portal.Host>
     );

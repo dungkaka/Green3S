@@ -80,18 +80,21 @@ const ReportPlanLogRepair = () => {
                 key: "image",
                 title: "VT",
                 width: 8 * rem,
-                render: ({ item, index, defaultBlockStyle }) => (
-                    <Pressable onPress={() => imageLogViewerRef.current.open(item.image)} key={9} style={defaultBlockStyle}>
-                        <Image
-                            source={{
-                                uri: item.image,
-                                width: "100%",
-                                height: "100%",
-                            }}
-                            resizeMode="contain"
-                        />
-                    </Pressable>
-                ),
+                render: ({ item, index, defaultBlockStyle }) => {
+                    if (!item.image) return <View key={9} style={defaultBlockStyle} />;
+                    return (
+                        <Pressable onPress={() => imageLogViewerRef.current.open(item.image)} key={9} style={defaultBlockStyle}>
+                            <Image
+                                source={{
+                                    uri: item.image,
+                                    width: "100%",
+                                    height: "100%",
+                                }}
+                                resizeMode="contain"
+                            />
+                        </Pressable>
+                    );
+                },
             },
         ],
         [rData]
@@ -128,6 +131,7 @@ export default ReportPlanLogRepair;
 const styles = StyleSheet.create({
     container: { flex: 1, backgroundColor: "white" },
     contentCell: {
+        fontSize: 13 * unit,
         textAlign: "center",
         color: Color.gray_11,
     },

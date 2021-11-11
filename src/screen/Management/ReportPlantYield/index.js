@@ -11,6 +11,7 @@ import Filter from "./Filter";
 import { useReportPlantYield } from "@services/report";
 import AllPlants from "./AllPlants";
 import APlant from "./APlant";
+import ErrorPage from "@common-components/ErrorPage";
 
 const options = [
     {
@@ -63,13 +64,24 @@ const options = [
             </View>
         ),
     },
+    { key: "yield_reactive", title: "Sản lượng vô công", width: 7 * rem },
     {
         key: "difference",
         title: "Chênh lệch (MWH)",
         width: 8 * rem,
         render: ({ item, index, defaultBlockStyle }) => (
-            <View key={5} style={defaultBlockStyle}>
+            <View key={6} style={defaultBlockStyle}>
                 <AppText style={styles.contentCell}>{round2(item.difference)}</AppText>
+            </View>
+        ),
+    },
+    {
+        key: "time_sunny",
+        title: "Tỷ lệ chuyển đổi",
+        width: 7 * rem,
+        render: ({ item, index, defaultBlockStyle }) => (
+            <View key={7} style={defaultBlockStyle}>
+                <AppText style={styles.contentCell}>{round2(item.time_sunny)}</AppText>
             </View>
         ),
     },
@@ -78,6 +90,26 @@ const options = [
     { key: "total_error_repaired", title: "Khắc phục", width: 4 * rem },
     { key: "total_error_inventory", title: "Tồn", width: 4 * rem },
     { key: "time_reduce_power", title: "Số giờ tiết giảm CS", width: 6 * rem },
+    {
+        key: "time_rain",
+        title: "Số giờ mưa",
+        width: 6 * rem,
+        render: ({ item, index, defaultBlockStyle }) => (
+            <View key={13} style={defaultBlockStyle}>
+                <AppText style={styles.contentCell}>{round2(item.time_rain)}</AppText>
+            </View>
+        ),
+    },
+    {
+        key: "time_error",
+        title: "Số giờ lỗi",
+        width: 6 * rem,
+        render: ({ item, index, defaultBlockStyle }) => (
+            <View key={14} style={defaultBlockStyle}>
+                <AppText style={styles.contentCell}>{round2(item.total_error / 12)}</AppText>
+            </View>
+        ),
+    },
 ];
 
 const initEndDate = time().toDateObject();
@@ -103,7 +135,7 @@ const ReportPlantYield = () => {
         startDate: initStartDate,
         plant: { stationCode: "", stationName: "Tất cả" },
     });
-    const { rData, rIsValidating, mutate } = useReportPlantYield({ ...filter });
+    const { rData, rIsValidating, error, mutate } = useReportPlantYield({ ...filter });
     const plants = rData?.plants || [];
     const datas = rData?.datas || {};
     const devicesData = rData?.devices;
@@ -136,11 +168,11 @@ const ReportPlantYield = () => {
             <Filter filter={filter} handleFilter={handleFilter} plants={plantsSearch.current} />
 
             {rIsValidating ? (
-                <View style={{ flex: 1, backgroundColor: "white" }}>
-                    <JumpLogoPage />
-                </View>
+                <JumpLogoPage />
+            ) : error ? (
+                <ErrorPage />
             ) : rData ? (
-                <ScrollView>
+                <ScrollView style={styles.scrollContainer}>
                     {filter.plant.stationCode == "" ? (
                         <AllPlants
                             rangeDate={rangeDate}
@@ -170,10 +202,11 @@ export default ReportPlantYield;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        // backgroundColor: "white",
+        backgroundColor: "white",
     },
 
     contentCell: {
+        fontSize: 13 * unit,
         textAlign: "center",
         color: Color.gray_11,
     },
@@ -182,6 +215,12 @@ const styles = StyleSheet.create({
         alignItems: "center",
         paddingVertical: 2 * rem,
     },
+
+    scrollContainer: {
+        flexGrow: 1,
+        backgroundColor: Color.backgroundAndroid,
+    },
+
     tableHeaderContainer: {
         flex: 1,
         flexDirection: "row",

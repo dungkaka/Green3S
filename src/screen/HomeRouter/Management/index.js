@@ -24,7 +24,7 @@ const Management = () => {
                 </View>
                 <View style={styles.reportContainer}>
                     <Pressable
-                        onPress={() => navigation.navigate(NAVIGATION.REPORT_PLANT_YIELD)}
+                        onPress={() => navigation.navigate(NAVIGATION.REPORT_MAINTENANCE)}
                         style={styles.itemReportContainer}
                     >
                         <AppText style={styles.textItemReport}>Bảo trì</AppText>
@@ -32,7 +32,7 @@ const Management = () => {
                 </View>
                 <View style={styles.reportContainer}>
                     <Pressable
-                        onPress={() => navigation.navigate(NAVIGATION.REPORT_PLANT_YIELD)}
+                        onPress={() => navigation.navigate(NAVIGATION.REPORT_PLAN_MAINTENANCE)}
                         style={[styles.itemReportContainer, { borderBottomWidth: 0 }]}
                     >
                         <AppText style={styles.textItemReport}>Kế hoạch bảo trì</AppText>
@@ -43,7 +43,7 @@ const Management = () => {
                 <AppTextMedium style={styles.blockTitle}>Quản lý vật tư</AppTextMedium>
                 <View style={styles.reportContainer}>
                     <Pressable
-                        onPress={() => navigation.navigate(NAVIGATION.REPORT_PLANT_YIELD)}
+                        onPress={() => navigation.navigate(NAVIGATION.MATERIAL)}
                         style={[styles.itemReportContainer, { borderBottomWidth: 0 }]}
                     >
                         <AppText style={styles.textItemReport}>Danh sách vật tư</AppText>

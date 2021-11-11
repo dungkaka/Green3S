@@ -100,6 +100,7 @@ export default ReportPlantMaterial;
 const styles = StyleSheet.create({
     container: { flex: 1, backgroundColor: "white" },
     contentCell: {
+        fontSize: 13 * unit,
         textAlign: "center",
         color: Color.gray_11,
     },

@@ -45,9 +45,7 @@ export default StyleSheet.create({
         alignItems: "center",
     },
     dateDirectItem: {
-        fontSize: 18 * unit,
-        color: Color.gray_8,
-        top: -1,
+        paddingHorizontal: 12 * unit,
     },
     displayDate: {
         flexDirection: "row",

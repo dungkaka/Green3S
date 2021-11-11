@@ -50,8 +50,6 @@ const APlant = ({ rangeDate, plants, datas, devicesData = [], plantTableOptions,
     const detail_yield_per_day_by_date = tableData[0].detail_yield_per_day_by_date;
     const navigation = useNavigation();
 
-    console.log("A", detail_yield_per_day_by_date);
-
     devicesData.map((device) => {
         device.total_yield = round2(device.device_yields?.reduce((preV, currentV) => preV + currentV.value, 0));
         device.timeSun = round2(device.total_yield / device.inverter_power);
@@ -435,6 +433,7 @@ const styles = StyleSheet.create({
         color: Color.gray_11,
     },
     contentCell: {
+        fontSize: 13 * unit,
         textAlign: "center",
         color: Color.gray_11,
     },

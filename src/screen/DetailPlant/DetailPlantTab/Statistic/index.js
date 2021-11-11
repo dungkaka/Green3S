@@ -1,8 +1,3 @@
-import { AppText, AppTextMedium } from "@common-ui/AppText";
-import EchartsWebView from "@common-ui/EchartsWebView";
-import { ModalDatePicker } from "@common-ui/Calendar/DatePicker";
-import { Color } from "@theme/colors";
-import { ColorDefault } from "@theme/index";
 import React, { useRef } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import CapacityChart from "./CapacityChart";

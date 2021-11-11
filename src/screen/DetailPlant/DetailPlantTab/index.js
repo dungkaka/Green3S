@@ -9,7 +9,8 @@ import PlantInfo from "./PlantInfo";
 import ListDevices from "./ListDevices";
 import General from "./General";
 import Statistic from "./Statistic";
-import Supplies from "./Supplies";
+import DPMaterialUsed from "./MaterialUsed";
+import DPMaterial from "./Material";
 
 const DetailPlantTab = () => {
     const { params } = useRoute();
@@ -28,8 +29,9 @@ const DetailPlantTab = () => {
             { key: "general", title: "Tổng quan" },
             { key: "statistics", title: "Thống kê" },
             { key: "devices", title: "Thiết bị" },
+            { key: "material", title: "Vật tư" },
+            { key: "materialUsed", title: "Vật tư sử dụng" },
             { key: "info", title: "Thông tin" },
-            { key: "supplies", title: "Vật tư" },
         ],
     });
 
@@ -39,12 +41,14 @@ const DetailPlantTab = () => {
                 return <General />;
             case "statistics":
                 return <Statistic />;
-            case "info":
-                return <PlantInfo />;
             case "devices":
                 return <ListDevices />;
-            case "supplies":
-                return <Supplies />;
+            case "material":
+                return <DPMaterial />;
+            case "materialUsed":
+                return <DPMaterialUsed />;
+            case "info":
+                return <PlantInfo />;
             default:
                 return null;
         }
@@ -78,7 +82,7 @@ const DetailPlantTab = () => {
                     setState({ ...state, index: index });
                 });
             }}
-            // swipeEnabled={false}
+            swipeEnabled={false}
         />
     );
 };

@@ -1,13 +1,15 @@
 import { AppText, AppTextMedium } from "@common-ui/AppText";
 import { JumpLogo, JumpLogoPage } from "@common-ui/Loading/JumpLogo";
-import { useRoute } from "@react-navigation/native";
+import { useRoute, useNavigation } from "@react-navigation/native";
 import { useFetchDetailPlant } from "@services/factory";
 import { Color } from "@theme/colors";
 import { rem, unit } from "@theme/styleContants";
+import { NAVIGATION } from "constant/navigation";
 import React from "react";
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 
 const ListDevices = () => {
+    const navigation = useNavigation();
     const { params } = useRoute();
     const { stationCode } = params ? params : {};
 
@@ -22,13 +24,20 @@ const ListDevices = () => {
         const { device_id, devName, stationCode } = item;
 
         return (
-            <View style={styles.itemContainer}>
+            <Pressable
+                onPress={() => {
+                    navigation.navigate(NAVIGATION.DETAIL_DEVICE, {
+                        device: item,
+                    });
+                }}
+                style={styles.itemContainer}
+            >
                 <AppTextMedium style={styles.devName}>{devName}</AppTextMedium>
                 <AppText style={styles.devDes}>Loại thiết bị: Interver</AppText>
                 <AppText style={styles.devDes}>Phiên bản: V300R001C00SPC040</AppText>
                 <AppText style={styles.devDes}>SN: 1020B0169659</AppText>
                 <AppText style={styles.devDes}>Model: SUN2000-100KTL-M1</AppText>
-            </View>
+            </Pressable>
         );
     };
 

@@ -8,6 +8,7 @@ import { TabView, TabBar, SceneMap, NavigationState, SceneRendererProps } from "
 import { Constants } from "react-native-unimodules";
 import ErrorsPage from "./ErrorsPage";
 import FactoriesPage from "./FactoriesPage";
+import ReportPlantYield from "./ReportPlantYield";
 
 const Home = () => {
     const [state, setState] = useState({
@@ -15,6 +16,7 @@ const Home = () => {
         routes: [
             { key: "errors", title: "Tổng quan lỗi" },
             { key: "factories", title: "Nhà máy" },
+            { key: "statistics", title: "Thống kê" },
         ],
     });
 
@@ -22,6 +24,7 @@ const Home = () => {
         SceneMap({
             errors: ErrorsPage,
             factories: FactoriesPage,
+            statistics: ReportPlantYield,
         }),
         []
     );

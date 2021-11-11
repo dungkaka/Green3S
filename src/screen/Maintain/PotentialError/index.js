@@ -12,6 +12,19 @@ import ImageLogViewer from "./ImageLogViewer";
 
 const initEndDate = time().toDateObject();
 
+const renderStatus = (code) => {
+    switch (code) {
+        case 0:
+            return <AppText style={[styles.contentCellTag, { backgroundColor: Color.redPastelDark }]}>Chưa sửa</AppText>;
+        case 1:
+            return <AppText style={[styles.contentCellTag, { backgroundColor: Color.greenBlueDark }]}>Đã sửa</AppText>;
+        case -1:
+            return <AppText style={[styles.contentCellTag, { backgroundColor: Color.gray_10 }]}>Toàn bộ trạng thái</AppText>;
+        default:
+            return null;
+    }
+};
+
 const PotentialError = () => {
     const [filter, setFilter] = useState({
         month: initEndDate.month,
@@ -77,24 +90,28 @@ const PotentialError = () => {
             key: "image",
             title: "Ảnh",
             width: 8 * rem,
-            render: ({ item, index, defaultBlockStyle }) => (
-                <Pressable
-                    key={5}
-                    onPress={() =>
-                        imageLogViewerRef.current.open(`https://green3s.vn/uploads/errors/${item.stationCode}/${item.image}`)
-                    }
-                    style={defaultBlockStyle}
-                >
-                    <Image
-                        source={{
-                            uri: `https://green3s.vn/uploads/errors/${item.stationCode}/${item.image}`,
-                            width: "100%",
-                            height: "100%",
-                        }}
-                        resizeMode="contain"
-                    />
-                </Pressable>
-            ),
+            render: ({ item, index, defaultBlockStyle }) => {
+                if (!item.image) return <View key={5} style={defaultBlockStyle} />;
+                const imageUrl = JSON.parse(item.image)[0];
+                return (
+                    <Pressable
+                        key={5}
+                        onPress={() =>
+                            imageLogViewerRef.current.open(`https://green3s.vn/uploads/errors/${item.stationCode}/${imageUrl}`)
+                        }
+                        style={defaultBlockStyle}
+                    >
+                        <Image
+                            source={{
+                                uri: `https://green3s.vn/uploads/errors/${item.stationCode}/${imageUrl}`,
+                                width: "100%",
+                                height: "100%",
+                            }}
+                            resizeMode="contain"
+                        />
+                    </Pressable>
+                );
+            },
         },
 
         {
@@ -147,10 +164,10 @@ const PotentialError = () => {
         {
             key: "status_accept",
             title: "Tình trạng",
-            width: 6 * rem,
+            width: 7 * rem,
             render: ({ item, index, defaultBlockStyle }) => (
                 <View key={12} style={defaultBlockStyle}>
-                    <AppText style={styles.contentCell}>{item.status_accept == 1 ? "Đã duyệt" : "Chưa duyệt"}</AppText>
+                    {renderStatus(item.status_accept)}
                 </View>
             ),
         },
@@ -190,8 +207,17 @@ const styles = StyleSheet.create({
     },
 
     contentCell: {
+        fontSize: 13 * unit,
         textAlign: "center",
         color: Color.gray_11,
+    },
+    contentCellTag: {
+        fontSize: 13 * unit,
+        textAlign: "center",
+        color: "white",
+        borderRadius: 4,
+        paddingHorizontal: 6,
+        paddingVertical: 2,
     },
     loading: {
         justifyContent: "center",

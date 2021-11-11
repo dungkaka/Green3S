@@ -1,88 +1,115 @@
 import { AppText, AppTextMedium } from "@common-ui/AppText";
 import EchartsWebView from "@common-ui/EchartsWebView";
-import { ModalDatePicker } from "@common-ui/Calendar/DatePicker";
+import { ModalDatePicker } from "@common-ui/Calendar/DatePickerModal";
 import { ColorDefault } from "@theme/";
 import { Color } from "@theme/colors";
-import React, { useEffect, useRef, useState } from "react";
-import { Pressable, View } from "react-native";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { ActivityIndicator, Pressable, StyleSheet, View } from "react-native";
 import styles from "./styles.index";
 import { AntDesign } from "@expo/vector-icons";
-import { useDispatch } from "react-redux";
-import { closeIconLoadingOverlay, openIconLoadingOverlay } from "@redux/actions/app";
-import { useOnlyDidUpdateEffect } from "@hooks/useOnlyDidUpdateEffect";
+import { time } from "@utils/helps/time";
+import { useFetchDetailPlant, useFetchPowerByTime } from "@services/factory";
+import { useRoute } from "@react-navigation/native";
+import { round2 } from "@utils/helps/functions";
+import { hitSlop10 } from "@common-ui/Pressable/utils";
+
+const initEndDate = time().toDateObject();
 
 const CapacityChart = () => {
+    const { params } = useRoute();
     const chartRef = useRef();
+
+    const { stationCode } = params ? params : {};
     const modalDatePickerRef = useRef();
-    const [date, setDate] = useState({ day: 1, month: 1, year: 2021 });
-    const dispatch = useDispatch();
+    const [date, setDate] = useState(initEndDate);
+    const { data, isValidating, error, mutate } = useFetchPowerByTime({
+        stationCode,
+        date: date,
+    });
 
-    useOnlyDidUpdateEffect(() => {
-        dispatch(openIconLoadingOverlay());
-        setTimeout(() => dispatch(closeIconLoadingOverlay), 1000);
-    }, [date]);
+    const dataChart = data?.data_chart_power || [];
 
-    const option2 = useRef({
-        grid: {
-            top: 80,
-            bottom: 50,
-            left: 45,
-            right: 25,
-        },
-        xAxis: {
-            type: "category",
-            data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-            axisLabel: {
-                color: Color.gray_6,
+    const option = useMemo(
+        () => ({
+            grid: {
+                top: 80,
+                bottom: 50,
+                left: 45,
+                right: 25,
             },
-            axisLine: {
-                lineStyle: {
+            xAxis: {
+                type: "category",
+                data: dataChart.map((data) => data.created_at.slice(11)),
+                boundaryGap: false,
+                axisLabel: {
+                    color: Color.gray_6,
+                    fontSize: 11,
+                },
+                axisLine: {
+                    lineStyle: {
+                        color: Color.gray_6,
+                    },
+                },
+            },
+            yAxis: {
+                type: "value",
+                name: "kWh",
+                nameTextStyle: {
                     color: Color.gray_6,
                 },
-            },
-        },
-        yAxis: {
-            type: "value",
-            name: "kWh",
-            nameTextStyle: {
-                color: Color.gray_6,
-            },
-            axisLabel: {
-                color: Color.gray_6,
-            },
-            axisLine: {
-                show: true,
-                lineStyle: {
-                    color: Color.gray_5,
+                axisLabel: {
+                    color: Color.gray_6,
+                    fontSize: 11,
+                },
+                axisLine: {
+                    show: true,
+                    lineStyle: {
+                        color: Color.gray_5,
+                    },
                 },
             },
-        },
-        series: [
-            {
-                name: "Công suất",
-                data: [120, 200, 150, 80, 70, 110, 130],
-                type: "line",
-                itemStyle: {
-                    color: ColorDefault.primary,
+            series: [
+                {
+                    name: "Công suất",
+                    data: dataChart.map((data) => round2(data.cap_now) || 0),
+                    type: "line",
+                    smooth: true,
+                    showSymbol: false,
+                    itemStyle: {
+                        color: ColorDefault.primary,
+                    },
+                    // areaStyle: `{
+                    //     color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                    //         {
+                    //             offset: 0,
+                    //             color: "rgb(255, 158, 68)",
+                    //         },
+                    //         {
+                    //             offset: 1,
+                    //             color: "rgb(255, 70, 131)",
+                    //         },
+                    //     ]),
+                    // }`,
+                },
+            ],
+            tooltip: {
+                trigger: "axis",
+                backgroundColor: "rgba(255,255,255,0.9)",
+                borderWidth: 0,
+                axisPointer: {
+                    type: "shadow",
                 },
             },
-        ],
-        tooltip: {
-            trigger: "axis",
-            backgroundColor: "rgba(255,255,255,0.9)",
-            borderWidth: 0,
-            axisPointer: {
-                type: "shadow",
+            legend: {
+                top: 10,
+                left: 10,
+                icon: "circle",
+                data: ["Công suất"],
+                itemHeight: 10,
             },
-        },
-        legend: {
-            top: 10,
-            left: 10,
-            icon: "circle",
-            data: ["Công suất"],
-            itemHeight: 10,
-        },
-    }).current;
+        }),
+        [data]
+    );
 
     return (
         <View style={styles.container}>
@@ -90,8 +117,14 @@ const CapacityChart = () => {
                 <AppTextMedium style={styles.title}>Công suất</AppTextMedium>
             </View>
             <View style={styles.dateContainer}>
-                <Pressable>
-                    <AppTextMedium style={styles.dateDirectItem}>{`<    `}</AppTextMedium>
+                <Pressable
+                    onPress={() => {
+                        setDate(time(new Date(date.year, date.month - 1, date.day - 1)).toDateObject());
+                    }}
+                    style={styles.dateDirectItem}
+                    hitSlop={hitSlop10}
+                >
+                    <AntDesign name="left" size={20} color={Color.gray_8} />
                 </Pressable>
                 <Pressable
                     onPress={() => {
@@ -104,8 +137,14 @@ const CapacityChart = () => {
                         {date.day}/{date.month}/{date.year}
                     </AppTextMedium>
                 </Pressable>
-                <Pressable>
-                    <AppTextMedium style={styles.dateDirectItem}>{`    >`}</AppTextMedium>
+                <Pressable
+                    onPress={() => {
+                        setDate(time(new Date(date.year, date.month - 1, date.day + 1)).toDateObject());
+                    }}
+                    style={styles.dateDirectItem}
+                    hitSlop={hitSlop10}
+                >
+                    <AntDesign name="right" size={20} color={Color.gray_8} />
                 </Pressable>
             </View>
 
@@ -119,7 +158,19 @@ const CapacityChart = () => {
             />
 
             <View style={styles.echartContainer}>
-                <EchartsWebView ref={chartRef} option={option2} delayRender={300} />
+                <EchartsWebView ref={chartRef} option={option} delayRender={300} />
+                {isValidating ? (
+                    <View
+                        style={{
+                            ...StyleSheet.absoluteFill,
+                            backgroundColor: "rgba(255,255,255,0.3)",
+                            justifyContent: "center",
+                            alignItems: "center",
+                        }}
+                    >
+                        <ActivityIndicator size={42} color={Color.gray_6} animating={true} />
+                    </View>
+                ) : null}
             </View>
         </View>
     );

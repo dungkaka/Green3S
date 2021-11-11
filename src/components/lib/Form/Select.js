@@ -7,6 +7,7 @@ import { FlatList, Pressable, StyleSheet, Text, TouchableOpacity, View } from "r
 import ModalPortal from "@common-ui/Modal/ModalPortal";
 import { MaterialIcons } from "@expo/vector-icons";
 import { ColorDefault } from "@theme";
+import { useOnlyDidUpdateLayoutEffect } from "@hooks/useOnlyDidUpdateLayoutEffetct";
 
 const MemoSelectItem = React.memo(
     ({ children = null, required, itemHeight, option, isActive, setActiveOption }) => {
@@ -71,12 +72,18 @@ const Select = forwardRef(
         const flatlistRef = useRef();
         const [activeOption, setActiveOption] = useState(initialOption);
 
+        useOnlyDidUpdateLayoutEffect(() => {
+            setActiveOption(undefined);
+        }, [options]);
+
         useImperativeHandle(ref, () => ({
             open: (key) => {
                 const option = optionByKey[key];
                 if (option) {
                     if (option.key != activeOption?.key) setActiveOption(option);
                     flatlistRef.current.scrollToIndex({ index: option.index, animated: false, viewPosition: 0.5 });
+                } else {
+                    setActiveOption(undefined);
                 }
 
                 modalRef.current.open();
@@ -117,7 +124,7 @@ const Select = forwardRef(
 
                     <FlatList
                         ref={flatlistRef}
-                        contentContainerStyle={{ paddingVertical: rem }}
+                        contentContainerStyle={styles.listContainer}
                         scrollEventThrottle={16}
                         windowSize={5}
                         initialNumToRender={12}
@@ -130,7 +137,7 @@ const Select = forwardRef(
                                   })
                                 : undefined
                         }
-                        initialScrollIndex={activeOption ? optionByKey[activeOption.key].index : 0}
+                        initialScrollIndex={activeOption ? optionByKey[activeOption.key]?.index : 0}
                         keyExtractor={(item, i) => item.key.toString()}
                         data={options}
                         renderItem={renderItem}
@@ -180,14 +187,13 @@ const styles = StyleSheet.create({
     modalContainer: {
         flex: 1,
         backgroundColor: "white",
-        paddingHorizontal: 8 * unit,
         borderRadius: 8 * unit,
     },
 
     headerModal: {
         flexDirection: "row",
         alignItems: "center",
-        paddingHorizontal: 18 * unit,
+        paddingHorizontal: 24 * unit,
         paddingTop: 2 * rem,
         paddingBottom: rem,
     },
@@ -197,6 +203,10 @@ const styles = StyleSheet.create({
         color: Color.gray_10,
     },
 
+    listContainer: {
+        paddingVertical: rem,
+        paddingHorizontal: 8 * unit,
+    },
     footerModal: {
         flexDirection: "row",
         marginHorizontal: 6 * unit,
@@ -225,7 +235,7 @@ const styles = StyleSheet.create({
         paddingVertical: 8 * unit,
         marginVertical: 2 * unit,
         fontFamily: GoogleSansFontType.medium,
-        fontSize: 16 * unit,
+        fontSize: 15 * unit,
         color: Color.gray_9,
     },
     activeItemSelect: {
