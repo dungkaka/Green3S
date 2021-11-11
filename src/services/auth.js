@@ -25,7 +25,7 @@ export const useLogin = () => {
         // const data = await requester({
         //     requestFunc: () => Request.Server.post(key, user),
         // })();
-        await delay(100);
+        await delay(1);
         const data = {
             username: "Dungkaka",
             token: "123456",

@@ -76,7 +76,7 @@ const options = [
     {
         key: "amount_error",
         title: "Số lỗi theo dõi",
-        width: 6 * rem,
+        width: 5 * rem,
     },
     {
         key: "result",

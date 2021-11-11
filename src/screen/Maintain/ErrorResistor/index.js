@@ -51,7 +51,7 @@ const options = [
     {
         key: "device",
         title: "Thiết bị",
-        width: 6 * rem,
+        width: 5 * rem,
         render: ({ item, index, defaultBlockStyle }) => (
             <View key={2} style={defaultBlockStyle}>
                 <AppText style={styles.contentCell}>{item.device?.devName}</AppText>
@@ -61,12 +61,12 @@ const options = [
     {
         key: "error_name",
         title: "Tên lỗi",
-        width: 8 * rem,
+        width: 7 * rem,
     },
     {
         key: "string",
         title: "String",
-        width: 8 * rem,
+        width: 6 * rem,
         render: ({ item, index, defaultBlockStyle }) => (
             <View key={4} style={defaultBlockStyle}>
                 <AppText style={styles.contentCellString}>{item.string}</AppText>
@@ -97,15 +97,15 @@ const options = [
     {
         key: "time_repair",
         title: "Thời gian tác động",
-        width: 8 * rem,
+        width: 7 * rem,
         render: ({ item, index, defaultBlockStyle }) => (
             <View key={9} style={defaultBlockStyle}>
                 <AppText style={styles.contentCell}>{JSON.parse(item.time_repair)?.repaired}</AppText>
             </View>
         ),
     },
-    { key: "created_at", title: "Thời gian xuất hiện", width: 8 * rem },
-    { key: "time_end", title: "Thời gian kết thúc", width: 8 * rem },
+    { key: "created_at", title: "Thời gian xuất hiện", width: 7 * rem },
+    { key: "time_end", title: "Thời gian kết thúc", width: 7 * rem },
 ];
 
 const initEndDate = time().toDateObject();

@@ -35,7 +35,7 @@ const tableDeviceOptions = [
     {
         key: "total_yield",
         title: "Sản lượng (KWH)",
-        width: 8 * rem,
+        width: 7 * rem,
     },
     {
         key: "timeSun",

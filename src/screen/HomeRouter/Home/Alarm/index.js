@@ -97,7 +97,7 @@ const options = [
     {
         key: "causeId",
         title: "POSSIBLEID",
-        width: 8 * rem,
+        width: 7 * rem,
     },
     {
         key: "number",
@@ -145,11 +145,11 @@ const options = [
             </ButtonModal>
         ),
     },
-    { key: "timestamp", title: "Thời gian xảy ra", width: 8 * rem },
+    { key: "timestamp", title: "Thời gian xảy ra", width: 7 * rem },
     {
         key: "status_accept",
         title: "Trạng thái",
-        width: 8 * rem,
+        width: 6 * rem,
         render: ({ item, index, defaultBlockStyle }) => (
             <View key={11} style={defaultBlockStyle}>
                 <AppText style={styles.contentCell}>{item.status_accept == 1 ? "Đã sửa" : "Chưa sửa"}</AppText>
@@ -230,7 +230,7 @@ const styles = StyleSheet.create({
     },
 
     contentCellTag: {
-        fontSize: 13 * unit,
+        fontSize: 12 * unit,
         textAlign: "center",
         color: "white",
         borderRadius: 4,
@@ -250,6 +250,7 @@ const styles = StyleSheet.create({
 
     cellTextDetail: {
         fontSize: 13 * unit,
+        color: Color.redDark,
     },
 
     cellRSTitle: {

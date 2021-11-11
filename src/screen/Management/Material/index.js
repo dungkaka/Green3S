@@ -62,12 +62,12 @@ const options = [
     {
         key: "code",
         title: "Mã",
-        width: 6 * rem,
+        width: 5 * rem,
     },
     {
         key: "serial",
         title: "Serial",
-        width: 6 * rem,
+        width: 5 * rem,
     },
     {
         key: "amount",
@@ -123,7 +123,7 @@ const options = [
     {
         key: "status_accept",
         title: "Trạng thái",
-        width: 8 * rem,
+        width: 7 * rem,
         render: ({ item, index, defaultBlockStyle }) => (
             <View key={12} style={defaultBlockStyle}>
                 {renderStatusAccept(item.status_accept)}
@@ -133,7 +133,7 @@ const options = [
     {
         key: "created_at",
         title: "Ngày tạo",
-        width: 8 * rem,
+        width: 7 * rem,
         render: ({ item, index, defaultBlockStyle }) => (
             <View key={13} style={defaultBlockStyle}>
                 <AppText style={styles.contentCell}>{format(item.created_at, "YYYY-MM-DD H:M:S")}</AppText>

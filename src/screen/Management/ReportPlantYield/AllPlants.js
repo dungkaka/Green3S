@@ -77,7 +77,7 @@ const AllPlants = ({ rangeDate, plants, datas, plantTableOptions, filter }) => {
             <View style={styles.block}>
                 <AppTextMedium style={styles.titleBlock}>Tổng quan sản lượng và lỗi</AppTextMedium>
                 <TableStickBasicTemplate
-                    heightRow={68}
+                    heightRow={62}
                     left={[0, 1]}
                     stickPosition={3 * rem}
                     options={plantTableOptions}

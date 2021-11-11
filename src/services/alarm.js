@@ -10,7 +10,7 @@ export const useFetchAlarm = ({ startDate, endDate, stationCode, page }) => {
         API_GREEN3S.ALARM(format(startDate, "YYYY-MM-DD"), format(endDate, "YYYY-MM-DD"), stationCode, page),
         {
             revalidateIfStale: true,
-            dedupingInterval: 60000,
+            dedupingInterval: 240000,
             use: [noCache],
         }
     );

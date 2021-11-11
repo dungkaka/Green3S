@@ -77,13 +77,14 @@ const AllPlants = ({ rangeDate, plants, datas, plantTableOptions, filter }) => {
             <View style={styles.block}>
                 <AppTextMedium style={styles.titleBlock}>Tổng quan sản lượng và lỗi</AppTextMedium>
                 <TableStickBasicTemplate
-                    heightRow={68}
+                    heightRow={62}
                     left={[0, 1]}
                     stickPosition={3 * rem}
                     options={plantTableOptions}
                     data={tableData}
                     headerContainerStyle={styles.tableHeaderContainer}
                     textHeaderStyle={styles.tableTextHeader}
+                    numberLinesContentCell={3}
                 />
             </View>
             <View style={{ width: "100%", height: 600, marginTop: 10 * unit, backgroundColor: "white", elevation: 0.5 }}>

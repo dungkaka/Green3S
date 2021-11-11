@@ -7,7 +7,7 @@ export const useListWorkMaintainance = ({ stationCode, month, year, nameWork, pa
     const key = API_GREEN3S.MAINTAINANCE_LIST_WORK(stationCode, month, year, nameWork, page);
     const res = useAPIFetcher(key, {
         revalidateIfStale: true,
-        dedupingInterval: 60000,
+        dedupingInterval: 240000,
         use: [noCache],
     });
 

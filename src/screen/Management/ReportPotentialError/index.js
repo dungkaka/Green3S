@@ -32,7 +32,7 @@ const ReportPotentialError = () => {
             {
                 key: "created_at",
                 title: "Ngày tạo",
-                width: 4 * rem,
+                width: 6 * rem,
                 render: ({ item, index, defaultBlockStyle }) => (
                     <View key={1} style={defaultBlockStyle}>
                         <AppText style={styles.contentCell}>{item.created_at.slice(0, 10)}</AppText>
@@ -108,7 +108,7 @@ const ReportPotentialError = () => {
             {
                 key: "date_repair",
                 title: "Ngày sửa",
-                width: 8 * rem,
+                width: 7 * rem,
                 render: ({ item, index, defaultBlockStyle }) => (
                     <View key={9} style={defaultBlockStyle}>
                         <AppText style={styles.contentCell}>{item.date_repair?.slice(0, 10)}</AppText>

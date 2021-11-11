@@ -196,7 +196,7 @@ const ModalReportDetail = forwardRef(
                                     {title}
                                 </AppTextMedium>
                                 <TableStickBasicTemplate
-                                    heightRow={100}
+                                    heightRow={120}
                                     left={[0, 1]}
                                     stickPosition={3 * rem}
                                     options={options}

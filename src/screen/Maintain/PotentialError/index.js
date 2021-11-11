@@ -69,7 +69,7 @@ const PotentialError = () => {
         {
             key: "name",
             title: "Tên lỗi",
-            width: 8 * rem,
+            width: 7 * rem,
         },
         {
             key: "stationName",
@@ -149,7 +149,7 @@ const PotentialError = () => {
         {
             key: "date_repair",
             title: "Ngày sửa",
-            width: 8 * rem,
+            width: 7 * rem,
             render: ({ item, index, defaultBlockStyle }) => (
                 <View key={10} style={defaultBlockStyle}>
                     <AppText style={styles.contentCell}>{item.date_repair?.slice(0, 10)}</AppText>
