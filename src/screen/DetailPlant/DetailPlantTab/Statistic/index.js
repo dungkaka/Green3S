@@ -13,6 +13,6 @@ const Statistic = () => {
     );
 };
 
-export default React.memo(Statistic);
+export default React.memo(Statistic, () => true);
 
 const styles = StyleSheet.create({});

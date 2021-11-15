@@ -12,6 +12,7 @@ import { useFetchDetailPlant, useFetchPowerByTime } from "@services/factory";
 import { useRoute } from "@react-navigation/native";
 import { round2 } from "@utils/helps/functions";
 import { hitSlop10 } from "@common-ui/Pressable/utils";
+import { useFetchDevicePower } from "@services/device";
 
 const initDate = time().toDateObject();
 
@@ -19,27 +20,30 @@ const CapacityChart = () => {
     const { params } = useRoute();
     const chartRef = useRef();
 
-    const { stationCode } = params ? params : {};
+    const { device } = params ? params : {};
     const modalDatePickerRef = useRef();
     const [date, setDate] = useState(initDate);
-    const { data, isValidating, error, mutate } = useFetchPowerByTime({
-        stationCode,
+    const { rData, rIsValidating, error, mutate } = useFetchDevicePower({
+        deviceId: device.device_id,
         date: date,
     });
 
-    const dataChart = data?.data_chart_power || [];
+    const dataChart = rData?.datas || [];
 
     const option = useMemo(
         () => ({
             grid: {
                 top: 80,
                 bottom: 50,
-                left: 45,
-                right: 25,
+                left: 35,
+                right: 20,
+            },
+            dataZoom: {
+                type: "inside",
             },
             xAxis: {
                 type: "category",
-                data: dataChart.map((data) => data.created_at.slice(11)),
+                data: dataChart.map((data) => data.time.slice(0, 5)),
                 boundaryGap: false,
                 axisLabel: {
                     color: Color.gray_6,
@@ -71,7 +75,7 @@ const CapacityChart = () => {
             series: [
                 {
                     name: "Công suất",
-                    data: dataChart.map((data) => round2(data.cap_now) || 0),
+                    data: dataChart.map((data) => round2(data.power) || 0),
                     type: "line",
                     smooth: true,
                     showSymbol: false,
@@ -108,13 +112,13 @@ const CapacityChart = () => {
                 itemHeight: 10,
             },
         }),
-        [data]
+        [rData]
     );
 
     return (
         <View style={styles.container}>
             <View style={styles.titleContainer}>
-                <AppTextMedium style={styles.title}>Công suất</AppTextMedium>
+                <AppTextMedium style={styles.title}>Biểu đồ công suất thực</AppTextMedium>
             </View>
             <View style={styles.dateContainer}>
                 <Pressable
@@ -160,7 +164,7 @@ const CapacityChart = () => {
 
             <View style={styles.echartContainer}>
                 <EchartsWebView ref={chartRef} option={option} delayRender={300} />
-                {isValidating ? (
+                {rIsValidating ? (
                     <View
                         style={{
                             ...StyleSheet.absoluteFill,

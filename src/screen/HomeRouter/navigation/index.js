@@ -53,6 +53,7 @@ function TabNavigation() {
                 <Tab.Screen
                     options={{
                         title: "Quản lý",
+                        headerShown: false,
                     }}
                     name={NAVIGATION.TAB_MANAGEMENT}
                     component={Management}
@@ -60,6 +61,7 @@ function TabNavigation() {
                 <Tab.Screen
                     options={{
                         title: "Bảo trì",
+                        headerShown: false,
                     }}
                     name={NAVIGATION.TAB_MAINTAIN}
                     component={Maintain}

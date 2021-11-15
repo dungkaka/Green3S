@@ -4,7 +4,17 @@ import { rem, unit } from "@theme/styleContants";
 import { GoogleSansFontType, NunitoType } from "@theme/typography";
 import React, { useEffect, useRef } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { KeyboardAvoidingView, Platform, Pressable, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import {
+    Keyboard,
+    KeyboardAvoidingView,
+    Platform,
+    Pressable,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View,
+} from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import Animated, { Easing, useAnimatedStyle, useSharedValue, withRepeat, withTiming } from "react-native-reanimated";
 import { useNavigation } from "@react-navigation/native";
@@ -71,7 +81,7 @@ const Login = () => {
                         <View style={styles.inputContainer}>
                             <AntDesign name="user" size={18 * unit} color={Color.gray_6} />
                             <Controller
-                                name="station_name"
+                                name="email"
                                 control={control}
                                 render={({
                                     field: { onChange, onBlur, value, name, ref },
@@ -100,7 +110,7 @@ const Login = () => {
                         <View style={styles.inputContainer}>
                             <AntDesign name="lock" size={18 * unit} color={Color.gray_6} />
                             <Controller
-                                name="station_name"
+                                name="password"
                                 control={control}
                                 render={({
                                     field: { onChange, onBlur, value, name, ref },
@@ -132,16 +142,23 @@ const Login = () => {
 
                     <View style={styles.blockAction}>
                         <Pressable
-                            onPress={async () => {
+                            onPress={handleSubmit(async (user) => {
+                                Keyboard.dismiss();
                                 try {
                                     dispatch(openIconLoadingOverlay());
-                                    await revalidateRemoteUser(null, () => {
+                                    await revalidateRemoteUser(user, () => {
                                         dispatch(closeIconLoadingOverlay);
                                     });
                                 } catch (e) {
-                                    showToast({ type: "error" });
+                                    console.log("E", e);
+                                    dispatch(closeIconLoadingOverlay);
+                                    showToast({
+                                        type: "error",
+                                        title: "Lỗi đăng nhập",
+                                        description: "Đăng nhập không thành công !",
+                                    });
                                 }
-                            }}
+                            })}
                             style={styles.buttonLogin}
                         >
                             <Text style={styles.textLogin}>Login</Text>

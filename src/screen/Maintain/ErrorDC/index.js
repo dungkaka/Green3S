@@ -27,87 +27,6 @@ const renderStatus = (code) => {
     }
 };
 
-const options = [
-    {
-        key: "order",
-        title: "STT",
-        width: 3 * rem,
-        render: ({ item, index, defaultBlockStyle }) => (
-            <View key={0} style={defaultBlockStyle}>
-                <AppText style={styles.contentCell}>{index + 1}</AppText>
-            </View>
-        ),
-    },
-    {
-        key: "station",
-        title: "Nhà máy",
-        width: 6 * rem,
-        render: ({ item, index, defaultBlockStyle }) => (
-            <View key={1} style={defaultBlockStyle}>
-                <AppText style={styles.contentCell}>{item.factory?.stationName}</AppText>
-            </View>
-        ),
-    },
-    {
-        key: "device",
-        title: "Thiết bị",
-        width: 5 * rem,
-        render: ({ item, index, defaultBlockStyle }) => (
-            <View key={2} style={defaultBlockStyle}>
-                <AppText style={styles.contentCell}>{item.device?.devName}</AppText>
-            </View>
-        ),
-    },
-    {
-        key: "string",
-        title: "String",
-        width: 6 * rem,
-        render: ({ item, index, defaultBlockStyle }) => (
-            <View key={3} style={defaultBlockStyle}>
-                <AppText style={styles.contentCellString}>{item.string}</AppText>
-            </View>
-        ),
-    },
-    {
-        key: "error_name",
-        title: "Tên lỗi",
-        width: 7 * rem,
-    },
-    {
-        key: "reason",
-        title: "Nguyên nhân",
-        width: 16 * rem,
-    },
-    {
-        key: "solution",
-        title: "Giải pháp",
-        width: 16 * rem,
-    },
-    {
-        key: "status",
-        title: "Trạng thái sửa",
-        width: 7 * rem,
-        render: ({ item, index, defaultBlockStyle }) => (
-            <View key={7} style={defaultBlockStyle}>
-                {renderStatus(item.status)}
-            </View>
-        ),
-    },
-    { key: "note", title: "Ghi chú", width: 8 * rem },
-    {
-        key: "time_repair",
-        title: "Thời gian tác động",
-        width: 7 * rem,
-        render: ({ item, index, defaultBlockStyle }) => (
-            <View key={9} style={defaultBlockStyle}>
-                <AppText style={styles.contentCell}>{JSON.parse(item.time_repair)?.repaired}</AppText>
-            </View>
-        ),
-    },
-    { key: "created_at", title: "Thời gian xuất hiện", width: 7 * rem },
-    { key: "time_end", title: "Thời gian kết thúc", width: 7 * rem },
-];
-
 const initEndDate = time().toDateObject();
 const initStartDate = { ...time().toDateObject(), day: 1 };
 
@@ -121,6 +40,98 @@ const ErrorDC = () => {
     });
     const { rData, rIsValidating, mutate } = useFetchErrorDC({ ...filter });
     const datas = rData?.datas || [];
+    const counts = rData?.counts || {};
+
+    const options = [
+        {
+            key: "order",
+            title: "STT",
+            width: 3 * rem,
+            render: ({ item, index, defaultBlockStyle }) => (
+                <View key={0} style={defaultBlockStyle}>
+                    <AppText style={styles.contentCell}>{index + 1}</AppText>
+                </View>
+            ),
+        },
+        {
+            key: "station",
+            title: "Nhà máy",
+            width: 6 * rem,
+            render: ({ item, index, defaultBlockStyle }) => (
+                <View key={1} style={defaultBlockStyle}>
+                    <AppText style={styles.contentCell}>{item.factory?.stationName}</AppText>
+                </View>
+            ),
+        },
+        {
+            key: "device",
+            title: "Thiết bị",
+            width: 5 * rem,
+            render: ({ item, index, defaultBlockStyle }) => (
+                <View key={2} style={defaultBlockStyle}>
+                    <AppText style={styles.contentCell}>{item.device?.devName}</AppText>
+                </View>
+            ),
+        },
+        {
+            key: "string",
+            title: "String",
+            width: 6 * rem,
+            render: ({ item, index, defaultBlockStyle }) => (
+                <View key={3} style={defaultBlockStyle}>
+                    <AppText style={styles.contentCellString}>{item.string}</AppText>
+                </View>
+            ),
+        },
+        {
+            key: "error_name",
+            title: "Tên lỗi",
+            width: 7 * rem,
+        },
+        {
+            key: "reason",
+            title: "Nguyên nhân",
+            width: 16 * rem,
+        },
+        {
+            key: "solution",
+            title: "Giải pháp",
+            width: 16 * rem,
+        },
+        {
+            key: "counts",
+            title: "Số lần lỗi",
+            width: 4 * rem,
+            render: ({ item, index, defaultBlockStyle }) => (
+                <View key={7} style={defaultBlockStyle}>
+                    <AppText style={styles.contentCell}>{counts[item.device_id]?.[item.string]}</AppText>
+                </View>
+            ),
+        },
+        {
+            key: "status",
+            title: "Trạng thái sửa",
+            width: 7 * rem,
+            render: ({ item, index, defaultBlockStyle }) => (
+                <View key={8} style={defaultBlockStyle}>
+                    {renderStatus(item.status)}
+                </View>
+            ),
+        },
+        { key: "note", title: "Ghi chú", width: 8 * rem },
+        {
+            key: "time_repair",
+            title: "Thời gian tác động",
+            width: 7 * rem,
+            render: ({ item, index, defaultBlockStyle }) => (
+                <View key={10} style={defaultBlockStyle}>
+                    <AppText style={styles.contentCell}>{JSON.parse(item.time_repair)?.repaired}</AppText>
+                </View>
+            ),
+        },
+        { key: "created_at", title: "Thời gian xuất hiện", width: 7 * rem },
+        { key: "time_end", title: "Thời gian kết thúc", width: 7 * rem },
+    ];
 
     const handleFilter = (filter) => {
         setFilter({

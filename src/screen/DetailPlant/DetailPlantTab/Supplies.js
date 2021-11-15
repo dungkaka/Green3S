@@ -84,7 +84,7 @@ const Supplies = () => {
     );
 };
 
-export default React.memo(Supplies);
+export default React.memo(Supplies, () => true);
 
 const styles = StyleSheet.create({
     container: {

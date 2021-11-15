@@ -17,7 +17,7 @@ import { useRoute } from "@react-navigation/native";
 import { time } from "@utils/helps/time";
 import { hitSlop10 } from "@common-ui/Pressable/utils";
 
-const initEndDate = time().toDateObject();
+const initDate = time().toDateObject();
 
 const RevenueChart = () => {
     const { params } = useRoute();
@@ -27,7 +27,7 @@ const RevenueChart = () => {
 
     const { stationCode } = params ? params : {};
     const [mode, setMode] = useState("month");
-    const [date, setDate] = useState(initEndDate);
+    const [date, setDate] = useState(initDate);
     const { data, isValidating, error, mutate } = useFetchYieldByTime({
         stationCode,
         year: date.year,
@@ -177,6 +177,7 @@ const RevenueChart = () => {
             <ModalDatePicker
                 ref={modalDatePickerRef}
                 delayRender={500}
+                initialDate={date}
                 mode={mode}
                 onOk={() => {
                     modalDatePickerRef.current.close();

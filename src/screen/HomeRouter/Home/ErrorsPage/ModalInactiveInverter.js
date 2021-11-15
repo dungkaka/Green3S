@@ -26,13 +26,10 @@ const ErrorItem = React.memo(
                     }}
                     style={{ flex: 3, marginRight: 8, flexDirection: "row", flexWrap: "wrap" }}
                 >
-                    <AppText style={styles.itemTextLink}>{item.device?.devName}</AppText>
+                    <AppText style={styles.itemText}>{item.device?.devName}</AppText>
                 </Pressable>
-                <View style={{ flex: 3, color: Color.redPastel, marginRight: 8 }}>
-                    <AppTextMedium style={[styles.itemText, { color: Color.redDark }]}>{item.error}</AppTextMedium>
-                </View>
                 <View style={{ flex: 3 }}>
-                    <AppText style={styles.itemText}>{item.created_at}</AppText>
+                    <AppText style={styles.itemTextLink}>{item.created_at}</AppText>
                 </View>
             </View>
         );
@@ -40,7 +37,7 @@ const ErrorItem = React.memo(
     () => true
 );
 
-const ModalErrorDisconnect = forwardRef(({ data = [] }, ref) => {
+const ModalInactiveInverter = forwardRef(({ data = [] }, ref) => {
     const mount = useRef(true);
     const myModalRef = useRef();
 
@@ -76,15 +73,16 @@ const ModalErrorDisconnect = forwardRef(({ data = [] }, ref) => {
                         <Octicons
                             name="x"
                             size={26}
-                            color={PairColor.gray.dark}
+                            color={PairColor.red.dark}
                             style={styles.xIcon}
                             onPress={() => myModalRef.current.close()}
                         />
-                        <Text style={styles.titleModal}>Mất tín hiệu (Real Time)</Text>
+                        <Text style={styles.titleModal}>Inverter không hoạt động</Text>
                     </View>
                 </View>
 
                 <FlatList
+                    initialNumToRender={3}
                     contentContainerStyle={styles.listContainer}
                     ListHeaderComponent={
                         <View style={styles.headerList}>
@@ -94,11 +92,6 @@ const ModalErrorDisconnect = forwardRef(({ data = [] }, ref) => {
                             <View style={{ flex: 3, marginRight: 8 }}>
                                 <AppTextBold>Thiết bị</AppTextBold>
                             </View>
-
-                            <View style={{ flex: 3, marginRight: 8 }}>
-                                <AppTextBold>Lỗi</AppTextBold>
-                            </View>
-
                             <View style={{ flex: 3 }}>
                                 <AppTextBold>Ngày tạo</AppTextBold>
                             </View>
@@ -119,7 +112,7 @@ const ModalErrorDisconnect = forwardRef(({ data = [] }, ref) => {
     );
 });
 
-export default ModalErrorDisconnect;
+export default ModalInactiveInverter;
 
 const styles = StyleSheet.create({
     modalContainer: {
@@ -135,7 +128,7 @@ const styles = StyleSheet.create({
     titleModal: {
         fontSize: 20 * unit,
         fontFamily: GoogleSansFontType.bold,
-        color: PairColor.gray.dark,
+        color: PairColor.red.dark,
     },
     content: {
         color: Color.gray_10,

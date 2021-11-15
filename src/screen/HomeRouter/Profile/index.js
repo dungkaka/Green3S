@@ -8,14 +8,14 @@ import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 const Profile = () => {
     const { data, logout } = useLogin();
 
-    const { username } = data || {};
+    const { token_type } = data || {};
 
     return (
         <View style={{ flex: 1, backgroundColor: "white" }}>
             <View style={{ height: 250, backgroundColor: Color.gray_3 }} />
             <View style={{ justifyContent: "center", alignItems: "center" }}>
                 <View style={{ height: 100, width: 100, borderRadius: 50, backgroundColor: Color.gray_5, marginTop: -40 }} />
-                <AppText style={{ paddingVertical: 12 * unit }}>ADMIN</AppText>
+                <AppText style={{ paddingVertical: 12 * unit }}>{token_type}</AppText>
                 <Pressable
                     onPress={() => logout()}
                     style={{ padding: 16, backgroundColor: Color.gray_3, borderRadius: 6 * unit }}

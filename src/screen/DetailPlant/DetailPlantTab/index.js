@@ -11,6 +11,20 @@ import General from "./General";
 import Statistic from "./Statistic";
 import DPMaterialUsed from "./MaterialUsed";
 import DPMaterial from "./Material";
+import { AppTextMedium } from "@common-ui/AppText";
+
+const CommingSoon = React.memo(
+    () => {
+        return (
+            <View style={{ flex: 1, backgroundColor: "white", justifyContent: "center", alignItems: "center" }}>
+                <AppTextMedium style={{ fontSize: 16 * unit, color: Color.greenBlueDark }}>
+                    Tính năng đang phát triển !
+                </AppTextMedium>
+            </View>
+        );
+    },
+    () => true
+);
 
 const DetailPlantTab = () => {
     const { params } = useRoute();
@@ -32,6 +46,7 @@ const DetailPlantTab = () => {
             { key: "material", title: "Vật tư" },
             { key: "materialUsed", title: "Vật tư sử dụng" },
             { key: "info", title: "Thông tin" },
+            { key: "alalylist", title: "Phân tích hiệu suất theo hướng" },
         ],
     });
 
@@ -50,7 +65,7 @@ const DetailPlantTab = () => {
             case "info":
                 return <PlantInfo />;
             default:
-                return null;
+                return <CommingSoon />;
         }
     };
 

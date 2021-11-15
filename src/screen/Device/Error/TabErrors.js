@@ -80,7 +80,7 @@ const TabErrors = ({ data = {} }) => {
                     setState({ ...state, index: index });
                 });
             }}
-            // swipeEnabled={true}
+            swipeEnabled={false}
         />
     );
 };

@@ -6,15 +6,18 @@ import { HEIGHT } from "@theme/scale";
 import { unit } from "@theme/styleContants";
 import { GoogleSansFontType } from "@theme/typography";
 import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
-import { View, Text, StyleSheet, FlatList } from "react-native";
+import { View, Text, StyleSheet, FlatList, TouchableOpacity } from "react-native";
 import { Octicons } from "@expo/vector-icons";
 import { JumpLogo } from "@common-ui/Loading/JumpLogo";
 import { round2 } from "@utils/helps/functions";
+import { useNavigation } from "@react-navigation/native";
+import { NAVIGATION } from "constant/navigation";
 
 const ModalRealTimeDevice = forwardRef(({}, ref) => {
     const mount = useRef(true);
     const myModalRef = useRef();
     const [plant, setPlant] = useState();
+    const navigation = useNavigation();
 
     const { data, isValidating, error } = useFetchRealtimeDevices({ station_code: plant?.stationCode });
 
@@ -41,7 +44,7 @@ const ModalRealTimeDevice = forwardRef(({}, ref) => {
     );
 
     const renderItem = ({ item, index }) => {
-        const { devName, created_at, data } = item;
+        const { devName, created_at, data, device_id } = item;
 
         let active_power, day_cap;
 
@@ -53,9 +56,20 @@ const ModalRealTimeDevice = forwardRef(({}, ref) => {
 
         return (
             <View style={styles.itemContainer}>
-                <View style={{ flex: 4 }}>
-                    <AppText style={{ fontSize: 13 * unit }}>{devName}</AppText>
-                </View>
+                <TouchableOpacity
+                    activeOpacity={0.6}
+                    onPress={() =>
+                        navigation.navigate(NAVIGATION.DETAIL_DEVICE, {
+                            device: {
+                                device_id: device_id,
+                                devName: devName,
+                            },
+                        })
+                    }
+                    style={{ flex: 4 }}
+                >
+                    <AppText style={{ fontSize: 13 * unit, color: Color.blueDark }}>{devName}</AppText>
+                </TouchableOpacity>
                 <View style={{ flex: 4, flexDirection: "row", flexWrap: "wrap" }}>
                     <AppTextMedium style={{ color: Color.redPastel, fontSize: 13 * unit }}>
                         {round2(active_power)}

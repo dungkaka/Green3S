@@ -4,6 +4,10 @@ import { useEffect, useState } from "react";
 import { format } from "@utils/helps/time";
 import { requester } from "@utils/helps/request";
 
+export const useListDevice = ({ stationCode = "" } = {}) => {
+    return useAPIFetcher(API_GREEN3S.FETCH_LIST_DEVICE(stationCode));
+};
+
 export const useDeviceOverview = ({ deviceId, date }) => {
     const [isReady, setIsReady] = useState(false);
     const key = API_GREEN3S.DEVICE_OVERVIEW(deviceId, format(date, "DD/MM/YYYY"), format(date, "H:M:S"));
@@ -12,7 +16,7 @@ export const useDeviceOverview = ({ deviceId, date }) => {
         key,
         {
             revalidateIfStale: true,
-            dedupingInterval: 6000,
+            dedupingInterval: 240000,
             use: [noCache],
         },
         requester({
@@ -59,7 +63,29 @@ export const useFetchError = ({ deviceId, date }) => {
 
     const res = useAPIFetcher(API_GREEN3S.DEVICE_ERROR(deviceId, format(date, "YYYY-MM-DD")), {
         revalidateIfStale: true,
-        dedupingInterval: 60000,
+        dedupingInterval: 240000,
+        use: [noCache],
+    });
+
+    useEffect(() => {
+        setTimeout(() => {
+            setIsReady(true);
+        }, 500);
+    }, []);
+
+    return {
+        ...res,
+        rData: isReady ? res.data : undefined,
+        rIsValidating: isReady ? res.isValidating : true,
+    };
+};
+
+export const useFetchDevicePower = ({ deviceId, date }) => {
+    const [isReady, setIsReady] = useState(false);
+
+    const res = useAPIFetcher(API_GREEN3S.FETCH_DEVICE_POWER(deviceId, format(date, "DD/MM/YYYY")), {
+        revalidateIfStale: true,
+        dedupingInterval: 240000,
         use: [noCache],
     });
 

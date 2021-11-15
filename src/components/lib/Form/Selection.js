@@ -4,10 +4,13 @@ import { Color } from "@theme/colors";
 import { unit } from "@theme/styleContants";
 import React, { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
+import { useOnlyDidUpdateEffect } from "@utils/hooks/useOnlyDidUpdateEffect";
 
 function Selection({
     data,
     required = true,
+    initialOption = undefined,
+    initialOptionOnChangeData = undefined,
     emptyOption = "Chọn",
     title = "Selection",
     containerStyle = styles.displaySelectValueContainer,
@@ -15,14 +18,14 @@ function Selection({
     onChange = (select) => {},
 }) {
     const selectRef = useRef();
-    const [select, setSelect] = useState();
+    const [select, setSelect] = useState(initialOption);
 
-    useEffect(() => {
+    useOnlyDidUpdateEffect(() => {
         onChange(select);
     }, [select]);
 
-    useEffect(() => {
-        setSelect(undefined);
+    useOnlyDidUpdateEffect(() => {
+        setSelect(initialOptionOnChangeData);
     }, [data]);
 
     return (
@@ -42,6 +45,7 @@ function Selection({
 
             <Select
                 required={required}
+                initialOption={initialOption}
                 itemHeight={48}
                 options={data}
                 ref={selectRef}

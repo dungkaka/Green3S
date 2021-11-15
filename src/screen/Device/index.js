@@ -7,22 +7,30 @@ import { StyleSheet, Text, View } from "react-native";
 import { TabView, TabBar } from "react-native-tab-view";
 import Overview from "./Overview";
 import Error from "./Error";
+import Statistic from "./Statistic";
 import { AppTextMedium } from "@common-ui/AppText";
+import { useGoBackHandler } from "@utils/hooks/useGoBackHanlder";
+import DeviceHistory from "./DeviceHistory";
 
-const CommingSoon = () => {
-    return (
-        <View style={{ flex: 1, backgroundColor: "white", justifyContent: "center", alignItems: "center" }}>
-            <AppTextMedium style={{ fontSize: 16 * unit, color: Color.greenBlueDark }}>
-                Tính năng đang phát triển !
-            </AppTextMedium>
-        </View>
-    );
-};
+const CommingSoon = React.memo(
+    () => {
+        return (
+            <View style={{ flex: 1, backgroundColor: "white", justifyContent: "center", alignItems: "center" }}>
+                <AppTextMedium style={{ fontSize: 16 * unit, color: Color.greenBlueDark }}>
+                    Tính năng đang phát triển !
+                </AppTextMedium>
+            </View>
+        );
+    },
+    () => true
+);
 
 const Device = () => {
     const { params } = useRoute();
     const navigation = useNavigation();
     const { device } = params ? params : {};
+
+    useGoBackHandler();
 
     useLayoutEffect(() => {
         navigation.setOptions({
@@ -34,6 +42,7 @@ const Device = () => {
         index: 0,
         routes: [
             { key: "overview", title: "Tổng quan" },
+            { key: "statistic", title: "Thống kê" },
             { key: "error", title: "Lỗi" },
             {
                 key: "history",
@@ -46,8 +55,12 @@ const Device = () => {
         switch (route.key) {
             case "overview":
                 return <Overview />;
+            case "statistic":
+                return <Statistic />;
             case "error":
                 return <Error />;
+            // case "history":
+            //     return <DeviceHistory />;
             default:
                 return <CommingSoon />;
         }

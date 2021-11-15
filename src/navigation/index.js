@@ -35,6 +35,8 @@ import DPReportInverter from "screen/DetailPlant/ReportInverter";
 import DPReportPerformance from "screen/DetailPlant/ReportPerformance";
 import DPReportPotentialError from "screen/DetailPlant/ReportPotentialError";
 import Device from "screen/Device/index";
+import InactiveInverter from "screen/Maintain/InactiveInterver";
+import AllError from "screen/Maintain/AllError";
 
 enableAnimationExperimental();
 handleKillApp();
@@ -203,6 +205,13 @@ const AppNavigation = ({ isLogin }) => {
                             {/* Error */}
                             <Stack.Group>
                                 <Stack.Screen
+                                    name={NAVIGATION.ALLE_ERROR}
+                                    component={AllError}
+                                    options={{
+                                        title: "Tất cả lỗi",
+                                    }}
+                                />
+                                <Stack.Screen
                                     name={NAVIGATION.ERROR_AC}
                                     component={ErrorAC}
                                     options={{
@@ -230,11 +239,18 @@ const AppNavigation = ({ isLogin }) => {
                                         title: "Lỗi tiềm ẩn",
                                     }}
                                 />
-                                <Stack.Screen
+                                {/* <Stack.Screen
                                     name={NAVIGATION.ERROR_RESISTOR}
                                     component={ErrorResistor}
                                     options={{
                                         title: "Lỗi điện trở cách điện thấp",
+                                    }}
+                                /> */}
+                                <Stack.Screen
+                                    name={NAVIGATION.INACTIVE_INVERTER}
+                                    component={InactiveInverter}
+                                    options={{
+                                        title: "Inverter dừng hoạt động",
                                     }}
                                 />
                                 <Stack.Screen

@@ -3,6 +3,40 @@ import { noCache, useAPIFetcher } from "@hooks/useAPIFetcher";
 import { format } from "@utils/helps/time";
 import { useEffect, useState } from "react";
 
+export const useFetchAllError = ({ startDate, endDate, stationCode, deviceId, error, status, string, page }) => {
+    const [isReady, setIsReady] = useState(false);
+
+    const res = useAPIFetcher(
+        API_GREEN3S.ALL_ERROR(
+            format(startDate, "YYYY-MM-DD"),
+            format(endDate, "YYYY-MM-DD"),
+            stationCode,
+            deviceId,
+            status,
+            error,
+            string,
+            page
+        ),
+        {
+            revalidateIfStale: true,
+            dedupingInterval: 300000,
+            use: [noCache],
+        }
+    );
+
+    useEffect(() => {
+        setTimeout(() => {
+            setIsReady(true);
+        }, 500);
+    }, []);
+
+    return {
+        ...res,
+        rData: isReady ? res.data : undefined,
+        rIsValidating: isReady ? res.isValidating : true,
+    };
+};
+
 export const useFetchErrorAC = ({ startDate, endDate, stationCode, error, status, page }) => {
     const [isReady, setIsReady] = useState(false);
 

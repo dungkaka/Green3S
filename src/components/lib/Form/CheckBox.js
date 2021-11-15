@@ -1,4 +1,3 @@
-import { AppText } from "@common-ui/AppText";
 import { AppColor } from "@theme";
 import { Color } from "@theme/colors";
 import React, { useLayoutEffect, useState } from "react";

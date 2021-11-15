@@ -16,15 +16,12 @@ export const AppTextMedium = (props) => {
 
 const styles = StyleSheet.create({
     text: {
-        fontSize: 14,
         fontFamily: GoogleSansFontType.regular,
     },
     textBold: {
-        fontSize: 14,
         fontFamily: GoogleSansFontType.bold,
     },
     textMedium: {
-        fontSize: 14,
         fontFamily: GoogleSansFontType.medium,
     },
 });

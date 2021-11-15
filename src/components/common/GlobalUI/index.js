@@ -8,7 +8,7 @@ const GlobalUI = ({ isLogin }) => {
     return (
         <Fragment>
             <LoadingOverlay />
-            <ToastManager position={isLogin ? "bottom" : "top"} />
+            <ToastManager position="top" />
         </Fragment>
     );
 };

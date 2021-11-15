@@ -15,11 +15,13 @@ import ModalGridLow from "./ModalGridLow";
 import ModalMiss from "./ModalMiss";
 import { JumpLogoPage } from "@common-ui/Loading/JumpLogo";
 import ErrorPage from "@common-components/ErrorPage";
+import ModalInactiveInverter from "./ModalInactiveInverter";
 
 const ErrorsPage = () => {
     const modalErrorDisconnectRef = useRef();
     const modalErrorDCRef = useRef();
-    const modalErrorResistorRef = useRef();
+    // const modalErrorResistorRef = useRef();
+    const modelInactiveInverterRef = useRef();
     const modalErrorPerformanceRef = useRef();
     const modalPhaseUnbalanceRef = useRef();
     const modalGrigHighRef = useRef();
@@ -113,22 +115,31 @@ const ErrorsPage = () => {
                                 </AppTextMedium>
                             </View>
                         </Pressable>
-                        <Pressable onPress={() => modalErrorResistorRef.current.open()} style={styles.blockFlex}>
+                        <Pressable onPress={() => modelInactiveInverterRef.current.open()} style={styles.blockFlex}>
+                            <View style={styles.blockContainer}>
+                                <View style={[styles.lineDiv, { backgroundColor: PairColor.red.dark }]} />
+                                <AppTextMedium style={[styles.title, { color: PairColor.red.dark }]}>
+                                    Inverter không hoạt động ({datas.ac?.device_in_active?.length || 0})
+                                </AppTextMedium>
+                            </View>
+                        </Pressable>
+                        {/* <Pressable onPress={() => modalErrorResistorRef.current.open()} style={styles.blockFlex}>
                             <View style={styles.blockContainer}>
                                 <View style={[styles.lineDiv, { backgroundColor: PairColor.red.dark }]} />
                                 <AppTextMedium style={[styles.title, { color: PairColor.red.dark }]}>
                                     Điện trở cách điện thấp ({datas.count_resistor || 0})
                                 </AppTextMedium>
                             </View>
-                        </Pressable>
+                        </Pressable> */}
                     </View>
                 </Fragment>
             )}
 
             <ModalErrorDisconnect ref={modalErrorDisconnectRef} data={datas.disconnect} />
             <ModalErrorDC ref={modalErrorDCRef} data={datas.error_dc} />
+            <ModalInactiveInverter ref={modelInactiveInverterRef} data={datas.ac?.device_in_active} />
             <ModalPerformance ref={modalErrorPerformanceRef} data={datas.error_performance} />
-            <ModalErrorResistor ref={modalErrorResistorRef} data={datas.resistor} />
+            {/* <ModalErrorResistor ref={modalErrorResistorRef} data={datas.resistor} /> */}
             <ModalPhaseUnbalance ref={modalPhaseUnbalanceRef} data={datas.ac?.phase_unbalance} />
             <ModalGridHigh ref={modalGrigHighRef} data={datas.ac?.["grid high"]} />
             <ModalGridLow ref={modalGridLowRef} data={datas.ac?.["grid low"]} />

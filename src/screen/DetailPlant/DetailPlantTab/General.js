@@ -159,7 +159,7 @@ const General = () => {
     );
 };
 
-export default React.memo(General);
+export default React.memo(General, () => true);
 
 const styles = StyleSheet.create({
     container: {

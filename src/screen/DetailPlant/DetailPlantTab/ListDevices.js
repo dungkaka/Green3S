@@ -54,7 +54,7 @@ const ListDevices = () => {
     );
 };
 
-export default React.memo(ListDevices);
+export default React.memo(ListDevices, () => true);
 
 const styles = StyleSheet.create({
     container: {

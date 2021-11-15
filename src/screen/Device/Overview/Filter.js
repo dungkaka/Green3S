@@ -53,7 +53,7 @@ const Filter = ({ filter, handleFilter = () => {} }) => {
                 mode="minute"
                 ref={modalStartDatePickerRef}
                 initialDate={startDate}
-                delayRender={300}
+                delayRender={500}
                 onOk={() => {
                     modalStartDatePickerRef.current.close();
                     setStartDate(modalStartDatePickerRef.current.getData().date);

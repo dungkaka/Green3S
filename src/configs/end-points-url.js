@@ -1,6 +1,9 @@
-const preUrl = "http://green3s.vn/api/v1";
+const preUrl = "https://green3s.vn/api/v1";
 
 export const API_GREEN3S = {
+    //Login:
+    LOGIN: () => preUrl + `/login`,
+
     // Home/DashBoard
     LIST_PLANTS: () => preUrl + `/plant/list`,
     SEARCH_FACTORY: (station_name = "", firm = "") => preUrl + `/home?station_name=${station_name}&firm=${firm}`,
@@ -32,6 +35,19 @@ export const API_GREEN3S = {
         preUrl + `/plant/report/plan-maintance?stationCode=${stationCode}&month=${month}&year=${year}`,
 
     // Error
+    ALL_ERROR: (
+        dateStart = "",
+        dateEnd = "",
+        stationCode = "",
+        device_id = "",
+        status = "",
+        error = "",
+        string = "",
+        page = 1,
+        pageSize = 20
+    ) =>
+        preUrl +
+        `/error/all?error=${error}&date_start=${dateStart}&date_end=${dateEnd}&stationCode=${stationCode}&device_id=${device_id}&status=${status}&string=${string}&per_page=${pageSize}&page=${page}`,
     ERROR_AC: (dateStart = "", dateEnd = "", stationCode = "", status = "", error = "", page = 1, pageSize = 20) =>
         preUrl +
         `/error/ac?date_start=${dateStart}&date_end=${dateEnd}&stationCode=${stationCode}&status=${status}&error=${error}&per_page=${pageSize}&page=${page}`,
@@ -66,6 +82,8 @@ export const API_GREEN3S = {
     MAINTAINANCE_CATEGORY: () => preUrl + `/maintance/category`,
 
     // Device
+    FETCH_LIST_DEVICE: (stationCode) => preUrl + `/plant/${stationCode}/device`,
     DEVICE_OVERVIEW: (deviceId, date, time) => preUrl + `/device/${deviceId}/overview?time=${time}&date=${date}`,
     DEVICE_ERROR: (deviceId, date) => preUrl + `/device/${deviceId}/error?date=${date}`,
+    FETCH_DEVICE_POWER: (deviceId, date) => preUrl + `/device/${deviceId}/chart-power?date=${date}`,
 };

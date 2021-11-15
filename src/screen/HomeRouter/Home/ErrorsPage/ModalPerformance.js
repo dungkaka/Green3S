@@ -5,11 +5,14 @@ import { HEIGHT } from "@theme/scale";
 import { unit } from "@theme/styleContants";
 import { GoogleSansFontType } from "@theme/typography";
 import React, { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
-import { View, Text, StyleSheet, FlatList } from "react-native";
+import { View, Text, StyleSheet, FlatList, Pressable } from "react-native";
 import { Octicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import { NAVIGATION } from "constant/navigation";
 
 const ErrorItem = React.memo(
     ({ item, index }) => {
+        const navigation = useNavigation();
         return (
             <View style={styles.itemListContainer}>
                 <View style={{ flex: 4, marginRight: 8 }}>
@@ -33,9 +36,16 @@ const ErrorItem = React.memo(
                         {item.string}
                     </AppTextMedium>
                 </View>
-                <View style={{ flex: 3, marginRight: 8, flexDirection: "row", flexWrap: "wrap" }}>
-                    <AppText style={styles.itemText}>{item.device?.devName}</AppText>
-                </View>
+                <Pressable
+                    onPress={() => {
+                        navigation.push(NAVIGATION.DETAIL_DEVICE, {
+                            device: item.device,
+                        });
+                    }}
+                    style={{ flex: 3, marginRight: 8, flexDirection: "row", flexWrap: "wrap" }}
+                >
+                    <AppText style={styles.itemTextLink}>{item.device?.devName}</AppText>
+                </Pressable>
                 <View style={{ flex: 3 }}>
                     <AppText style={styles.itemText}>{item.created_at}</AppText>
                 </View>
@@ -194,5 +204,9 @@ const styles = StyleSheet.create({
     },
     itemText: {
         fontSize: 13 * unit,
+    },
+    itemTextLink: {
+        fontSize: 13 * unit,
+        color: Color.blueDark,
     },
 });

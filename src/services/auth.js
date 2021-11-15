@@ -1,16 +1,17 @@
 import { API_GREEN3S } from "@configs/end-points-url";
 import { useAPIFetcher } from "@hooks/useAPIFetcher";
 import { createRequestWithToken, Request } from "@utils/helps/axios";
-import { delay } from "@utils/helps/functions";
-import { fileRequester, requester, requestSyncFile } from "@utils/helps/request";
+import { fileRequester, requester } from "@utils/helps/request";
 import { DocumentStorage } from "@utils/local-file-sytem";
-import { useEffect } from "react";
+import { mutate } from "swr";
+import { getExpoPushToken } from "./notification";
 
 export const useLogin = () => {
-    const key = "LOGIN";
+    const key = API_GREEN3S.LOGIN();
     const res = useAPIFetcher(
         key,
         {
+            revalidateIfStale: false,
             revalidateOnMount: false,
             errorRetryCount: 0,
         },
@@ -19,21 +20,17 @@ export const useLogin = () => {
         })
     );
 
-    useEffect(() => {}, []);
-
     const revalidateRemoteUser = async (user, onSuccess = () => {}) => {
-        // const data = await requester({
-        //     requestFunc: () => Request.Server.post(key, user),
-        // })();
-        await delay(1);
-        const data = {
-            username: "Dungkaka",
-            token: "123456",
-        };
+        const token = await getExpoPushToken();
+        const data = await requester({
+            requestFunc: () => Request.Server.post(key, { ...user, deviceToken: token }),
+        })();
+
         onSuccess();
         DocumentStorage.writeAsync("auth", "user", data);
-        res.mutate(data, false);
-        createRequestWithToken(data.token);
+        await res.mutate(data, false);
+        mutate(keyUseUser, data);
+        createRequestWithToken(data.Token);
     };
 
     const logout = async () => {
@@ -45,21 +42,29 @@ export const useLogin = () => {
     res.revalidateRemoteUser = revalidateRemoteUser;
     res.revalidateLocalUser = async () => {
         const data = await res.mutate();
-        data && createRequestWithToken(data.token);
+        if (data) {
+            mutate(keyUseUser, data);
+            createRequestWithToken(data.Token);
+        }
     };
     res.logout = logout;
     return res;
 };
 
+const keyUseUser = "USER_INFOR";
 export const useUser = () => {
-    const key = "USER_INFOR";
     const res = useAPIFetcher(
-        key,
-        null,
+        keyUseUser,
+        {
+            revalidateIfStale: false,
+        },
         fileRequester({
             requestFunc: () => DocumentStorage.readAsync("auth", "user"),
         })
     );
 
-    return res;
+    return {
+        data: res.data,
+        userName: "ADMIN USER",
+    };
 };

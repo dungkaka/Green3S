@@ -153,7 +153,7 @@ export const useReportMaintainance = ({ stationCode, month, year }) => {
                     });
                     return data;
                 } catch (e) {
-                    console.log("E", e);
+                    throw new Error(e.message);
                 }
             },
         })

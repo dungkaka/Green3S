@@ -57,7 +57,7 @@ const PlantInfo = () => {
     );
 };
 
-export default React.memo(PlantInfo);
+export default React.memo(PlantInfo, () => true);
 
 const styles = StyleSheet.create({
     container: {
