@@ -36,7 +36,11 @@ const dataSelectStatus = [
 ];
 
 const dataSelectError = [
-    { key: "", value: "Tất cả" },
+    { key: "", value: "Chưa chọn" },
+    {
+        key: "performance_low",
+        value: "Hiệu suất thấp",
+    },
     {
         key: "grid low",
         value: "Điện áp lưới thấp",
@@ -52,6 +56,10 @@ const dataSelectError = [
     {
         key: "phase_unbalance",
         value: "Mất cân bẳng pha",
+    },
+    {
+        key: "device_in_active",
+        value: "Inverter dừng hoạt động",
     },
 ];
 
@@ -89,6 +97,18 @@ const Filter = ({ filter, handleFilter = () => {} }) => {
     return (
         <View style={{ elevation: 0.5, backgroundColor: "white" }}>
             <ScrollView horizontal contentContainerStyle={styles.dateSelectionContainer} showsHorizontalScrollIndicator={false}>
+                <View style={styles.selectPlantConatainer}>
+                    <AppTextMedium>Lỗi</AppTextMedium>
+                    <Pressable
+                        onPress={() => {
+                            selectErrorRef.current.open(error.key);
+                        }}
+                        style={styles.displayDate}
+                    >
+                        <AppTextMedium style={styles.textDateDisplay}>{error?.value}</AppTextMedium>
+                    </Pressable>
+                </View>
+
                 <View style={styles.dateContainer}>
                     <AppTextMedium>Từ :</AppTextMedium>
                     <Pressable
@@ -173,23 +193,19 @@ const Filter = ({ filter, handleFilter = () => {} }) => {
                     </Pressable>
                 </View>
 
-                <View style={styles.selectPlantConatainer}>
-                    <AppTextMedium>Lỗi</AppTextMedium>
-                    <Pressable
-                        onPress={() => {
-                            selectErrorRef.current.open(error.key);
-                        }}
-                        style={styles.displayDate}
-                    >
-                        <AppTextMedium style={styles.textDateDisplay}>{error?.value}</AppTextMedium>
-                    </Pressable>
-                </View>
-
                 <View style={styles.dateContainer}>
                     <AppTextMedium> </AppTextMedium>
                     <Pressable
                         onPress={() => {
-                            handleFilter({ startDate, endDate, plant: plant.value, status, error });
+                            handleFilter({
+                                startDate,
+                                endDate,
+                                plant: plant.value,
+                                status,
+                                error,
+                                device: device.current,
+                                string,
+                            });
                         }}
                         style={styles.search}
                     >

@@ -4,10 +4,9 @@ import React, { useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Color } from "@theme/colors";
 import { time } from "@utils/helps/time";
-import { round2 } from "@utils/helps/functions";
 import { JumpLogoPage } from "@common-ui/Loading/JumpLogo";
 import Filter from "./Filter";
-import { useFetchErrorAC } from "@services/error";
+import { useFetchAllError, useFetchErrorAC } from "@services/error";
 import TableStickBasicTemplate from "@common-ui/Table/TableStickBasicTemplate";
 
 const renderStatus = (code) => {
@@ -108,9 +107,11 @@ const AllError = () => {
         stationCode: "",
         status: -1,
         error: "",
+        deviceId: "",
+        string: "",
         page: 1,
     });
-    const { rData, rIsValidating, mutate } = useFetchErrorAC({ ...filter });
+    const { rData, rIsValidating, mutate } = useFetchAllError({ ...filter });
     const datas = rData?.datas || [];
 
     const handleFilter = (filter) => {
@@ -120,6 +121,8 @@ const AllError = () => {
             stationCode: filter.plant.stationCode,
             status: filter.status.key,
             error: filter.error.key,
+            string: filter.string.key,
+            deviceId: filter.device.key,
             page: 1,
         });
     };
