@@ -76,7 +76,6 @@ const styles = StyleSheet.create({
         backgroundColor: Color.greenBlueDark,
         overflow: "hidden",
         elevation: 0,
-        height: 50,
     },
     indicator: {
         backgroundColor: "white",

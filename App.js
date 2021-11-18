@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import * as Font from "expo-font";
 import { useLogin } from "@services/auth";
 import { appFont } from "@theme/typography";
@@ -33,7 +33,7 @@ function App() {
     if (!isReady) return null;
 
     return (
-        <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
+        <View style={styles.container} onLayout={onLayoutRootView}>
             <AppContainer isLogin={isLogin} />
         </View>
     );
@@ -46,3 +46,9 @@ export default function AppLoaded() {
         </Provider>
     );
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+    },
+});

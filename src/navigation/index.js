@@ -21,8 +21,6 @@ import Performance from "screen/Maintain/Performance";
 import PotentialError from "screen/Maintain/PotentialError";
 import ErrorResistor from "screen/Maintain/ErrorResistor";
 import ErrorDisconnect from "screen/Maintain/ErrorDisconnect";
-import Alarm from "screen/HomeRouter/Home/Alarm";
-import { Color } from "@theme/colors";
 import Material from "screen/Management/Material";
 import MaintainanceListWork from "screen/Maintain/MaintananceListWork";
 import MaintainanceCategory from "screen/Maintain/MaintainanceCategory";
@@ -80,226 +78,213 @@ const AppNavigation = ({ isLogin }) => {
                             }}
                         />
 
+                        {/* Detail Of A Plants */}
                         <Stack.Group screenOptions={{ ...TransitionPresets.ModalPresentationIOS }}>
-                            {/* Detail Of A Plants */}
-                            <Stack.Group>
-                                <Stack.Screen
-                                    name={NAVIGATION.DETAIL_PLANT}
-                                    component={DetailPlantTab}
-                                    options={{
-                                        title: "Nhà máy",
-                                        headerBackgroundContainerStyle: {
-                                            height: "101%",
-                                        },
-                                    }}
-                                />
-                                <Stack.Screen
-                                    name={NAVIGATION.DP_REPORT_FACTORY}
-                                    component={DPReportFactory}
-                                    options={{
-                                        title: "Nhà máy",
-                                    }}
-                                />
+                            <Stack.Screen
+                                name={NAVIGATION.DETAIL_PLANT}
+                                component={DetailPlantTab}
+                                options={{
+                                    title: "Nhà máy",
+                                    headerBackgroundContainerStyle: {
+                                        height: "101%",
+                                    },
+                                }}
+                            />
+                            <Stack.Screen
+                                name={NAVIGATION.DP_REPORT_FACTORY}
+                                component={DPReportFactory}
+                                options={{
+                                    title: "Nhà máy",
+                                }}
+                            />
 
-                                <Stack.Screen
-                                    name={NAVIGATION.DP_REPORT_INVERTER}
-                                    component={DPReportInverter}
-                                    options={{
-                                        title: "Inverter",
-                                    }}
-                                />
+                            <Stack.Screen
+                                name={NAVIGATION.DP_REPORT_INVERTER}
+                                component={DPReportInverter}
+                                options={{
+                                    title: "Inverter",
+                                }}
+                            />
 
-                                <Stack.Screen
-                                    name={NAVIGATION.DP_REPORT_AC}
-                                    component={DPReportAC}
-                                    options={{
-                                        title: "Lỗi AC",
-                                    }}
-                                />
+                            <Stack.Screen
+                                name={NAVIGATION.DP_REPORT_AC}
+                                component={DPReportAC}
+                                options={{
+                                    title: "Lỗi AC",
+                                }}
+                            />
 
-                                <Stack.Screen
-                                    name={NAVIGATION.DP_REPORT_DC}
-                                    component={DPReportDC}
-                                    options={{
-                                        title: "Lỗi DC",
-                                    }}
-                                />
+                            <Stack.Screen
+                                name={NAVIGATION.DP_REPORT_DC}
+                                component={DPReportDC}
+                                options={{
+                                    title: "Lỗi DC",
+                                }}
+                            />
 
-                                <Stack.Screen
-                                    name={NAVIGATION.DP_REPORT_PERFORMANCE}
-                                    component={DPReportPerformance}
-                                    options={{
-                                        title: "Hiệu suất thấp",
-                                    }}
-                                />
+                            <Stack.Screen
+                                name={NAVIGATION.DP_REPORT_PERFORMANCE}
+                                component={DPReportPerformance}
+                                options={{
+                                    title: "Hiệu suất thấp",
+                                }}
+                            />
 
-                                <Stack.Screen
-                                    name={NAVIGATION.DP_REPORT_POTENTIAL_ERROR}
-                                    component={DPReportPotentialError}
-                                    options={{
-                                        title: "Lỗi tiềm ẩn",
-                                    }}
-                                />
-                            </Stack.Group>
+                            <Stack.Screen
+                                name={NAVIGATION.DP_REPORT_POTENTIAL_ERROR}
+                                component={DPReportPotentialError}
+                                options={{
+                                    title: "Lỗi tiềm ẩn",
+                                }}
+                            />
+                        </Stack.Group>
 
-                            {/* Detail Of A Device */}
-                            <Stack.Group screenOptions={{ ...TransitionPresets.ModalPresentationIOS }}>
-                                <Stack.Screen
-                                    name={NAVIGATION.DETAIL_DEVICE}
-                                    component={Device}
-                                    options={{
-                                        title: "Thiết bị",
-                                        headerBackgroundContainerStyle: {
-                                            height: "101%",
-                                        },
-                                    }}
-                                />
-                            </Stack.Group>
+                        {/* Report Tab */}
+                        <Stack.Group screenOptions={{ ...TransitionPresets.ModalPresentationIOS }}>
+                            <Stack.Screen
+                                name={NAVIGATION.REPORT_PLANT_YIELD}
+                                component={ReportPlantYield}
+                                options={{
+                                    title: "Báo cáo nhà máy",
+                                }}
+                            />
+                            <Stack.Screen
+                                name={NAVIGATION.REPORT_PLANT_MATERIAL}
+                                component={ReportPlantMaterial}
+                                options={{
+                                    title: "Báo cáo vật tư",
+                                }}
+                            />
+                            <Stack.Screen
+                                name={NAVIGATION.REPORT_PLANT_LOG_REPAIR}
+                                component={ReportPlanLogRepair}
+                                options={{
+                                    title: "Nhật kí sửa chữa",
+                                }}
+                            />
+                            <Stack.Screen
+                                name={NAVIGATION.REPORT_PLANT_POTENTIAL_ERROR}
+                                component={ReportPotentialError}
+                                options={{
+                                    title: "Lỗi tiềm ẩn",
+                                }}
+                            />
+                            <Stack.Screen
+                                name={NAVIGATION.REPORT_MAINTENANCE}
+                                component={ReportMaintainance}
+                                options={{
+                                    title: "Báo cáo bảo trì",
+                                }}
+                            />
+                            <Stack.Screen
+                                name={NAVIGATION.REPORT_PLAN_MAINTENANCE}
+                                component={ReportPlanMaintainance}
+                                options={{
+                                    title: "Báo cáo kế hoạch bảo trì",
+                                }}
+                            />
+                        </Stack.Group>
 
-                            {/* Report Tab */}
-                            <Stack.Group>
-                                <Stack.Screen
-                                    name={NAVIGATION.REPORT_PLANT_YIELD}
-                                    component={ReportPlantYield}
-                                    options={{
-                                        title: "Báo cáo nhà máy",
-                                    }}
-                                />
-                                <Stack.Screen
-                                    name={NAVIGATION.REPORT_PLANT_MATERIAL}
-                                    component={ReportPlantMaterial}
-                                    options={{
-                                        title: "Báo cáo vật tư",
-                                    }}
-                                />
-                                <Stack.Screen
-                                    name={NAVIGATION.REPORT_PLANT_LOG_REPAIR}
-                                    component={ReportPlanLogRepair}
-                                    options={{
-                                        title: "Nhật kí sửa chữa",
-                                    }}
-                                />
-                                <Stack.Screen
-                                    name={NAVIGATION.REPORT_PLANT_POTENTIAL_ERROR}
-                                    component={ReportPotentialError}
-                                    options={{
-                                        title: "Lỗi tiềm ẩn",
-                                    }}
-                                />
-                                <Stack.Screen
-                                    name={NAVIGATION.REPORT_MAINTENANCE}
-                                    component={ReportMaintainance}
-                                    options={{
-                                        title: "Báo cáo bảo trì",
-                                    }}
-                                />
-                                <Stack.Screen
-                                    name={NAVIGATION.REPORT_PLAN_MAINTENANCE}
-                                    component={ReportPlanMaintainance}
-                                    options={{
-                                        title: "Báo cáo kế hoạch bảo trì",
-                                    }}
-                                />
-                            </Stack.Group>
-
-                            {/* Error */}
-                            <Stack.Group>
-                                <Stack.Screen
-                                    name={NAVIGATION.ALLE_ERROR}
-                                    component={AllError}
-                                    options={{
-                                        title: "Tất cả lỗi",
-                                    }}
-                                />
-                                <Stack.Screen
-                                    name={NAVIGATION.ERROR_AC}
-                                    component={ErrorAC}
-                                    options={{
-                                        title: "Lỗi AC",
-                                    }}
-                                />
-                                <Stack.Screen
-                                    name={NAVIGATION.ERROR_DC}
-                                    component={ErrorDC}
-                                    options={{
-                                        title: "Lỗi DC",
-                                    }}
-                                />
-                                <Stack.Screen
-                                    name={NAVIGATION.PERFORMANCE}
-                                    component={Performance}
-                                    options={{
-                                        title: "Hiệu suất",
-                                    }}
-                                />
-                                <Stack.Screen
-                                    name={NAVIGATION.POTENTIAL_ERROR}
-                                    component={PotentialError}
-                                    options={{
-                                        title: "Lỗi tiềm ẩn",
-                                    }}
-                                />
-                                {/* <Stack.Screen
+                        {/* Error */}
+                        <Stack.Group screenOptions={{ ...TransitionPresets.ModalPresentationIOS }}>
+                            <Stack.Screen
+                                name={NAVIGATION.ALLE_ERROR}
+                                component={AllError}
+                                options={{
+                                    title: "Tất cả lỗi",
+                                }}
+                            />
+                            <Stack.Screen
+                                name={NAVIGATION.ERROR_AC}
+                                component={ErrorAC}
+                                options={{
+                                    title: "Lỗi AC",
+                                }}
+                            />
+                            <Stack.Screen
+                                name={NAVIGATION.ERROR_DC}
+                                component={ErrorDC}
+                                options={{
+                                    title: "Lỗi DC",
+                                }}
+                            />
+                            <Stack.Screen
+                                name={NAVIGATION.PERFORMANCE}
+                                component={Performance}
+                                options={{
+                                    title: "Hiệu suất",
+                                }}
+                            />
+                            <Stack.Screen
+                                name={NAVIGATION.POTENTIAL_ERROR}
+                                component={PotentialError}
+                                options={{
+                                    title: "Lỗi tiềm ẩn",
+                                }}
+                            />
+                            {/* <Stack.Screen
                                     name={NAVIGATION.ERROR_RESISTOR}
                                     component={ErrorResistor}
                                     options={{
                                         title: "Lỗi điện trở cách điện thấp",
                                     }}
                                 /> */}
-                                <Stack.Screen
-                                    name={NAVIGATION.INACTIVE_INVERTER}
-                                    component={InactiveInverter}
-                                    options={{
-                                        title: "Inverter dừng hoạt động",
-                                    }}
-                                />
-                                <Stack.Screen
-                                    name={NAVIGATION.ERROR_DISCONNECT}
-                                    component={ErrorDisconnect}
-                                    options={{
-                                        title: "Lỗi mất tín hiệu trong ngày",
-                                    }}
-                                />
-                            </Stack.Group>
-
-                            {/* Báo động */}
                             <Stack.Screen
-                                name={NAVIGATION.ALARM}
-                                component={Alarm}
+                                name={NAVIGATION.INACTIVE_INVERTER}
+                                component={InactiveInverter}
                                 options={{
-                                    title: "Báo động",
-                                    headerStyle: {
-                                        backgroundColor: Color.redDark,
+                                    title: "Inverter dừng hoạt động",
+                                }}
+                            />
+                            <Stack.Screen
+                                name={NAVIGATION.ERROR_DISCONNECT}
+                                component={ErrorDisconnect}
+                                options={{
+                                    title: "Lỗi mất tín hiệu trong ngày",
+                                }}
+                            />
+                        </Stack.Group>
+
+                        {/* Vật tư */}
+                        <Stack.Screen
+                            name={NAVIGATION.MATERIAL}
+                            component={Material}
+                            options={{
+                                ...TransitionPresets.ModalPresentationIOS,
+                                title: "Danh sách vật tư",
+                            }}
+                        />
+
+                        {/* Detail Of A Device */}
+                        <Stack.Group screenOptions={{ ...TransitionPresets.ModalPresentationIOS }}>
+                            <Stack.Screen
+                                name={NAVIGATION.DETAIL_DEVICE}
+                                component={Device}
+                                options={{
+                                    title: "Thiết bị",
+                                    headerBackgroundContainerStyle: {
+                                        height: "101%",
                                     },
                                 }}
                             />
+                        </Stack.Group>
 
-                            {/* Vật tư */}
+                        {/* Bảo trì */}
+                        <Stack.Group screenOptions={{ ...TransitionPresets.ModalPresentationIOS }}>
                             <Stack.Screen
-                                name={NAVIGATION.MATERIAL}
-                                component={Material}
+                                name={NAVIGATION.MAINTAINANCE_LIST_WORK}
+                                component={MaintainanceListWork}
                                 options={{
-                                    title: "Danh sách vật tư",
+                                    title: "Danh sách bảo trì",
                                 }}
                             />
-
-                            {/* Bảo trì */}
-                            <Stack.Group>
-                                <Stack.Screen
-                                    name={NAVIGATION.MAINTAINANCE_LIST_WORK}
-                                    component={MaintainanceListWork}
-                                    options={{
-                                        title: "Danh sách bảo trì",
-                                    }}
-                                />
-                                <Stack.Screen
-                                    name={NAVIGATION.MAINTAINANCE_CATEGORY}
-                                    component={MaintainanceCategory}
-                                    options={{
-                                        title: "Danh sách hạng mục bảo trì",
-                                    }}
-                                />
-                            </Stack.Group>
+                            <Stack.Screen
+                                name={NAVIGATION.MAINTAINANCE_CATEGORY}
+                                component={MaintainanceCategory}
+                                options={{
+                                    title: "Danh sách hạng mục bảo trì",
+                                }}
+                            />
                         </Stack.Group>
                     </Fragment>
                 )}

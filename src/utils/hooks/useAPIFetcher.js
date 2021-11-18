@@ -1,26 +1,39 @@
-import { fetcher } from "@utils/helps/request";
+import { fetcher as defaultFetcher } from "@utils/helps/request";
 import { useEffect, useRef } from "react";
 import useSWR, { useSWRConfig } from "swr";
 import { usePrevious } from "./usePrevious";
 
-export const useAPIFetcher = (key, options, _fetcher) => {
-    return useSWR(key, _fetcher ? _fetcher : fetcher, {
+export const useAPIFetcher = (key, options, fetcher) => {
+    return useSWR(key, fetcher ? fetcher : defaultFetcher, {
         compare: (a, b) => a == b,
-        revalidateIfStale: false,
+        revalidateIfStale: true,
         revalidateOnFocus: false,
         revalidateOnReconnect: false,
         shouldRetryOnError: true,
-        errorRetryInterval: 2000,
+        errorRetryInterval: 1000,
         errorRetryCount: 2,
-        dedupingInterval: 5000,
+        dedupingInterval: timeInterval.XX_SHORT,
         ...options,
     });
+};
+
+export const timeInterval = {
+    XX_SHORT: 5000,
+    X_SHORT: 15000,
+    SHORT: 60000,
+    NORMAL: 180000,
+    LONG: 300000,
+    X_LONG: 600000,
 };
 
 /*
     * key: can be url or array of key. "api/v1" or ["api/v1", param1, param2];
 
     * revalidateOnMount = false will prevent fetch API when component mounted, need to use mutate to force validate.
+    In span time dedupingInterval, validate only happen with mutate(). That mean, if revalidateOnMount = true, and component A
+    mount in time of dedupingInterval, it will not revalidate, just use old data from previous hook.
+
+    * revalidateIfStale: if revalidateIfStale = false, don't declare revalidateOnMount, or make revalidateOnMount = false,
 
     * IN EACH TIME, useSWR always take data from cache if it already validate before, then revalidate and return new value.
     Even revalidateOnMount = false or isPaused() = true, it still follow this rule.
@@ -29,7 +42,7 @@ export const useAPIFetcher = (key, options, _fetcher) => {
 
     * dedupingInterval: determined should revalidate request in the next period of time. That mean, if you have component A with dedupingInterval = 5000 and component B with dedupingInterval = 1000 (A and B same key). When you are in component A, 
     after 3s go to component B, the request will not revalidate. But if you are in component B, after 3s go to component A, 
-    the request will revalidate.
+    the request will revalidate. 
 
     * All config value will keep until we call mutate(). That mean, if a config value depend on some state of component, when update state, config of useSWR not change; until you call mutate(), it will revalidate useSWR with new config value that depend on state.
 

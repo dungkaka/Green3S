@@ -1,8 +1,9 @@
 import { API_GREEN3S } from "@configs/end-points-url";
-import { noCache, useAPIFetcher } from "@hooks/useAPIFetcher";
+import { noCache, timeInterval, useAPIFetcher } from "@hooks/useAPIFetcher";
 import { useEffect, useState } from "react";
 import { format } from "@utils/helps/time";
 import { requester } from "@utils/helps/request";
+import { auth } from "./user";
 
 export const useListDevice = ({ stationCode = "" } = {}) => {
     return useAPIFetcher(API_GREEN3S.FETCH_LIST_DEVICE(stationCode));
@@ -15,9 +16,8 @@ export const useDeviceOverview = ({ deviceId, date }) => {
     const res = useAPIFetcher(
         key,
         {
-            revalidateIfStale: true,
-            dedupingInterval: 240000,
-            use: [noCache],
+            dedupingInterval: timeInterval.LONG,
+            use: [noCache, auth],
         },
         requester({
             handleData: (data) => {
@@ -62,9 +62,8 @@ export const useFetchError = ({ deviceId, date }) => {
     const [isReady, setIsReady] = useState(false);
 
     const res = useAPIFetcher(API_GREEN3S.DEVICE_ERROR(deviceId, format(date, "YYYY-MM-DD")), {
-        revalidateIfStale: true,
-        dedupingInterval: 240000,
-        use: [noCache],
+        dedupingInterval: timeInterval.LONG,
+        use: [noCache, auth],
     });
 
     useEffect(() => {
@@ -84,9 +83,8 @@ export const useFetchDevicePower = ({ deviceId, date }) => {
     const [isReady, setIsReady] = useState(false);
 
     const res = useAPIFetcher(API_GREEN3S.FETCH_DEVICE_POWER(deviceId, format(date, "DD/MM/YYYY")), {
-        revalidateIfStale: true,
-        dedupingInterval: 240000,
-        use: [noCache],
+        dedupingInterval: timeInterval.LONG,
+        use: [noCache, auth],
     });
 
     useEffect(() => {

@@ -8,24 +8,25 @@ import { NAVIGATION } from "constant/navigation";
 import { showToast } from "@common-ui/ToastNotify/ToastManager";
 
 export const useListenResponseNotification = () => {
-    // const navigation = useNavigation();
-    // useEffect(() => {
-    //     const subscription = Notifications.addNotificationResponseReceivedListener((response) => {
-    //         const data = response.notification.request.content?.data;
-    //         if (data?.story_id) {
-    //             navigation.navigate(NAVIGATION.Stack_Story_Detail, {
-    //                 story: {
-    //                     id: data.story_id,
-    //                 },
-    //             });
-    //             return;
-    //         }
-    //         if (data?.url) {
-    //             Linking.openURL(data.url);
-    //         }
-    //     });
-    //     return () => subscription.remove();
-    // }, []);
+    const navigation = useNavigation();
+    useEffect(() => {
+        const subscription = Notifications.addNotificationResponseReceivedListener((response) => {
+            const data = response.notification.request.content?.data;
+            console.log("DATA", data);
+            // if (data?.story_id) {
+            //     navigation.navigate(NAVIGATION.Stack_Story_Detail, {
+            //         story: {
+            //             id: data.story_id,
+            //         },
+            //     });
+            //     return;
+            // }
+            // if (data?.url) {
+            //     Linking.openURL(data.url);
+            // }
+        });
+        return () => subscription.remove();
+    }, []);
 };
 
 export const getExpoPushToken = async () => {

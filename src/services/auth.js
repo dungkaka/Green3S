@@ -1,12 +1,15 @@
 import { API_GREEN3S } from "@configs/end-points-url";
 import { useAPIFetcher } from "@hooks/useAPIFetcher";
 import { createRequestWithToken, Request } from "@utils/helps/axios";
+import { delay } from "@utils/helps/functions";
 import { fileRequester, requester } from "@utils/helps/request";
 import { DocumentStorage } from "@utils/local-file-sytem";
-import { mutate } from "swr";
+import { useSWRConfig } from "swr";
 import { getExpoPushToken } from "./notification";
+import { keyUseUser } from "./user";
 
 export const useLogin = () => {
+    const { cache, mutate } = useSWRConfig();
     const key = API_GREEN3S.LOGIN();
     const res = useAPIFetcher(
         key,
@@ -28,43 +31,25 @@ export const useLogin = () => {
 
         onSuccess();
         DocumentStorage.writeAsync("auth", "user", data);
+        createRequestWithToken(data.access_token);
+        await mutate(keyUseUser, data);
         await res.mutate(data, false);
-        mutate(keyUseUser, data);
-        createRequestWithToken(data.Token);
     };
 
     const logout = async () => {
         await DocumentStorage.deleteAsync("auth", "user");
-        await res.mutate(null, false);
         createRequestWithToken(null);
+        await res.mutate(null, false);
     };
 
     res.revalidateRemoteUser = revalidateRemoteUser;
     res.revalidateLocalUser = async () => {
         const data = await res.mutate();
         if (data) {
+            createRequestWithToken(data.access_token);
             mutate(keyUseUser, data);
-            createRequestWithToken(data.Token);
         }
     };
     res.logout = logout;
     return res;
-};
-
-const keyUseUser = "USER_INFOR";
-export const useUser = () => {
-    const res = useAPIFetcher(
-        keyUseUser,
-        {
-            revalidateIfStale: false,
-        },
-        fileRequester({
-            requestFunc: () => DocumentStorage.readAsync("auth", "user"),
-        })
-    );
-
-    return {
-        data: res.data,
-        userName: "ADMIN USER",
-    };
 };

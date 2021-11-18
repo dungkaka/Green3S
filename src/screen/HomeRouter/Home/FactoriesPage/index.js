@@ -10,7 +10,6 @@ import { FontAwesome } from "@expo/vector-icons";
 import { ColorDefault } from "@theme/index";
 import { JumpLogo } from "@common-ui/Loading/JumpLogo";
 import { useOnlyDidUpdateLayoutEffect } from "@hooks/useOnlyDidUpdateLayoutEffetct";
-import { CacheStorage } from "@utils/local-file-sytem";
 
 const modalWidth = (WIDTH * 2) / 3;
 
@@ -47,7 +46,10 @@ const FactoriesPage = () => {
         <View style={styles.container}>
             {/* Statistic */}
             <View style={styles.headContainer}>
-                <AppTextMedium>Tổng: {plants.length}</AppTextMedium>
+                <Pressable onPress={() => mutate()}>
+                    <AppTextMedium>Tổng: {plants.length}</AppTextMedium>
+                </Pressable>
+
                 <View style={{ flex: 1, paddingHorizontal: rem }}>
                     <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                         {Object.values(filter).map((i) => {

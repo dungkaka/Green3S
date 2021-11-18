@@ -16,14 +16,14 @@ export const requester =
     } = {}) =>
     async (url) => {
         try {
-            // console.log("URL", url);
+            console.log("URL", url);
             const beforeTime = Date.now();
             const res = await requestFunc(url);
             if (Date.now() - beforeTime < 500) await delay(boundedTime);
             if (res.data?.status || res.data?.success || ignoreStatus) return handleData(res.data);
             else {
-                const { code, Message } = res.data;
-                throw new Exception(code, Message);
+                const { code, message } = res.data;
+                throw new Exception(code, message);
             }
         } catch (error) {
             throw new Exception(error.code ? error.code : error.response?.status, error.message);

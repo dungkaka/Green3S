@@ -27,11 +27,10 @@
         "md5": "^2.3.0",
         "react": "16.13.1",
         "react-dom": "16.13.1",
-        "react-hook-form": "^7.14.2",
+        "react-hook-form": "^7.19.5",
         "react-native": "~0.63.4",
         "react-native-gesture-handler": "~1.10.2",
         "react-native-image-zoom-viewer": "^3.0.1",
-        "react-native-modal": "^12.1.0",
         "react-native-pager-view": "5.0.12",
         "react-native-reanimated": "~2.2.0",
         "react-native-safe-area-context": "3.2.0",
@@ -44,8 +43,7 @@
         "react-redux": "^7.2.4",
         "redux": "^4.1.1",
         "redux-thunk": "^2.3.0",
-        "swr": "^1.0.1",
-        "victory-native": "^35.5.5"
+        "swr": "^1.0.1"
     },
     "devDependencies": {
         "@babel/core": "^7.9.0",

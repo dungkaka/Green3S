@@ -150,7 +150,6 @@ const Login = () => {
                                         dispatch(closeIconLoadingOverlay);
                                     });
                                 } catch (e) {
-                                    console.log("E", e);
                                     dispatch(closeIconLoadingOverlay);
                                     showToast({
                                         type: "error",

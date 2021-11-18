@@ -20,6 +20,10 @@
         "assetBundlePatterns": [
             "**/*"
         ],
+        "notification": {
+            "icon": "./assets/icon-notification.png",
+            "androidMode": "collapse"
+        },
         "ios": {
             "supportsTablet": true
         },

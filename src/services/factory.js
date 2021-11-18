@@ -1,41 +1,38 @@
 import { Int } from "@utils/helps/number";
-import { requester } from "@utils/helps/request";
+import { fetcher, requester } from "@utils/helps/request";
 import { useEffect, useState } from "react";
-const { API_GREEN3S } = require("@configs/end-points-url");
-const { useAPIFetcher, saveActiveData, noCache } = require("@hooks/useAPIFetcher");
+import { auth } from "./user";
+const { useAPIFetcher, saveActiveData, noCache, timeInterval } = require("@hooks/useAPIFetcher");
+import useSWR, { useSWRConfig } from "swr";
+import { API_GREEN3S } from "@configs/end-points-url";
 
 export const keyListPlants = API_GREEN3S.LIST_PLANTS();
 export const useListPlants = () => {
-    return useAPIFetcher(keyListPlants);
+    const { data, isValidating, error } = useAPIFetcher(keyListPlants, {
+        revalidateIfStale: false,
+        dedupingInterval: 2000,
+        // use: [auth],
+    });
+
+    return { data, isValidating, error };
 };
 
 export const useSearchFactory = ({ station_name, firm } = {}) => {
     const key = API_GREEN3S.SEARCH_FACTORY(station_name, firm);
-    const res = useAPIFetcher(
-        key,
-        {
-            dedupingInterval: 15 * 1000,
-            use: [saveActiveData],
-        }
-        // requestSyncCache({
-        //     cache: true,
-        //     expiredTime: 35,
-        //     unit: "s",
-        // })
-    );
+    const res = useAPIFetcher(key, {
+        dedupingInterval: timeInterval.NORMAL,
+        use: [saveActiveData, auth],
+    });
 
     return res;
 };
 
 export const useFetchRealtimeDevices = ({ station_code } = {}) => {
     const key = API_GREEN3S.FETCH_REALTIME_DEVICES_FACTORY(station_code);
-    const res = useAPIFetcher(
-        station_code ? key : null,
-        {
-            dedupingInterval: 60 * 1000,
-        },
-        requester({ ignoreStatus: true })
-    );
+    const res = useAPIFetcher(station_code ? key : null, {
+        dedupingInterval: timeInterval.NORMAL,
+        use: [auth],
+    });
 
     return res;
 };
@@ -43,7 +40,8 @@ export const useFetchRealtimeDevices = ({ station_code } = {}) => {
 export const useFetchDetailPlant = ({ station_code } = {}) => {
     const key = API_GREEN3S.GET_DETAIL_PLANT(station_code);
     const res = useAPIFetcher(station_code ? key : null, {
-        dedupingInterval: 60 * 1000,
+        dedupingInterval: timeInterval.NORMAL,
+        use: [auth],
     });
 
     return res;
@@ -52,8 +50,8 @@ export const useFetchDetailPlant = ({ station_code } = {}) => {
 export const useFetchYieldByTime = ({ stationCode, year, month } = {}) => {
     const key = API_GREEN3S.FETCH_YIELD_BY_TIME(stationCode, year, month);
     const res = useAPIFetcher(key, {
-        dedupingInterval: 60 * 1000,
-        use: [noCache],
+        dedupingInterval: timeInterval.NORMAL,
+        use: [noCache, auth],
     });
 
     return res;
@@ -62,8 +60,8 @@ export const useFetchYieldByTime = ({ stationCode, year, month } = {}) => {
 export const useFetchPowerByTime = ({ stationCode, date } = {}) => {
     const key = API_GREEN3S.FETCH_POWER_BY_TIME(stationCode, `${date.day}/${date.month}/${date.year}`);
     const res = useAPIFetcher(key, {
-        dedupingInterval: 60 * 1000,
-        use: [noCache],
+        dedupingInterval: timeInterval.NORMAL,
+        use: [noCache, auth],
     });
 
     return res;
@@ -73,9 +71,8 @@ export const usePlantReport = ({ stationCode, date }) => {
     const [isReady, setIsReady] = useState(false);
     const key = API_GREEN3S.PLANT_REPORT(stationCode, date.month, date.year);
     const res = useAPIFetcher(key, {
-        revalidateIfStale: true,
-        dedupingInterval: 60000,
-        use: [noCache],
+        dedupingInterval: timeInterval.NORMAL,
+        use: [noCache, auth],
     });
 
     useEffect(() => {
@@ -98,8 +95,8 @@ export const usePlantReportInverter = ({ stationCode, date }) => {
         key,
         {
             revalidateIfStale: true,
-            dedupingInterval: 60000,
-            use: [noCache],
+            dedupingInterval: timeInterval.NORMAL,
+            use: [noCache, auth],
         },
         requester({
             handleData: (data) => {
@@ -136,9 +133,8 @@ export const usePlantMaterial = ({ stationCode }) => {
     const res = useAPIFetcher(
         key,
         {
-            revalidateIfStale: true,
-            dedupingInterval: 60000,
-            use: [noCache],
+            dedupingInterval: timeInterval.NORMAL,
+            use: [noCache, auth],
         },
         requester({
             handleData: (data) => {

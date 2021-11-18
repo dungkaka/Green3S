@@ -1,8 +1,9 @@
 import { API_GREEN3S } from "@configs/end-points-url";
-import { noCache, useAPIFetcher } from "@hooks/useAPIFetcher";
+import { noCache, timeInterval, useAPIFetcher } from "@hooks/useAPIFetcher";
 import { requester } from "@utils/helps/request";
 import { format } from "@utils/helps/time";
 import { useEffect, useState } from "react";
+import { auth } from "./user";
 
 export const useReportPlantYield = ({ startDate, endDate, plant }) => {
     const [isReady, setIsReady] = useState(false);
@@ -10,8 +11,7 @@ export const useReportPlantYield = ({ startDate, endDate, plant }) => {
     const res = useAPIFetcher(
         API_GREEN3S.REPORT_PLANT_YIELD(format(endDate, "YYYY-MM-DD"), format(startDate, "YYYY-MM-DD"), plant.stationCode),
         {
-            revalidateIfStale: true,
-            dedupingInterval: 60000,
+            dedupingInterval: timeInterval.LONG,
             onSuccess: (data) => {
                 if (data.datas)
                     for (let stationCode in data.datas) {
@@ -32,7 +32,7 @@ export const useReportPlantYield = ({ startDate, endDate, plant }) => {
                         d.device_yields_by_dates = device_yields_by_dates;
                     });
             },
-            use: [noCache],
+            use: [noCache, auth],
         }
     );
 
@@ -55,9 +55,8 @@ export const useReportPlantMaterial = ({ startDate, endDate, plant }) => {
     const res = useAPIFetcher(
         API_GREEN3S.REPORT_PLANT_MATERIAL(format(endDate, "YYYY-MM-DD"), format(startDate, "YYYY-MM-DD"), plant.stationCode),
         {
-            revalidateIfStale: true,
-            dedupingInterval: 60000,
-            use: [noCache],
+            dedupingInterval: timeInterval.LONG,
+            use: [noCache, auth],
         }
     );
 
@@ -80,9 +79,8 @@ export const useReportPlantLogRepair = ({ startDate, endDate, plant }) => {
     const res = useAPIFetcher(
         API_GREEN3S.REPORT_PLANT_LOG_REPAIR(format(endDate, "YYYY-MM-DD"), format(startDate, "YYYY-MM-DD"), plant.stationCode),
         {
-            revalidateIfStale: true,
-            dedupingInterval: 60000,
-            use: [noCache],
+            dedupingInterval: timeInterval.LONG,
+            use: [noCache, auth],
         }
     );
 
@@ -109,9 +107,8 @@ export const useReportPlantPotentialError = ({ startDate, endDate, plant }) => {
             plant.stationCode
         ),
         {
-            revalidateIfStale: true,
-            dedupingInterval: 60000,
-            use: [noCache],
+            dedupingInterval: timeInterval.LONG,
+            use: [noCache, auth],
         }
     );
 
@@ -134,9 +131,8 @@ export const useReportMaintainance = ({ stationCode, month, year }) => {
     const res = useAPIFetcher(
         key,
         {
-            revalidateIfStale: true,
-            dedupingInterval: 10000,
-            use: [noCache],
+            dedupingInterval: 30000,
+            use: [noCache, auth],
         },
         requester({
             handleData: (data) => {
@@ -176,9 +172,8 @@ export const useReportPlanMaintainance = ({ stationCode, month, year }) => {
     const [isReady, setIsReady] = useState(false);
     const key = API_GREEN3S.REPORT_PLAN_MAINTAINANCE(stationCode, month, year);
     const res = useAPIFetcher(key, {
-        revalidateIfStale: true,
-        dedupingInterval: 10000,
-        use: [noCache],
+        dedupingInterval: 30000,
+        use: [noCache, auth],
     });
 
     useEffect(() => {
