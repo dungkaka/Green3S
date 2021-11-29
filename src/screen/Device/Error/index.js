@@ -3,8 +3,7 @@ import { rem, unit } from "@theme/styleContants";
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Color } from "@theme/colors";
-import { time } from "@utils/helps/time";
-import { JumpLogoPage } from "@common-ui/Loading/JumpLogo";
+import { format, time } from "@utils/helps/time";
 import Filter from "./Filter";
 import { useFetchError } from "@services/device";
 import { useRoute } from "@react-navigation/native";
@@ -20,7 +19,6 @@ const Error = () => {
         date: initDate,
         deviceId: device.device_id,
     });
-    const { rData, rIsValidating, mutate } = useFetchError({ ...filter });
 
     const handleFilter = (filter) => {
         setFilter({
@@ -32,14 +30,7 @@ const Error = () => {
     return (
         <View style={styles.container}>
             <Filter filter={filter} handleFilter={handleFilter} />
-
-            {rIsValidating ? (
-                <View style={{ flex: 1, backgroundColor: "white" }}>
-                    <JumpLogoPage />
-                </View>
-            ) : rData ? (
-                <TabErrors data={rData.datas} />
-            ) : null}
+            <TabErrors key={format(filter.date)} filter={filter} />
         </View>
     );
 };

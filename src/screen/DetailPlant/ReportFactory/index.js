@@ -31,8 +31,8 @@ const DPReportFactory = () => {
             key: "order",
             title: "STT",
             width: 3 * rem,
-            render: ({ item, index, defaultBlockStyle }) => (
-                <View key={0} style={defaultBlockStyle}>
+            render: ({ item, index, cellStyle }) => (
+                <View key={0} style={cellStyle}>
                     <AppText style={styles.contentCell}>{index + 1}</AppText>
                 </View>
             ),
@@ -56,22 +56,22 @@ const DPReportFactory = () => {
             key: "max_yield",
             title: "Sản lượng đỉnh",
             width: 8 * rem,
-            render: ({ item, index, defaultBlockStyle }) => {
+            render: ({ item, index, cellStyle }) => {
                 if (item.yield_today == max_yield)
                     return (
-                        <View key={4} style={[defaultBlockStyle, { backgroundColor: Color.blueModern_1 }]}>
+                        <View key={4} style={[cellStyle, { backgroundColor: Color.blueModern_1 }]}>
                             <AppTextMedium style={[styles.contentCell, { color: "white" }]}>{max_yield}</AppTextMedium>
                         </View>
                     );
-                return <View key={4} style={defaultBlockStyle} />;
+                return <View key={4} style={cellStyle} />;
             },
         },
         {
             key: "TL",
             title: "TL chuyển đổi",
             width: 8 * rem,
-            render: ({ item, index, defaultBlockStyle }) => (
-                <View key={5} style={defaultBlockStyle}>
+            render: ({ item, index, cellStyle }) => (
+                <View key={5} style={cellStyle}>
                     <AppText style={styles.contentCell}>{round2(item.yield_today / capacity)}</AppText>
                 </View>
             ),
@@ -80,8 +80,8 @@ const DPReportFactory = () => {
             key: "sum",
             title: "Doanh thu (€)",
             width: 10 * rem,
-            render: ({ item, index, defaultBlockStyle }) => (
-                <View key={6} style={defaultBlockStyle}>
+            render: ({ item, index, cellStyle }) => (
+                <View key={6} style={cellStyle}>
                     <AppText style={styles.contentCell}>{numberWithCommas(round2(item.yield_today * revenue), ",")}</AppText>
                 </View>
             ),

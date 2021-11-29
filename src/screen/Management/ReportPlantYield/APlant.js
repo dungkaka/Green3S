@@ -16,8 +16,8 @@ const tableDeviceOptions = [
         key: "order",
         title: "STT",
         width: 3 * rem,
-        render: ({ item, index, defaultBlockStyle }) => (
-            <View key={0} style={defaultBlockStyle}>
+        render: ({ item, index, cellStyle }) => (
+            <View key={0} style={cellStyle}>
                 <AppText style={styles.contentCell}>{index + 1}</AppText>
             </View>
         ),

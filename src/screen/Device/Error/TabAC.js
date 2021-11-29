@@ -1,9 +1,11 @@
 import { AppText } from "@common-ui/AppText";
 import TableStickBasicTemplate from "@common-ui/Table/TableStickBasicTemplate";
+import { ErrorACService } from "@services/error";
 import { Color } from "@theme/colors";
 import { rem, unit } from "@theme/styleContants";
-import React from "react";
+import React, { Fragment } from "react";
 import { StyleSheet, View } from "react-native";
+import { JumpLogoPage } from "@common-ui/Loading/JumpLogo";
 
 const renderStatus = (code) => {
     switch (code) {
@@ -27,8 +29,8 @@ const options = [
         key: "order",
         title: "STT",
         width: 3 * rem,
-        render: ({ item, index, defaultBlockStyle }) => (
-            <View key={0} style={defaultBlockStyle}>
+        render: ({ item, index, cellStyle }) => (
+            <View key={0} style={cellStyle}>
                 <AppText style={styles.contentCell}>{index + 1}</AppText>
             </View>
         ),
@@ -37,8 +39,8 @@ const options = [
         key: "station",
         title: "Nhà máy",
         width: 6 * rem,
-        render: ({ item, index, defaultBlockStyle }) => (
-            <View key={1} style={defaultBlockStyle}>
+        render: ({ item, index, cellStyle }) => (
+            <View key={1} style={cellStyle}>
                 <AppText style={styles.contentCell}>{item.factory?.stationName}</AppText>
             </View>
         ),
@@ -47,8 +49,8 @@ const options = [
         key: "device",
         title: "Thiết bị",
         width: 6 * rem,
-        render: ({ item, index, defaultBlockStyle }) => (
-            <View key={2} style={defaultBlockStyle}>
+        render: ({ item, index, cellStyle }) => (
+            <View key={2} style={cellStyle}>
                 <AppText style={styles.contentCell}>{item.device?.devName}</AppText>
             </View>
         ),
@@ -72,8 +74,8 @@ const options = [
         key: "status",
         title: "Trạng thái sửa",
         width: 7 * rem,
-        render: ({ item, index, defaultBlockStyle }) => (
-            <View key={6} style={defaultBlockStyle}>
+        render: ({ item, index, cellStyle }) => (
+            <View key={6} style={cellStyle}>
                 {renderStatus(item.status)}
             </View>
         ),
@@ -83,8 +85,8 @@ const options = [
         key: "time_repair",
         title: "Thời gian tác động",
         width: 8 * rem,
-        render: ({ item, index, defaultBlockStyle }) => (
-            <View key={8} style={defaultBlockStyle}>
+        render: ({ item, index, cellStyle }) => (
+            <View key={8} style={cellStyle}>
                 <AppText style={styles.contentCell}>{JSON.parse(item.time_repair)?.repaired}</AppText>
             </View>
         ),
@@ -93,20 +95,37 @@ const options = [
     { key: "time_end", title: "Thời gian kết thúc", width: 8 * rem },
 ];
 
-export default TabErrorAC = ({ data = [] }) => {
+const TabErrorAC = ({ filter = {} }) => {
+    const { rData, rIsValidating, mutate } = ErrorACService.useFetchErrorAC({
+        deviceId: filter.deviceId,
+        startDate: filter.date,
+        endDate: filter.date,
+        pageSize: 100,
+    });
+
     return (
-        <TableStickBasicTemplate
-            heightRow={100}
-            left={[0, 1]}
-            stickPosition={3 * rem}
-            options={options}
-            data={data}
-            headerContainerStyle={styles.tableHeaderContainer}
-            textHeaderStyle={styles.tableTextHeader}
-            numberLinesContentCell={5}
-        />
+        <Fragment>
+            {rIsValidating ? (
+                <View style={{ flex: 1, backgroundColor: "white" }}>
+                    <JumpLogoPage />
+                </View>
+            ) : rData ? (
+                <TableStickBasicTemplate
+                    heightRow={100}
+                    left={[0, 1]}
+                    stickPosition={3 * rem}
+                    options={options}
+                    data={rData.datas || []}
+                    headerContainerStyle={styles.tableHeaderContainer}
+                    textHeaderStyle={styles.tableTextHeader}
+                    numberLinesContentCell={5}
+                />
+            ) : null}
+        </Fragment>
     );
 };
+
+export default React.memo(TabErrorAC);
 
 const styles = StyleSheet.create({
     contentCell: {

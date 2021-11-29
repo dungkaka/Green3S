@@ -1,16 +1,18 @@
 import TableStickBasicTemplate from "@common-ui/Table/TableStickBasicTemplate";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { Color } from "@theme/colors";
+import { WIDTH } from "@theme/scale";
 import { rem, unit } from "@theme/styleContants";
 import { GoogleSansFontType } from "@theme/typography";
+import { format } from "@utils/helps/time";
 import React, { useLayoutEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { TabView, TabBar } from "react-native-tab-view";
+import { TabView, TabBar, TabBarIndicator } from "react-native-tab-view";
 import TabErrorAC from "./TabAC";
 import TabErrorDC from "./TabDC";
 import TabPerformance from "./TabPerformance";
 
-const TabErrors = ({ data = {} }) => {
+const TabErrors = ({ data = {}, filter = {} }) => {
     const { params } = useRoute();
     const navigation = useNavigation();
     const { device } = params ? params : {};
@@ -33,20 +35,11 @@ const TabErrors = ({ data = {} }) => {
     const renderScene = ({ route }) => {
         switch (route.key) {
             case "ac":
-                return (
-                    <TabErrorAC
-                        data={[
-                            ...(data["grid high"] || []),
-                            ...(data["grid low"] || []),
-                            ...(data.miss || []),
-                            ...(data.phase_unbalance || []),
-                        ]}
-                    />
-                );
+                return <TabErrorAC filter={filter} />;
             case "dc":
-                return <TabErrorDC data={data.dc} />;
+                return <TabErrorDC filter={filter} />;
             case "performance":
-                return <TabPerformance data={data.performance_low} />;
+                return <TabPerformance filter={filter} />;
             default:
                 return null;
         }
@@ -63,6 +56,16 @@ const TabErrors = ({ data = {} }) => {
                 tabStyle={styles.tabStyle}
                 renderLabel={({ route, focused, color }) => {
                     return <Text style={[styles.label, { opacity: focused ? 1 : 0.6 }]}>{route.title}</Text>;
+                }}
+                renderIndicator={(indicatorProps) => {
+                    const width = indicatorProps.getTabWidth(state.index);
+                    return (
+                        <TabBarIndicator
+                            {...indicatorProps}
+                            width={width * 0.6}
+                            style={[styles.indicator, { left: width * 0.2 }]}
+                        />
+                    );
                 }}
                 pressColor={"transparent"}
             />
@@ -91,13 +94,11 @@ const styles = StyleSheet.create({
     tabBarContainer: {
         flexDirection: "row",
         justifyContent: "center",
-        overflow: "visible",
     },
     tabbar: {
         flexDirection: "row",
         justifyContent: "center",
         backgroundColor: "white",
-        // overflow: "hidden",
         elevation: 0,
     },
     indicator: {
@@ -107,13 +108,13 @@ const styles = StyleSheet.create({
     },
     label: {
         fontFamily: GoogleSansFontType.medium,
-        fontSize: 15 * unit,
-        paddingHorizontal: rem / 2,
+        fontSize: 14 * unit,
+        paddingHorizontal: 4,
         color: Color.gray_10,
     },
     tabStyle: {
         width: "auto",
-        minWidth: 100,
+        // minWidth: 100,
         minHeight: 38,
         paddingHorizontal: 12,
     },

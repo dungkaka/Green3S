@@ -1,6 +1,6 @@
 import { AppText } from "@common-ui/AppText";
 import { rem, unit } from "@theme/styleContants";
-import React, { useRef, useState } from "react";
+import React, { Fragment, useRef, useState } from "react";
 import { Image, Pressable, StyleSheet, View } from "react-native";
 import { Color } from "@theme/colors";
 import { time } from "@utils/helps/time";
@@ -15,14 +15,21 @@ import { WIDTH } from "@theme/scale";
 
 const initDate = time().toDateObject();
 
-const renderStatus = (code) => {
-    if (code == 0)
-        return <AppText style={[styles.contentCellTag, { backgroundColor: Color.redPastelDark }]}>Chưa bảo trì</AppText>;
-    if (code == 1)
-        return <AppText style={[styles.contentCellTag, { backgroundColor: Color.greenBlueDark }]}>Hoàn thành</AppText>;
-    if (code > 0 && code < 1)
-        return <AppText style={[styles.contentCellTag, { backgroundColor: Color.blueModern_1 }]}>Đang bảo trì</AppText>;
-    return null;
+const ModalReportDetailCell = ({ item }) => {
+    const modalRef = useRef();
+    return (
+        <Fragment>
+            <Pressable
+                onPress={() => {
+                    modalRef.current.open();
+                }}
+                style={styles.search}
+            >
+                <AntDesign name="arrowright" size={20} color="white" />
+            </Pressable>
+            <ModalReportDetail ref={modalRef} title={item.name} data={item.maintance_plans} />
+        </Fragment>
+    );
 };
 
 const options = [
@@ -30,8 +37,8 @@ const options = [
         key: "order",
         title: "STT",
         width: 3 * rem,
-        render: ({ item, index, defaultBlockStyle }) => (
-            <View key={0} style={defaultBlockStyle}>
+        render: ({ item, index, cellStyle }) => (
+            <View style={cellStyle}>
                 <AppText style={styles.contentCell}>{index + 1}</AppText>
             </View>
         ),
@@ -45,19 +52,10 @@ const options = [
         key: "detail",
         title: "Chi tiết công việc",
         width: 10 * rem,
-        render: ({ item, index, defaultBlockStyle }) => {
-            const modalRef = useRef();
+        render: ({ item, index, cellStyle }) => {
             return (
-                <View key={2} style={defaultBlockStyle}>
-                    <Pressable
-                        onPress={() => {
-                            modalRef.current.open();
-                        }}
-                        style={styles.search}
-                    >
-                        <AntDesign name="arrowright" size={20} color="white" />
-                    </Pressable>
-                    <ModalReportDetail ref={modalRef} title={item.name} data={item.maintance_plans} />
+                <View style={cellStyle}>
+                    <ModalReportDetailCell item={item} />
                 </View>
             );
         },

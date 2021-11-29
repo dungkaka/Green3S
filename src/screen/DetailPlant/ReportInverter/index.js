@@ -19,8 +19,8 @@ const options = [
         key: "order",
         title: "STT",
         width: 3 * rem,
-        render: ({ item, index, defaultBlockStyle }) => (
-            <View key={0} style={defaultBlockStyle}>
+        render: ({ item, index, cellStyle }) => (
+            <View key={0} style={cellStyle}>
                 <AppText style={styles.contentCell}>{index + 1}</AppText>
             </View>
         ),
@@ -37,8 +37,8 @@ const options = [
             key: key,
             title: "Ngày " + key,
             width: 5.5 * rem,
-            render: ({ item, index, defaultBlockStyle }) => (
-                <View key={i + 2} style={defaultBlockStyle}>
+            render: ({ item, index, cellStyle }) => (
+                <View key={i + 2} style={cellStyle}>
                     <AppText style={styles.contentCell}>{item.device_yields_byId?.[key]?.value}</AppText>
                 </View>
             ),

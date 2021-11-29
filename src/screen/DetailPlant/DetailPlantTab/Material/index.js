@@ -15,8 +15,8 @@ const options = [
         key: "order",
         title: "STT",
         width: 3 * rem,
-        render: ({ item, index, defaultBlockStyle }) => (
-            <View key={0} style={defaultBlockStyle}>
+        render: ({ item, index, cellStyle }) => (
+            <View key={0} style={cellStyle}>
                 <AppText style={styles.contentCell}>{index + 1}</AppText>
             </View>
         ),
@@ -70,8 +70,8 @@ const options = [
         key: "maintenance_date",
         title: "Lịch bảo trì sắp tới",
         width: 8 * rem,
-        render: ({ item, index, defaultBlockStyle }) => (
-            <View key={10} style={defaultBlockStyle}>
+        render: ({ item, index, cellStyle }) => (
+            <View key={10} style={cellStyle}>
                 <AppText style={styles.contentCell}>{format(new Date(item.maintenance_date))}</AppText>
             </View>
         ),
@@ -80,8 +80,8 @@ const options = [
         key: "next_maintenance_date",
         title: "Lịch bảo trì tiếp theo",
         width: 8 * rem,
-        render: ({ item, index, defaultBlockStyle }) => (
-            <View key={11} style={defaultBlockStyle}>
+        render: ({ item, index, cellStyle }) => (
+            <View key={11} style={cellStyle}>
                 <AppText style={styles.contentCell}>{format(new Date(item.next_maintenance_date))}</AppText>
             </View>
         ),

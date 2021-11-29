@@ -18,8 +18,8 @@ const options = [
         key: "order",
         title: "STT",
         width: 3 * rem,
-        render: ({ item, index, defaultBlockStyle }) => (
-            <View key={0} style={defaultBlockStyle}>
+        render: ({ item, index, cellStyle }) => (
+            <View key={0} style={cellStyle}>
                 <AppText style={styles.contentCell}>{index + 1}</AppText>
             </View>
         ),
@@ -28,8 +28,8 @@ const options = [
         key: "name",
         title: "Nhà máy",
         width: 7 * rem,
-        render: ({ item, index, defaultBlockStyle }) => (
-            <View key={1} style={defaultBlockStyle}>
+        render: ({ item, index, cellStyle }) => (
+            <View key={1} style={cellStyle}>
                 <AppText numberOfLines={3} style={styles.contentCell}>
                     {item.name}
                 </AppText>
@@ -45,8 +45,8 @@ const options = [
         key: "yield",
         title: "Sản lượng (KWH)",
         width: 8 * rem,
-        render: ({ item, index, defaultBlockStyle }) => (
-            <View key={3} style={defaultBlockStyle}>
+        render: ({ item, index, cellStyle }) => (
+            <View key={3} style={cellStyle}>
                 <AppText style={styles.contentCell}>{round2(item.yield)}</AppText>
             </View>
         ),
@@ -55,8 +55,8 @@ const options = [
         key: "yield_meter",
         title: "Sản lượng công tơ (MWH)",
         width: 12 * rem,
-        render: ({ item, index, defaultBlockStyle }) => (
-            <View key={4} style={defaultBlockStyle}>
+        render: ({ item, index, cellStyle }) => (
+            <View key={4} style={cellStyle}>
                 <AppText style={styles.contentCell}>{item.yield_meter}</AppText>
                 <AppText numberOfLines={2} style={{ fontSize: 13 * unit, color: Color.gray_8, textAlign: "center" }}>
                     {item.note_yield_meter}
@@ -69,8 +69,8 @@ const options = [
         key: "difference",
         title: "Chênh lệch (MWH)",
         width: 8 * rem,
-        render: ({ item, index, defaultBlockStyle }) => (
-            <View key={6} style={defaultBlockStyle}>
+        render: ({ item, index, cellStyle }) => (
+            <View key={6} style={cellStyle}>
                 <AppText style={styles.contentCell}>{round2(item.difference)}</AppText>
             </View>
         ),
@@ -79,8 +79,8 @@ const options = [
         key: "time_sunny",
         title: "Tỷ lệ chuyển đổi",
         width: 7 * rem,
-        render: ({ item, index, defaultBlockStyle }) => (
-            <View key={7} style={defaultBlockStyle}>
+        render: ({ item, index, cellStyle }) => (
+            <View key={7} style={cellStyle}>
                 <AppText style={styles.contentCell}>{round2(item.time_sunny)}</AppText>
             </View>
         ),
@@ -94,8 +94,8 @@ const options = [
         key: "time_rain",
         title: "Số giờ mưa",
         width: 6 * rem,
-        render: ({ item, index, defaultBlockStyle }) => (
-            <View key={13} style={defaultBlockStyle}>
+        render: ({ item, index, cellStyle }) => (
+            <View key={13} style={cellStyle}>
                 <AppText style={styles.contentCell}>{round2(item.time_rain)}</AppText>
             </View>
         ),
@@ -104,8 +104,8 @@ const options = [
         key: "time_error",
         title: "Số giờ lỗi",
         width: 6 * rem,
-        render: ({ item, index, defaultBlockStyle }) => (
-            <View key={14} style={defaultBlockStyle}>
+        render: ({ item, index, cellStyle }) => (
+            <View key={14} style={cellStyle}>
                 <AppText style={styles.contentCell}>{round2(item.total_error / 12)}</AppText>
             </View>
         ),

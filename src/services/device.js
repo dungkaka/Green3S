@@ -58,13 +58,16 @@ export const useDeviceOverview = ({ deviceId, date }) => {
     };
 };
 
-export const useFetchError = ({ deviceId, date }) => {
+export const useFetchError = ({ deviceId, date, error }) => {
     const [isReady, setIsReady] = useState(false);
 
-    const res = useAPIFetcher(API_GREEN3S.DEVICE_ERROR(deviceId, format(date, "YYYY-MM-DD")), {
-        dedupingInterval: timeInterval.LONG,
-        use: [noCache, auth],
-    });
+    const res = useAPIFetcher(
+        API_GREEN3S.ALL_ERROR(format(date, "YYYY-MM-DD"), format(date, "YYYY-MM-DD"), "", deviceId, "", "", error),
+        {
+            dedupingInterval: timeInterval.LONG,
+            use: [noCache, auth],
+        }
+    );
 
     useEffect(() => {
         setTimeout(() => {

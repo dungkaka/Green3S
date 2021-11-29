@@ -23,8 +23,8 @@ const options = [
         key: "order",
         title: "STT",
         width: 3 * rem,
-        render: ({ item, index, defaultBlockStyle }) => (
-            <View key={0} style={defaultBlockStyle}>
+        render: ({ item, index, cellStyle }) => (
+            <View key={0} style={cellStyle}>
                 <AppText style={styles.contentCell}>{index + 1}</AppText>
             </View>
         ),
@@ -33,8 +33,8 @@ const options = [
         key: "name_work",
         title: "Công việc",
         width: 8 * rem,
-        render: ({ item, index, defaultBlockStyle }) => (
-            <View key={1} style={defaultBlockStyle}>
+        render: ({ item, index, cellStyle }) => (
+            <View key={1} style={cellStyle}>
                 <AppText style={styles.contentCell}>{item.maintance_work?.name_work}</AppText>
             </View>
         ),
@@ -44,8 +44,8 @@ const options = [
         key: "stationName",
         title: "Nhà máy",
         width: 8 * rem,
-        render: ({ item, index, defaultBlockStyle }) => (
-            <View key={2} style={defaultBlockStyle}>
+        render: ({ item, index, cellStyle }) => (
+            <View key={2} style={cellStyle}>
                 <AppText style={styles.contentCell}>{item.maintance_work?.factory.stationName}</AppText>
             </View>
         ),
@@ -66,8 +66,8 @@ const options = [
         key: "amount_rest",
         title: "Còn lại",
         width: 6 * rem,
-        render: ({ item, index, defaultBlockStyle }) => (
-            <View key={5} style={defaultBlockStyle}>
+        render: ({ item, index, cellStyle }) => (
+            <View key={5} style={cellStyle}>
                 <AppText style={styles.contentCell}>{item.amount - item.amount_done}</AppText>
             </View>
         ),

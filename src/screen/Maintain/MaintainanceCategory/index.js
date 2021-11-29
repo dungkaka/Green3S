@@ -16,8 +16,8 @@ const options = [
         key: "order",
         title: "STT",
         width: 3 * rem,
-        render: ({ item, index, defaultBlockStyle }) => (
-            <View key={1} style={defaultBlockStyle}>
+        render: ({ item, index, cellStyle }) => (
+            <View key={1} style={cellStyle}>
                 <AppText style={styles.contentCell}>{index + 1}</AppText>
             </View>
         ),
@@ -26,8 +26,8 @@ const options = [
         key: "name",
         title: "Tên hạng mục",
         width: WIDTH - 3 * rem,
-        render: ({ item, index, defaultBlockStyle }) => (
-            <View key={0} style={[defaultBlockStyle, { alignItems: "flex-start", paddingLeft: 1.5 * rem }]}>
+        render: ({ item, index, cellStyle }) => (
+            <View key={0} style={[cellStyle, { alignItems: "flex-start", paddingLeft: 1.5 * rem }]}>
                 <AppText style={styles.contentCell}>{item.name}</AppText>
             </View>
         ),
@@ -57,16 +57,17 @@ const MaintainanceCategory = () => {
                     <JumpLogoPage />
                 </View>
             ) : rData ? (
-                <TableStickBasicTemplate
-                    heightRow={60}
-                    left={[0, 1]}
-                    stickPosition={3 * rem}
-                    options={options}
-                    data={datas}
-                    headerContainerStyle={styles.tableHeaderContainer}
-                    textHeaderStyle={styles.tableTextHeader}
-                    numberLinesContentCell={2}
-                />
+                // <TableStickBasicTemplate
+                //     heightRow={60}
+                //     left={[0, 1]}
+                //     stickPosition={3 * rem}
+                //     options={options}
+                //     data={datas}
+                //     headerContainerStyle={styles.tableHeaderContainer}
+                //     textHeaderStyle={styles.tableTextHeader}
+                //     numberLinesContentCell={2}
+                // />
+                <TableStickBasicTemplate />
             ) : null}
         </View>
     );

@@ -46,7 +46,7 @@ const ButtonModal = ({
                     </View>
 
                     {/* Content */}
-                    <ScrollView style={styles.content}>{renderContentModal()}</ScrollView>
+                    <ScrollView contentContainerStyle={styles.content}>{renderContentModal()}</ScrollView>
                     {/* Footer */}
                     <View style={styles.footerModal}>
                         {/* Cancel */}
@@ -76,7 +76,7 @@ const ButtonModal = ({
                                               if (mount.current) setLoading(false);
                                           },
                                           () => {
-                                              if (mount.current) modalCustomRef.current.close();
+                                              if (mount.current) modalRef.current.close();
                                           }
                                       )
                                     : modalRef.current.close();

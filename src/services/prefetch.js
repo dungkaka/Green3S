@@ -1,7 +1,6 @@
 import { fetcher } from "@utils/helps/request";
-import { mutate } from "swr";
-import { keyListPlants } from "./factory";
+import { ConfigService } from "./config";
 
-export const preFetch = () => {
-    mutate(keyListPlants, fetcher(keyListPlants));
+export const preFetch = (mutate) => {
+    mutate(ConfigService, fetcher(keyListPlants));
 };

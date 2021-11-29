@@ -38,8 +38,8 @@ const options = [
         key: "order",
         title: "STT",
         width: 3 * rem,
-        render: ({ item, index, defaultBlockStyle }) => (
-            <View key={0} style={defaultBlockStyle}>
+        render: ({ item, index, cellStyle }) => (
+            <View key={0} style={cellStyle}>
                 <AppText style={styles.contentCell}>{index + 1}</AppText>
             </View>
         ),
@@ -48,8 +48,8 @@ const options = [
         key: "stationName",
         title: "Nhà máy",
         width: 7 * rem,
-        render: ({ item, index, defaultBlockStyle }) => (
-            <View key={1} style={defaultBlockStyle}>
+        render: ({ item, index, cellStyle }) => (
+            <View key={1} style={cellStyle}>
                 <AppText style={styles.contentCell}>{item.factory?.stationName}</AppText>
             </View>
         ),
@@ -93,8 +93,8 @@ const options = [
         key: "user",
         title: "Người tạo",
         width: 6 * rem,
-        render: ({ item, index, defaultBlockStyle }) => (
-            <View key={9} style={defaultBlockStyle}>
+        render: ({ item, index, cellStyle }) => (
+            <View key={9} style={cellStyle}>
                 <AppText style={styles.contentCell}>{item.user?.username}</AppText>
             </View>
         ),
@@ -103,8 +103,8 @@ const options = [
         key: "user_accept",
         title: "Người duyệt",
         width: 6 * rem,
-        render: ({ item, index, defaultBlockStyle }) => (
-            <View key={10} style={defaultBlockStyle}>
+        render: ({ item, index, cellStyle }) => (
+            <View key={10} style={cellStyle}>
                 <AppText style={styles.contentCell}>{item.user_accept?.username}</AppText>
             </View>
         ),
@@ -113,8 +113,8 @@ const options = [
         key: "status",
         title: "Tình trạng",
         width: 6 * rem,
-        render: ({ item, index, defaultBlockStyle }) => (
-            <View key={11} style={defaultBlockStyle}>
+        render: ({ item, index, cellStyle }) => (
+            <View key={11} style={cellStyle}>
                 <AppText style={styles.contentCell}>{renderStatus(item.status)}</AppText>
             </View>
         ),
@@ -124,8 +124,8 @@ const options = [
         key: "status_accept",
         title: "Trạng thái",
         width: 7 * rem,
-        render: ({ item, index, defaultBlockStyle }) => (
-            <View key={12} style={defaultBlockStyle}>
+        render: ({ item, index, cellStyle }) => (
+            <View key={12} style={cellStyle}>
                 {renderStatusAccept(item.status_accept)}
             </View>
         ),
@@ -134,8 +134,8 @@ const options = [
         key: "created_at",
         title: "Ngày tạo",
         width: 7 * rem,
-        render: ({ item, index, defaultBlockStyle }) => (
-            <View key={13} style={defaultBlockStyle}>
+        render: ({ item, index, cellStyle }) => (
+            <View key={13} style={cellStyle}>
                 <AppText style={styles.contentCell}>{format(item.created_at, "YYYY-MM-DD H:M:S")}</AppText>
             </View>
         ),

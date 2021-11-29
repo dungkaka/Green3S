@@ -1,3 +1,16 @@
+export const objectClean = (object, allowNull = true) => {
+    const newObject = { ...object };
+    Object.keys(newObject).forEach(function (key) {
+        if (newObject[key] == undefined || (!allowNull && object[key] == null)) {
+            delete newObject[key];
+        }
+    });
+
+    return newObject;
+};
+
+export const emptyObject = {};
+
 export const emptyFunc = () => {};
 
 export function randomItem(items) {

@@ -80,10 +80,19 @@ export const JumpLogoPage = (props) => {
     );
 };
 
+export const JumpLogoPageOverlay = (props) => {
+    return (
+        <View style={styles.pageOverlayContainer}>
+            <JumpLogoPage {...props} />
+        </View>
+    );
+};
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
     },
+    pageOverlayContainer: { ...StyleSheet.absoluteFill, zIndex: 999, backgroundColor: "rgba(255,255,255,0.5)" },
 });

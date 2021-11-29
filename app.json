@@ -28,7 +28,8 @@
             "supportsTablet": true
         },
         "android": {
-            "package": "com.dungkaka.projectelectronic",
+            "package": "green3s.com",
+            "googleServicesFile": "./src/configs/google-services.json",
             "permissions": [
                 "NOTIFICATIONS",
                 "CAMERA",

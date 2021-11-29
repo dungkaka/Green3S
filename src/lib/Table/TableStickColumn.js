@@ -1,11 +1,10 @@
-import { AppText, AppTextMedium } from "@common-ui/AppText";
+import { AppTextMedium } from "@common-ui/AppText";
 import Pagination from "@common-ui/Pagination/TabPagination";
 import { Color } from "@theme/colors";
 import { rem } from "@theme/styleContants";
 import React, { Fragment } from "react";
-import { FlatList, ScrollView, StyleSheet, View } from "react-native";
+import { FlatList, StyleSheet, View } from "react-native";
 import Animated, {
-    interpolate,
     scrollTo,
     useAnimatedRef,
     useAnimatedScrollHandler,
@@ -16,19 +15,20 @@ import Animated, {
 const FlatListAnimated = Animated.createAnimatedComponent(FlatList);
 
 const MemoRow = React.memo(
-    ({ children = null, heightRow }) => {
+    ({ children = null, heightRow, index }) => {
         return <View style={{ height: heightRow }}>{children}</View>;
     },
-    (prev, next) => prev.data == next.data
+    (prev, next) => prev.item == next.item && prev.isMark == next.isMark
 );
 
 const TableStickColumn = ({
     data = [],
+    marks = {},
     keyItem = "key",
-    leftHeader = null,
-    rightHeader = null,
-    LeftRow = ({ item, index }) => null,
-    RightRow = ({ item, index }) => null,
+    renderLeftHeader = () => null,
+    renderRightHeader = () => null,
+    renderLeftRow: pRenderLeftRow = ({ item, index }) => null,
+    renderRightRow: pRenderRightRow = ({ item, index }) => null,
     containerStyle,
     rightContainerStyle,
     leftContainerStyle,
@@ -107,17 +107,23 @@ const TableStickColumn = ({
         ],
     }));
 
-    const renderLeftRow = ({ item, index }) => (
-        <MemoRow heightRow={heightRow} data={data}>
-            <LeftRow index={index} item={item} />
-        </MemoRow>
-    );
+    const renderLeftRow = ({ item, index }) => {
+        const isMark = !!marks[item[keyItem]];
+        return (
+            <MemoRow heightRow={heightRow} item={item} isMark={isMark}>
+                {pRenderLeftRow({ item, index, isMark })}
+            </MemoRow>
+        );
+    };
 
-    const renderRightRow = ({ item, index }) => (
-        <MemoRow heightRow={heightRow} data={data}>
-            <RightRow index={index} item={item} />
-        </MemoRow>
-    );
+    const renderRightRow = ({ item, index }) => {
+        const isMark = !!marks[item[keyItem]];
+        return (
+            <MemoRow heightRow={heightRow} item={item} isMark={isMark}>
+                {pRenderRightRow({ item, index, isMark })}
+            </MemoRow>
+        );
+    };
 
     return (
         <Fragment>
@@ -126,7 +132,7 @@ const TableStickColumn = ({
                     <Animated.ScrollView horizontal scrollEventThrottle={16} onScroll={onRightHorizontalScroll}>
                         <View>
                             <View style={{ height: heightHeader, paddingLeft: leftWidth, overflow: "hidden" }}>
-                                {rightHeader}
+                                {renderRightHeader()}
                             </View>
                             <FlatListAnimated
                                 ref={rightARef}
@@ -135,11 +141,11 @@ const TableStickColumn = ({
                                     offset: heightRow * index,
                                     index,
                                 })}
-                                initialNumToRender={10}
+                                initialNumToRender={heightRow > 80 ? 6 : 10}
                                 contentContainerStyle={{ paddingLeft: leftWidth }}
                                 windowSize={7}
                                 bounces={false}
-                                keyExtractor={(item, index) => item?.[keyItem] || index.toString()}
+                                keyExtractor={(item, index) => (item?.[keyItem] || index).toString()}
                                 data={data}
                                 scrollEventThrottle={16}
                                 onScroll={onRightScroll}
@@ -151,7 +157,7 @@ const TableStickColumn = ({
                     </Animated.ScrollView>
                 </View>
                 <Animated.View style={[{ width: leftWidth }, leftContainerStyleAnimated, leftContainerStyle]}>
-                    <View style={{ height: heightHeader, overflow: "hidden" }}>{leftHeader}</View>
+                    <View style={{ height: heightHeader, overflow: "hidden" }}>{renderLeftHeader()}</View>
                     <FlatListAnimated
                         ref={leftARef}
                         getItemLayout={(data, index) => ({
@@ -162,7 +168,7 @@ const TableStickColumn = ({
                         windowSize={7}
                         initialNumToRender={10}
                         showsVerticalScrollIndicator={false}
-                        keyExtractor={(item, index) => item?.[keyItem] || index.toString()}
+                        keyExtractor={(item, index) => (item?.[keyItem] || index).toString()}
                         data={data}
                         renderItem={renderLeftRow}
                         onScroll={onLeftScroll}

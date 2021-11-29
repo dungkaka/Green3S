@@ -74,6 +74,11 @@ const AllPlants = ({ rangeDate, plants, datas, plantTableOptions, filter }) => {
 
     return (
         <Fragment>
+            <View style={{ width: "100%", height: 600, backgroundColor: "white", elevation: 0.5 }}>
+                <AppTextMedium style={styles.titleBlock}>Biểu đồ sản lượng từng ngày mỗi nhà máy</AppTextMedium>
+                <EchartsWebView ref={chartRef} option={options} delayRender={100} />
+            </View>
+
             <View style={styles.block}>
                 <AppTextMedium style={styles.titleBlock}>Tổng quan sản lượng và lỗi</AppTextMedium>
                 <TableStickBasicTemplate
@@ -86,10 +91,6 @@ const AllPlants = ({ rangeDate, plants, datas, plantTableOptions, filter }) => {
                     textHeaderStyle={styles.tableTextHeader}
                     numberLinesContentCell={3}
                 />
-            </View>
-            <View style={{ width: "100%", height: 600, marginTop: 10 * unit, backgroundColor: "white", elevation: 0.5 }}>
-                <AppTextMedium style={styles.titleBlock}>Biểu đồ sản lượng từng ngày mỗi nhà máy</AppTextMedium>
-                <EchartsWebView ref={chartRef} option={options} delayRender={100} />
             </View>
         </Fragment>
     );

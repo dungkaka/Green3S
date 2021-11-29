@@ -11,7 +11,7 @@
             "@hooks/*": ["utils/hooks/*"],
             "@utils/*": ["utils/*"],
 
-            "@common-ui/*": ["components/lib/*"],
+            "@common-ui/*": ["lib/*"],
             "@common-components/*": ["components/common/*"],
             "@components/*" : ["components/*"],
 

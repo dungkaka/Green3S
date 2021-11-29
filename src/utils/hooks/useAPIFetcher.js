@@ -1,6 +1,6 @@
 import { fetcher as defaultFetcher } from "@utils/helps/request";
 import { useEffect, useRef } from "react";
-import useSWR, { useSWRConfig } from "swr";
+import useSWR, { unstable_serialize, useSWRConfig } from "swr";
 import { usePrevious } from "./usePrevious";
 
 export const useAPIFetcher = (key, options, fetcher) => {
@@ -51,6 +51,8 @@ export const timeInterval = {
 
 /* ----------------------------------------------------------------------------------------------- */
 
+// Suggest order of middleware: [auth, expiredTime(20000), listen, saveActiveData]
+
 // Hook for middleware return addition activeData, that is lastest recently fetch success;
 export const saveActiveData = (useSWRNext) => (key, fetcher, config) => {
     const lastWorkData = useRef();
@@ -68,6 +70,7 @@ export const saveActiveData = (useSWRNext) => (key, fetcher, config) => {
     };
 };
 
+// Deprecated
 // Hook for middleware sure that cache is not avaiable when change key, but dedupingInterval still work;
 export const noCache = (useSWRNext) => (key, fetcher, config) => {
     const { cache } = useSWRConfig();
@@ -79,3 +82,56 @@ export const noCache = (useSWRNext) => (key, fetcher, config) => {
 
     return swr;
 };
+
+// Set expiredTime for a request
+// How to use: Make sure set dedupingInterval very short and revalidateIfStale = false
+// Because it will revalidate base on expiredTime, and ignore dedupingInterval.
+export const expiredTime = (time) => (useSWRNext) => (key, fetcher, config) => {
+    const { cache } = useSWRConfig();
+    const sKey = unstable_serialize(key);
+    const preKey = usePrevious(sKey);
+    let revalidateIfStale = false;
+
+    if (sKey != preKey) {
+        const isExpiredTime = cache.get("TIME_" + sKey) ? cache.get("TIME_" + sKey) < Date.now() : true;
+        if (isExpiredTime) {
+            cache.delete(sKey);
+            revalidateIfStale = true;
+        }
+    }
+
+    const swr = useSWRNext(key, fetcher, {
+        ...config,
+        revalidateIfStale: revalidateIfStale,
+        onSuccess: () => {
+            cache.set("TIME_" + sKey, Date.now() + time);
+        },
+    });
+
+    return swr;
+};
+
+export const resetExpiredTime = (cache, keyPart) => {
+    const regex = new RegExp(`TIME_.+${keyPart}`);
+    for (const key of cache.keys()) {
+        if (regex.test(key)) {
+            cache.delete(key);
+        }
+    }
+};
+
+// Hook for controll listen Data, Validating, Error
+export const listen =
+    (data = true, validating = true, error = true) =>
+    (useSWRNext) =>
+    (key, fetcher, config) => {
+        const { cache } = useSWRConfig();
+        const swr = useSWRNext(key, fetcher, { isPaused: () => (data ? false : true), ...config });
+
+        return {
+            data: data ? swr.data : cache.get(unstable_serialize(key)),
+            isValidating: validating ? swr.isValidating : null,
+            error: error ? swr.error : null,
+            mutate: swr.mutate,
+        };
+    };

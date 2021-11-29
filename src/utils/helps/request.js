@@ -16,7 +16,6 @@ export const requester =
     } = {}) =>
     async (url) => {
         try {
-            console.log("URL", url);
             const beforeTime = Date.now();
             const res = await requestFunc(url);
             if (Date.now() - beforeTime < 500) await delay(boundedTime);
@@ -34,7 +33,7 @@ export const fetcher = requester({ requestFunc: (url) => Request.Server.get(url)
 
 // FILE REQUESTER
 export const fileRequester =
-    ({ requestFunc = (fileName) => CacheStorage.readAsync("API", md5(fileName)), handleData = (data) => data } = {}) =>
+    ({ requestFunc = (fileName) => CacheStorage.readAsync("FILE", md5(fileName)), handleData = (data) => data } = {}) =>
     async (fileName) => {
         try {
             const res = await requestFunc(fileName);
@@ -51,11 +50,11 @@ export const fileRequester =
 // REQUEST SYNC BETWEEN API AND FILE
 export const requestSyncFile =
     ({
-        sync = false,
+        sync = true,
         expiredTime = 999,
         unit = "d",
-        fileFetcher = (fileName) => DocumentStorage.readAsync("TEMP", fileName),
-        fileWriter = (fileName, data) => DocumentStorage.writeAsync("TEMP", fileName, data),
+        fileFetcher = (fileName) => DocumentStorage.readAsync("FILE", fileName),
+        fileWriter = (fileName, data) => DocumentStorage.writeAsync("FILE", fileName, data),
         requester = fetcher,
         handleData,
     } = {}) =>

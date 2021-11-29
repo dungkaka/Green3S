@@ -1,14 +1,24 @@
 import { AppText } from "@common-ui/AppText";
 import { rem, unit } from "@theme/styleContants";
-import React, { useRef, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { Pressable, StyleSheet, TouchableOpacity, View } from "react-native";
 import { Color } from "@theme/colors";
 import { time } from "@utils/helps/time";
-import { round2 } from "@utils/helps/functions";
-import { JumpLogoPage } from "@common-ui/Loading/JumpLogo";
+import { JumpLogoPage, JumpLogoPageOverlay } from "@common-ui/Loading/JumpLogo";
 import Filter from "./Filter";
-import { useFetchErrorAC } from "@services/error";
+import { ErrorACService } from "@services/error";
 import TableStickBasicTemplate from "@common-ui/Table/TableStickBasicTemplate";
+import { useNavigation } from "@react-navigation/native";
+import { NAVIGATION } from "constant/navigation";
+import AddButon from "@common-components/TableUtil/AddButon";
+import CheckBox from "@common-ui/Form/CheckBox";
+import { confirmAlert } from "@common-ui/Alert/ConfirmAlert";
+import { useDispatch } from "react-redux";
+import { closeIconLoadingOverlay, openIconLoadingOverlay } from "@redux/actions/app";
+import { showToast } from "@common-ui/ToastNotify/ToastManager";
+import DeleteButton from "@common-components/TableUtil/DeleteButton";
+import EditButton from "@common-components/TableUtil/EditButton";
+import { Feather } from "@expo/vector-icons";
 
 const renderStatus = (code) => {
     switch (code) {
@@ -27,81 +37,12 @@ const renderStatus = (code) => {
     }
 };
 
-const options = [
-    {
-        key: "order",
-        title: "STT",
-        width: 3 * rem,
-        render: ({ item, index, defaultBlockStyle }) => (
-            <View key={0} style={defaultBlockStyle}>
-                <AppText style={styles.contentCell}>{index + 1}</AppText>
-            </View>
-        ),
-    },
-    {
-        key: "station",
-        title: "Nhà máy",
-        width: 6 * rem,
-        render: ({ item, index, defaultBlockStyle }) => (
-            <View key={1} style={defaultBlockStyle}>
-                <AppText style={styles.contentCell}>{item.factory?.stationName}</AppText>
-            </View>
-        ),
-    },
-    {
-        key: "device",
-        title: "Thiết bị",
-        width: 5 * rem,
-        render: ({ item, index, defaultBlockStyle }) => (
-            <View key={2} style={defaultBlockStyle}>
-                <AppText style={styles.contentCell}>{item.device?.devName}</AppText>
-            </View>
-        ),
-    },
-    {
-        key: "error_name",
-        title: "Tên lỗi",
-        width: 7 * rem,
-    },
-    {
-        key: "reason",
-        title: "Nguyên nhân",
-        width: 16 * rem,
-    },
-    {
-        key: "solution",
-        title: "Giải pháp",
-        width: 16 * rem,
-    },
-    {
-        key: "status",
-        title: "Trạng thái sửa",
-        width: 7 * rem,
-        render: ({ item, index, defaultBlockStyle }) => (
-            <View key={6} style={defaultBlockStyle}>
-                {renderStatus(item.status)}
-            </View>
-        ),
-    },
-    { key: "note", title: "Ghi chú", width: 8 * rem },
-    {
-        key: "time_repair",
-        title: "Thời gian tác động",
-        width: 7 * rem,
-        render: ({ item, index, defaultBlockStyle }) => (
-            <View key={8} style={defaultBlockStyle}>
-                <AppText style={styles.contentCell}>{JSON.parse(item.time_repair)?.repaired}</AppText>
-            </View>
-        ),
-    },
-    { key: "created_at", title: "Thời gian xuất hiện", width: 7 * rem },
-    { key: "time_end", title: "Thời gian kết thúc", width: 7 * rem },
-];
-
 const initEndDate = time().toDateObject();
 const initStartDate = { ...time().toDateObject(), day: 1 };
 
 const ErrorAC = () => {
+    const navigation = useNavigation();
+    const dispatch = useDispatch();
     const [filter, setFilter] = useState({
         endDate: initEndDate,
         startDate: initStartDate,
@@ -110,8 +51,265 @@ const ErrorAC = () => {
         error: "",
         page: 1,
     });
-    const { rData, rIsValidating, mutate } = useFetchErrorAC({ ...filter });
+    const { rData, rIsValidating, key, mutate } = ErrorACService.useFetchErrorAC({ ...filter });
+    const { deleteErrors: cDeleteErrors } = ErrorACService.useACErrorControl({ key });
     const datas = rData?.datas || [];
+
+    const [marks, setMarks] = useState({});
+    const arrayMarks = Object.keys(marks).filter((errorId) => marks[errorId] == true);
+    const isAllMark = datas.length > 0 && arrayMarks.length == datas.length;
+
+    useEffect(() => {
+        if (Object.keys(marks).length != 0) setMarks({});
+    }, [datas]);
+
+    useEffect(() => {
+        navigation.setOptions({
+            headerRight: () => {
+                if (arrayMarks.length > 0)
+                    return (
+                        <Pressable
+                            style={{
+                                flexDirection: "row",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                marginRight: 14 * unit,
+                            }}
+                            onPress={() => deleteErrors(arrayMarks)}
+                        >
+                            <AppText style={{ color: "white", paddingRight: 8 * unit }}>( Chọn {arrayMarks.length} )</AppText>
+                            <Feather name="trash-2" size={20} color="white" />
+                        </Pressable>
+                    );
+                return null;
+            },
+        });
+    }, [marks]);
+
+    const deleteErrors = (errorIds) => {
+        confirmAlert({
+            title: "Xóa lỗi",
+            content: `Bạn chắc chắn muốn xóa ${errorIds.length} lỗi này chứ, không thể khôi phục sau khi đã xóa !`,
+            onOk: async (loading, unloading, close) => {
+                try {
+                    dispatch(openIconLoadingOverlay());
+                    await cDeleteErrors(errorIds);
+                    dispatch(closeIconLoadingOverlay);
+                    close();
+                    showToast({
+                        type: "success",
+                        title: "Xóa lỗi",
+                        description: "Thành công !",
+                    });
+                } catch (e) {
+                    dispatch(closeIconLoadingOverlay);
+                    showToast({
+                        type: "error",
+                        title: "Xóa lỗi",
+                        description: "Lỗi: " + e.message,
+                    });
+                }
+            },
+        });
+    };
+
+    const options = useMemo(
+        () => [
+            {
+                key: "order",
+                title: "STT",
+                width: 3 * rem,
+                render: ({ item, index, cellStyle }) => (
+                    <View style={cellStyle}>
+                        <AppText style={styles.contentCell}>{index + 1}</AppText>
+                    </View>
+                ),
+            },
+            {
+                key: "station",
+                title: "Nhà máy",
+                width: 6 * rem,
+                render: ({ item, index, cellStyle }) => (
+                    <TouchableOpacity
+                        onPress={() =>
+                            item.factory &&
+                            navigation.navigate(NAVIGATION.DETAIL_PLANT, {
+                                ...item.factory,
+                            })
+                        }
+                        activeOpacity={0.8}
+                        style={cellStyle}
+                    >
+                        <AppText style={styles.contentCellPress}>{item.factory?.stationName}</AppText>
+                    </TouchableOpacity>
+                ),
+            },
+            {
+                key: "__select",
+                title: "STT",
+                width: 3 * rem,
+                renderHeader: ({ cellHeaderStyle }) => {
+                    return (
+                        <View style={cellHeaderStyle}>
+                            <CheckBox
+                                value={isAllMark}
+                                onChange={(value) => {
+                                    if (value) {
+                                        const newMarks = {};
+                                        datas.forEach((error) => (newMarks[error.id] = true));
+                                        setMarks(newMarks);
+                                    } else {
+                                        setMarks({});
+                                    }
+                                }}
+                            />
+                        </View>
+                    );
+                },
+                render: ({ item, index, isMark, cellStyle }) => {
+                    return (
+                        <View style={cellStyle}>
+                            <View style={{ padding: 4 * unit }}>
+                                <CheckBox
+                                    onChange={(value) => {
+                                        setMarks((marks) => ({
+                                            ...marks,
+                                            [item.id]: value ? true : false,
+                                        }));
+                                    }}
+                                    value={isMark}
+                                />
+                            </View>
+                        </View>
+                    );
+                },
+            },
+            {
+                key: "__control",
+                title: "Thao tác",
+                width: 5 * rem,
+                render: ({ item, index, cellStyle }) => {
+                    return (
+                        <View style={cellStyle}>
+                            <View style={{ padding: 6 * unit }}>
+                                <DeleteButton onPress={() => deleteErrors([item.id])} />
+                            </View>
+                            <View style={{ padding: 6 * unit }}>
+                                <EditButton
+                                    onPress={() => {
+                                        navigation.push(NAVIGATION.RS_UPDATION, {
+                                            error: item,
+                                            key: key,
+                                        });
+                                    }}
+                                />
+                            </View>
+                        </View>
+                    );
+                },
+            },
+            {
+                key: "device",
+                title: "Thiết bị",
+                width: 5 * rem,
+                render: ({ item, index, cellStyle }) => (
+                    <TouchableOpacity
+                        onPress={() =>
+                            item.factory &&
+                            navigation.navigate(NAVIGATION.DETAIL_DEVICE, {
+                                device: item.device,
+                            })
+                        }
+                        activeOpacity={0.8}
+                        style={cellStyle}
+                    >
+                        <AppText style={styles.contentCellPress}>{item.device?.devName}</AppText>
+                    </TouchableOpacity>
+                ),
+            },
+            {
+                key: "error_name",
+                title: "Tên lỗi",
+                width: 7 * rem,
+            },
+            {
+                key: "reason",
+                title: "Nguyên nhân",
+                width: 16 * rem,
+                render: ({ item, index, cellStyle }) => {
+                    if (!item.reason)
+                        return (
+                            <View style={cellStyle}>
+                                <AddButon
+                                    onPress={() => {
+                                        navigation.push(NAVIGATION.RS_UPDATION, {
+                                            error: item,
+                                            key: key,
+                                        });
+                                    }}
+                                    size={18}
+                                />
+                            </View>
+                        );
+                    return (
+                        <View style={cellStyle}>
+                            <AppText numberOfLines={5} style={styles.contentCell}>
+                                {item.reason}
+                            </AppText>
+                        </View>
+                    );
+                },
+            },
+            {
+                key: "solution",
+                title: "Giải pháp",
+                width: 16 * rem,
+                render: ({ item, index, cellStyle }) => {
+                    if (!item.solution)
+                        return (
+                            <View style={cellStyle}>
+                                <AddButon
+                                    onPress={() => {
+                                        navigation.push(NAVIGATION.RS_UPDATION, {
+                                            error: item,
+                                            key: key,
+                                        });
+                                    }}
+                                    size={18}
+                                />
+                            </View>
+                        );
+                    return (
+                        <View style={cellStyle}>
+                            <AppText numberOfLines={5} style={styles.contentCell}>
+                                {item.solution}
+                            </AppText>
+                        </View>
+                    );
+                },
+            },
+            {
+                key: "status",
+                title: "Trạng thái sửa",
+                width: 7 * rem,
+                render: ({ item, index, cellStyle }) => <View style={cellStyle}>{renderStatus(item.status)}</View>,
+            },
+            { key: "note", title: "Ghi chú", width: 8 * rem },
+            {
+                key: "time_repair",
+                title: "Thời gian tác động",
+                width: 7 * rem,
+                render: ({ item, index, cellStyle }) => (
+                    <View style={cellStyle}>
+                        <AppText style={styles.contentCell}>{JSON.parse(item.time_repair)?.repaired}</AppText>
+                    </View>
+                ),
+            },
+            { key: "created_at", title: "Thời gian xuất hiện", width: 7 * rem },
+            { key: "time_end", title: "Thời gian kết thúc", width: 7 * rem },
+        ],
+        [rData, marks]
+    );
 
     const handleFilter = (filter) => {
         setFilter({
@@ -124,36 +322,36 @@ const ErrorAC = () => {
         });
     };
 
+    const onChangePage = useCallback((page) => {
+        setFilter({ ...filter, page: page });
+    }, []);
+
     return (
         <View style={styles.container}>
             <Filter filter={filter} handleFilter={handleFilter} />
 
-            {rIsValidating ? (
-                <View style={{ flex: 1, backgroundColor: "white" }}>
-                    <JumpLogoPage />
-                </View>
-            ) : rData ? (
-                <TableStickBasicTemplate
-                    heightRow={100}
-                    left={[0, 1]}
-                    stickPosition={3 * rem}
-                    options={options}
-                    data={datas}
-                    headerContainerStyle={styles.tableHeaderContainer}
-                    textHeaderStyle={styles.tableTextHeader}
-                    numberLinesContentCell={5}
-                    showPagination={true}
-                    paginationInfo={{
-                        total: rData.total_page * 20 || 0,
-                        page: filter.page,
-                        pageSize: 20,
-                        currentPageSize: datas.length,
-                        onChangePage: (page) => {
-                            setFilter({ ...filter, page: page });
-                        },
-                    }}
-                />
-            ) : null}
+            {rIsValidating && <JumpLogoPageOverlay />}
+
+            <TableStickBasicTemplate
+                keyItem="id"
+                marks={marks}
+                heightRow={100}
+                left={[0, 1]}
+                stickPosition={3 * rem}
+                options={options}
+                data={datas}
+                headerContainerStyle={styles.tableHeaderContainer}
+                textHeaderStyle={styles.tableTextHeader}
+                numberLinesContentCell={5}
+                showPagination={true}
+                paginationInfo={{
+                    total: rData?.total_page * 20 || 0,
+                    page: filter.page,
+                    pageSize: 20,
+                    currentPageSize: datas.length,
+                    onChangePage: onChangePage,
+                }}
+            />
         </View>
     );
 };
@@ -165,10 +363,14 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: "white",
     },
-
     contentCell: {
         fontSize: 13 * unit,
         textAlign: "center",
+    },
+    contentCellPress: {
+        fontSize: 13 * unit,
+        textAlign: "center",
+        color: Color.blueDark,
     },
     contentCellTag: {
         fontSize: 13 * unit,

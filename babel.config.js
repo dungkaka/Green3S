@@ -16,7 +16,7 @@ module.exports = function (api) {
                         "@hooks": "./src/utils/hooks",
                         "@utils": "./src/utils",
 
-                        "@common-ui": "./src/components/lib",
+                        "@common-ui": "./src/lib",
                         "@common-components": "./src/components/common",
                         "@components": "./src/components",
 

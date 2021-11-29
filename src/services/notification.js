@@ -52,6 +52,11 @@ export const getExpoPushToken = async () => {
             });
         }
     } catch (e) {
+        showToast({
+            type: "error",
+            title: "Lỗi",
+            description: e.message,
+        });
         return token;
     }
 };

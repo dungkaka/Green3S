@@ -21,6 +21,8 @@ export const useUser = () => {
 
 export const auth = (useSWRNext) => (key, fetcher, config) => {
     const { user } = useUser();
-    const swr = useSWRNext(user && key ? [key, user?.email] : null, fetcher, config);
+    const keyArray = [key, user?.email];
+    const swr = useSWRNext(user && key ? keyArray : null, fetcher, config);
+    swr.key = keyArray;
     return swr;
 };

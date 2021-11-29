@@ -13,8 +13,8 @@ const options = [
         key: "order",
         title: "STT",
         width: 3 * rem,
-        render: ({ item, index, defaultBlockStyle }) => (
-            <View key={0} style={defaultBlockStyle}>
+        render: ({ item, index, cellStyle }) => (
+            <View key={0} style={cellStyle}>
                 <AppText style={styles.contentCell}>{index + 1}</AppText>
             </View>
         ),
@@ -33,8 +33,8 @@ const options = [
         key: "status",
         title: "Loại vật tư",
         width: 8 * rem,
-        render: ({ item, index, defaultBlockStyle }) => (
-            <View key={3} style={defaultBlockStyle}>
+        render: ({ item, index, cellStyle }) => (
+            <View key={3} style={cellStyle}>
                 <AppText style={styles.contentCell}>
                     {item.status == 1 ? "Cũ" : item.status == 2 ? "Mới" : "Thiết bị bảo hành"}
                 </AppText>
@@ -45,8 +45,8 @@ const options = [
         key: "material_useds",
         title: "Vị trí sử dụng",
         width: 12 * rem,
-        render: ({ item, index, defaultBlockStyle }) => (
-            <View key={4} style={defaultBlockStyle}>
+        render: ({ item, index, cellStyle }) => (
+            <View key={4} style={cellStyle}>
                 <AppText style={styles.contentCell}>
                     {item.material_useds[0].string} - {item.material_useds[0].device?.devName}
                 </AppText>

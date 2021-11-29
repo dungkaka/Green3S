@@ -15,9 +15,16 @@ const ErrorItem = React.memo(
         const navigation = useNavigation();
         return (
             <View style={styles.itemListContainer}>
-                <View style={{ flex: 4, marginRight: 8 }}>
-                    <AppText style={styles.itemText}>{item.factory?.stationName}</AppText>
-                </View>
+                <Pressable
+                    onPress={() => {
+                        navigation.push(NAVIGATION.DETAIL_PLANT, {
+                            ...item.factory,
+                        });
+                    }}
+                    style={{ flex: 4, marginRight: 8 }}
+                >
+                    <AppText style={styles.itemTextLink}>{item.factory?.stationName}</AppText>
+                </Pressable>
                 <Pressable
                     onPress={() => {
                         navigation.push(NAVIGATION.DETAIL_DEVICE, {
@@ -26,10 +33,10 @@ const ErrorItem = React.memo(
                     }}
                     style={{ flex: 3, marginRight: 8, flexDirection: "row", flexWrap: "wrap" }}
                 >
-                    <AppText style={styles.itemText}>{item.device?.devName}</AppText>
+                    <AppText style={styles.itemTextLink}>{item.device?.devName}</AppText>
                 </Pressable>
                 <View style={{ flex: 3 }}>
-                    <AppText style={styles.itemTextLink}>{item.created_at}</AppText>
+                    <AppText style={styles.itemText}>{item.created_at}</AppText>
                 </View>
             </View>
         );

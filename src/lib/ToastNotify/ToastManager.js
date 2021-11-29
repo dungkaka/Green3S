@@ -3,10 +3,11 @@ import { Color } from "@theme/colors";
 import { fontUnit, rem, unit } from "@theme/styleContants";
 import { GoogleSansFontType } from "@theme/typography";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Dimensions, FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Button, Dimensions, FlatList, Image, Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Ionicons, Feather } from "@expo/vector-icons";
 import { PanGestureHandler } from "react-native-gesture-handler";
 import Animated, {
+    Easing,
     runOnJS,
     Transition,
     Transitioning,
@@ -14,58 +15,50 @@ import Animated, {
     useAnimatedStyle,
     useSharedValue,
     withDelay,
-    withSpring,
     withTiming,
 } from "react-native-reanimated";
 import Constants from "expo-constants";
+import Portal from "@burstware/react-native-portal/build/Portal";
 
-const width = Dimensions.get("window").width;
+const width = 350;
 const TRANSLATE_X_THRESHOLD = -width * 0.25;
 
 const contextClass = {
     success: {
         bg: "white",
-        title: Color.greenBlue,
-        progress: Color.greenBlue,
+        title: "#15cfaa",
+        progress: "#15cfaa",
         IconFamily: Ionicons,
         iconName: "checkmark-circle-outline",
     },
     error: {
         bg: "white",
-        title: Color.redPastel,
-        progress: Color.redPastel,
+        title: "#fa442f",
+        progress: "#fa442f",
         IconFamily: Feather,
         iconName: "x-circle",
     },
     warning: {
         bg: "white",
-        title: Color.orangePastel,
-        progress: Color.orangePastel,
+        title: Color.orangeLight,
+        progress: Color.orangeLight,
         IconFamily: Feather,
         iconName: "alert-circle",
     },
     info: {
         bg: "white",
-        title: Color.blueModern_1,
-        progress: Color.blueModern_1,
+        title: Color.blueMax,
+        progress: Color.blueMax,
         IconFamily: Feather,
         iconName: "info",
     },
     default: {
         bg: "white",
-        title: Color.blueModern_1,
-        progress: Color.blueModern_1,
+        title: Color.blueMax,
+        progress: Color.blueMax,
         IconFamily: Feather,
         iconName: "info",
     },
-};
-
-const springItem = {
-    damping: 26,
-    stiffness: 200,
-    mass: 1.8,
-    restDisplacementThreshold: 0.01,
-    restSpeedThreshold: 1,
 };
 
 const AnimatedItem = React.memo(
@@ -75,7 +68,7 @@ const AnimatedItem = React.memo(
         let timeOutDeleteToast = 0;
 
         useEffect(() => {
-            animatedItem.value = withSpring(0, springItem, () => {
+            animatedItem.value = withTiming(0, { easing: Easing.bezier(0.51, 0.13, 0.05, 1.13), duration: 450 }, () => {
                 runOnJS(didShowToast)();
                 runOnJS(deleteItemDelay)();
 
@@ -96,7 +89,7 @@ const AnimatedItem = React.memo(
         };
 
         const deleteItem = (duration = 400) => {
-            animatedItem.value = withTiming(-1, { duration: duration }, () => {
+            animatedItem.value = withTiming(-1, { duration: duration, easing: Easing.bezier(0.23, 0.84, 0.39, 1.03) }, () => {
                 runOnJS(removeToast)(id);
             });
         };
@@ -111,7 +104,7 @@ const AnimatedItem = React.memo(
             onEnd: () => {
                 const shouldDeleteItem = animatedItem.value * width < TRANSLATE_X_THRESHOLD;
                 if (shouldDeleteItem) {
-                    runOnJS(deleteItem)(400 + animatedItem.value * 400);
+                    runOnJS(deleteItem)(500 + animatedItem.value * 500);
                 } else {
                     animatedItem.value = withTiming(0, null, () => {
                         runOnJS(deleteItemDelay)();
@@ -139,11 +132,13 @@ const AnimatedItem = React.memo(
                         </View>
                         <View>
                             <AppText style={[styles.title, { color: context.title }]}>{title}</AppText>
-                            <AppText style={styles.description}>{description}</AppText>
+                            <AppText numberOfLines={8} style={styles.description}>
+                                {description}
+                            </AppText>
                         </View>
                     </View>
 
-                    <TouchableOpacity style={styles.closeButton} onPress={deleteItem}>
+                    <TouchableOpacity style={styles.closeButton} onPress={() => deleteItem()}>
                         <Text style={styles.deleteIcon}>{"\u00D7"}</Text>
                     </TouchableOpacity>
                 </Animated.View>
@@ -190,32 +185,39 @@ export const ToastManager = ({ position = "bottom" }) => {
     Toast.clearAllToast = clearAllToast;
 
     return (
-        <Transitioning.View
-            ref={transitionRef}
-            transition={transition}
-            style={[
-                styles.container,
-                position == "bottom"
-                    ? {
-                          bottom: 0,
-                          marginBottom: 2 * rem,
-                      }
-                    : {
-                          top: 0,
-                          marginTop: Constants.statusBarHeight,
-                      },
-            ]}
-        >
-            <FlatList
-                data={valueArray}
-                ref={scrollViewRef}
-                scrollEnabled={false}
-                removeClippedSubviews={true}
-                contentContainerStyle={styles.flatlistContainer}
-                keyExtractor={(item) => item.id}
-                renderItem={({ item }) => <AnimatedItem item={item} removeToast={removeToast} didShowToast={didShowToast} />}
-            />
-        </Transitioning.View>
+        <Portal>
+            <Transitioning.View
+                ref={transitionRef}
+                transition={transition}
+                style={[
+                    styles.container,
+                    position == "bottom"
+                        ? {
+                              bottom: 0,
+                              marginBottom: rem,
+                          }
+                        : {
+                              top: 0,
+                              marginTop: Constants.statusBarHeight,
+                          },
+                ]}
+            >
+                <FlatList
+                    data={valueArray}
+                    ref={scrollViewRef}
+                    scrollEnabled={false}
+                    removeClippedSubviews={true}
+                    contentContainerStyle={[
+                        styles.flatlistContainer,
+                        { flexDirection: position == "top" ? "column" : "column-reverse" },
+                    ]}
+                    keyExtractor={(item) => item.id}
+                    renderItem={({ item }) => (
+                        <AnimatedItem item={item} removeToast={removeToast} didShowToast={didShowToast} />
+                    )}
+                />
+            </Transitioning.View>
+        </Portal>
     );
 };
 
@@ -224,6 +226,7 @@ const Toast = {};
 export const showToast = ({ type, title, description } = {}) => {
     Toast.showToast && Toast.showToast({ type, title, description });
 };
+
 export const clearAllToast = () => {
     Toast.clearAllToast && Toast.clearAllToast();
 };
@@ -232,7 +235,7 @@ const styles = StyleSheet.create({
     container: {
         position: "absolute",
         left: 0,
-        zIndex: 99999,
+        zIndex: 9999,
         justifyContent: "center",
         backgroundColor: "transparent",
     },
@@ -240,9 +243,8 @@ const styles = StyleSheet.create({
     flatlistContainer: {
         flex: 1,
         flexGrow: 1,
-        paddingVertical: rem / 2,
+        paddingVertical: rem,
         paddingRight: 2 * rem,
-        flexDirection: "column-reverse",
         justifyContent: "flex-start",
     },
 
@@ -254,21 +256,21 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         width: 320 * unit,
         marginLeft: 14 * unit,
-        marginTop: rem,
-        backgroundColor: "white",
+        marginVertical: rem / 2,
+        backgroundColor: "rgba(0,0,0,0.85)",
         alignItems: "flex-start",
         justifyContent: "center",
-        borderRadius: 4 * unit,
-        elevation: 1.5,
+        borderRadius: 12 * unit,
+        elevation: 6,
         overflow: "hidden",
-        // borderTopWidth: 1,
-        // borderColor: Color.gray_0,
     },
 
     singleItemContainer: {
         flex: 1,
-        padding: 1 * rem,
-        borderLeftWidth: 4 * unit,
+        paddingVertical: 1.5 * rem,
+        paddingLeft: rem,
+        paddingRight: 5 * rem,
+        borderLeftWidth: 6 * unit,
         flexDirection: "row",
         justifyContent: "flex-start",
     },
@@ -281,7 +283,8 @@ const styles = StyleSheet.create({
     },
 
     description: {
-        color: Color.gray_8,
+        paddingTop: 2 * unit,
+        color: Color.gray_2,
     },
 
     TouchableOpacityStyle: {
@@ -310,7 +313,7 @@ const styles = StyleSheet.create({
 
     deleteIcon: {
         width: "100%",
-        color: Color.gray_8,
+        color: Color.gray_4,
         fontSize: 30 * unit,
     },
 });

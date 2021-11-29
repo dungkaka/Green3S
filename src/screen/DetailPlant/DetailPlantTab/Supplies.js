@@ -1,13 +1,11 @@
-import { AppText, AppTextMedium } from "@common-ui/AppText";
+import { AppTextMedium } from "@common-ui/AppText";
 import TableStickBasicTemplate from "@common-ui/Table/TableStickBasicTemplate";
-import TableStickColumn from "@common-ui/Table/TableStickColumn";
 import { ModalDatePicker } from "@common-ui/Calendar/DatePickerModal";
-import { ColorDefault } from "@theme/index";
 import { Color } from "@theme/colors";
 import { rem, unit } from "@theme/styleContants";
 import { GoogleSansFontType } from "@theme/typography";
-import React, { useEffect, useState, useMemo, useRef } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import React, { useRef } from "react";
+import { Pressable, StyleSheet, View } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 
 const data = new Array(500).fill({

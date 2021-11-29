@@ -23,8 +23,8 @@ const ReportPlanLogRepair = () => {
                 key: "order",
                 title: "STT",
                 width: 3 * rem,
-                render: ({ item, index, defaultBlockStyle }) => (
-                    <View key={0} style={defaultBlockStyle}>
+                render: ({ item, index, cellStyle }) => (
+                    <View key={0} style={cellStyle}>
                         <AppText style={styles.contentCell}>{index + 1}</AppText>
                     </View>
                 ),
@@ -48,8 +48,8 @@ const ReportPlanLogRepair = () => {
                 key: "dev",
                 title: "MPPT - Thiết bị",
                 width: 12 * rem,
-                render: ({ item, index, defaultBlockStyle }) => (
-                    <View key={4} style={defaultBlockStyle}>
+                render: ({ item, index, cellStyle }) => (
+                    <View key={4} style={cellStyle}>
                         <AppText style={styles.contentCell}>
                             {item.string} - {item.devName}
                         </AppText>
@@ -80,10 +80,10 @@ const ReportPlanLogRepair = () => {
                 key: "image",
                 title: "VT",
                 width: 8 * rem,
-                render: ({ item, index, defaultBlockStyle }) => {
-                    if (!item.image) return <View key={9} style={defaultBlockStyle} />;
+                render: ({ item, index, cellStyle }) => {
+                    if (!item.image) return <View key={9} style={cellStyle} />;
                     return (
-                        <Pressable onPress={() => imageLogViewerRef.current.open(item.image)} key={9} style={defaultBlockStyle}>
+                        <Pressable onPress={() => imageLogViewerRef.current.open(item.image)} key={9} style={cellStyle}>
                             <Image
                                 source={{
                                     uri: item.image,

@@ -5,7 +5,6 @@ import { GoogleSansFontType } from "@theme/typography";
 import React, { useEffect, useRef, useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator } from "react-native";
 import ModalPortal from "./ModalPortal";
-import MyModal from "./MyModal";
 
 const LoadingIcon = ({ isIconAnimating, color }) => (
     <ActivityIndicator size={20 * unit} color={color} animating={isIconAnimating} />
@@ -95,7 +94,7 @@ const ModalAlert = ({
     );
 };
 
-export default React.memo(ModalAlert, () => true);
+export default React.memo(ModalAlert);
 
 const styles = StyleSheet.create({
     container: {

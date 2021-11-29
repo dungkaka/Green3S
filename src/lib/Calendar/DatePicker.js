@@ -78,7 +78,7 @@ const DatePicker = ({
         }
 
         if (MODE[mode] <= MODE.minute) {
-            const minuteIndex = hours.findIndex((m) => m.value == value.minute);
+            const minuteIndex = minutes.findIndex((m) => m.value == value.minute);
             if (minuteIndex != -1) {
                 minuteWheelRef.current.scrollToIndex({
                     animated: false,

@@ -1,8 +1,11 @@
+export const domain = "https://green3s.vn";
+export const fileImageDir = "uploads";
 const preUrl = "https://green3s.vn/api/v1";
 
 export const API_GREEN3S = {
     //Login:
     LOGIN: () => preUrl + `/login`,
+    LOGOUT: (deviceToken) => preUrl + `/logout`,
 
     // Home/DashBoard
     LIST_PLANTS: () => preUrl + `/plant/list`,
@@ -48,21 +51,33 @@ export const API_GREEN3S = {
     ) =>
         preUrl +
         `/error/all?error=${error}&date_start=${dateStart}&date_end=${dateEnd}&stationCode=${stationCode}&device_id=${device_id}&status=${status}&string=${string}&per_page=${pageSize}&page=${page}`,
-    ERROR_AC: (dateStart = "", dateEnd = "", stationCode = "", status = "", error = "", page = 1, pageSize = 20) =>
+    ERROR_AC: (
+        dateStart = "",
+        dateEnd = "",
+        stationCode = "",
+        deviceId = "",
+        status = "",
+        error = "",
+        page = 1,
+        pageSize = 20
+    ) =>
         preUrl +
-        `/error/ac?date_start=${dateStart}&date_end=${dateEnd}&stationCode=${stationCode}&status=${status}&error=${error}&per_page=${pageSize}&page=${page}`,
-    ERROR_DC: (dateStart = "", dateEnd = "", stationCode = "", status = "", page = 1, pageSize = 20) =>
+        `/error/ac?date_start=${dateStart}&date_end=${dateEnd}&stationCode=${stationCode}&device_id=${deviceId}&status=${status}&error=${error}&per_page=${pageSize}&page=${page}`,
+    ERROR_DC: (dateStart = "", dateEnd = "", stationCode = "", deviceId = "", status = "", page = 1, pageSize = 20) =>
         preUrl +
-        `/error/dc?date_start=${dateStart}&date_end=${dateEnd}&stationCode=${stationCode}&status=${status}&per_page=${pageSize}&page=${page}`,
-    PERFOMANCE: (dateStart = "", dateEnd = "", stationCode = "", status = "", page = 1, pageSize = 20) =>
+        `/error/dc?date_start=${dateStart}&date_end=${dateEnd}&stationCode=${stationCode}&device_id=${deviceId}&status=${status}&per_page=${pageSize}&page=${page}`,
+    PERFOMANCE: (dateStart = "", dateEnd = "", stationCode = "", deviceId = "", status = "", page = 1, pageSize = 20) =>
         preUrl +
-        `/error/performance?date_start=${dateStart}&date_end=${dateEnd}&stationCode=${stationCode}&status=${status}&per_page=${pageSize}&page=${page}`,
+        `/error/performance?date_start=${dateStart}&date_end=${dateEnd}&stationCode=${stationCode}&device_id=${deviceId}&status=${status}&per_page=${pageSize}&page=${page}`,
     POTENTIAL_ERROR: (month = "", year = "", stationCode = "", name = "") =>
         preUrl + `/error/potential?month=${month}&year=${year}&stationCode=${stationCode}&name=${name}`,
     ERROR_RESISTOR: (dateStart = "", dateEnd = "", stationCode = "", status = "", page = 1, pageSize = 20) =>
         preUrl +
         `/error/resistor?date_start=${dateStart}&date_end=${dateEnd}&stationCode=${stationCode}&status=${status}&per_page=${pageSize}&page=${page}`,
     ERROR_DISCONNECT: (stationCode) => preUrl + `/error/disconnect?stationCode=${stationCode}`,
+    ERROR_ADD_RS: () => preUrl + `/error/add-reason-solution`,
+    ERROR_UPDATE: () => preUrl + `/error/update-status-repair`,
+    DELETE_ERROR: () => preUrl + `/error/delete`,
 
     // ErrorOverview
     ERROR_PREVIEW_ALL: () => preUrl + `/error/home`,

@@ -35,6 +35,7 @@ import DPReportPotentialError from "screen/DetailPlant/ReportPotentialError";
 import Device from "screen/Device/index";
 import InactiveInverter from "screen/Maintain/InactiveInterver";
 import AllError from "screen/Maintain/AllError";
+import RSUpdation from "screen/Maintain/RSUpdation.js/index.js";
 
 enableAnimationExperimental();
 handleKillApp();
@@ -140,7 +141,7 @@ const AppNavigation = ({ isLogin }) => {
                         </Stack.Group>
 
                         {/* Report Tab */}
-                        <Stack.Group screenOptions={{ ...TransitionPresets.ModalPresentationIOS }}>
+                        <Stack.Group screenOptions={{ ...TransitionPresets.SlideFromRightIOS }}>
                             <Stack.Screen
                                 name={NAVIGATION.REPORT_PLANT_YIELD}
                                 component={ReportPlantYield}
@@ -186,7 +187,7 @@ const AppNavigation = ({ isLogin }) => {
                         </Stack.Group>
 
                         {/* Error */}
-                        <Stack.Group screenOptions={{ ...TransitionPresets.ModalPresentationIOS }}>
+                        <Stack.Group screenOptions={{ ...TransitionPresets.SlideFromRightIOS }}>
                             <Stack.Screen
                                 name={NAVIGATION.ALLE_ERROR}
                                 component={AllError}
@@ -243,6 +244,13 @@ const AppNavigation = ({ isLogin }) => {
                                     title: "Lỗi mất tín hiệu trong ngày",
                                 }}
                             />
+                            <Stack.Screen
+                                name={NAVIGATION.RS_UPDATION}
+                                component={RSUpdation}
+                                options={{
+                                    title: "Cập nhật lỗi",
+                                }}
+                            />
                         </Stack.Group>
 
                         {/* Vật tư */}
@@ -296,7 +304,9 @@ const AppNavigation = ({ isLogin }) => {
 const AppContainer = ({ isLogin }) => {
     return (
         <Portal.Host>
-            <AppNavigation isLogin={isLogin} />
+            <Portal.Host>
+                <AppNavigation isLogin={isLogin} />
+            </Portal.Host>
             <GlobalUI isLogin={isLogin} />
         </Portal.Host>
     );

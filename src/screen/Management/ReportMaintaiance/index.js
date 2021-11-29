@@ -1,6 +1,6 @@
 import { AppText } from "@common-ui/AppText";
 import { rem, unit } from "@theme/styleContants";
-import React, { useRef, useState } from "react";
+import React, { Fragment, useRef, useState } from "react";
 import { Image, Pressable, StyleSheet, View } from "react-native";
 import { Color } from "@theme/colors";
 import { time } from "@utils/helps/time";
@@ -24,13 +24,30 @@ const renderStatus = (code) => {
     return null;
 };
 
+const ModalReportDetailCell = ({ item }) => {
+    const modalRef = useRef();
+    return (
+        <Fragment>
+            <Pressable
+                onPress={() => {
+                    modalRef.current.open();
+                }}
+                style={styles.search}
+            >
+                <AntDesign name="arrowright" size={20} color="white" />
+            </Pressable>
+            <ModalReportDetail ref={modalRef} title={item.name} data={item.maintance_works} />
+        </Fragment>
+    );
+};
+
 const options = [
     {
         key: "order",
         title: "STT",
         width: 3 * rem,
-        render: ({ item, index, defaultBlockStyle }) => (
-            <View key={0} style={defaultBlockStyle}>
+        render: ({ item, index, cellStyle }) => (
+            <View key={0} style={cellStyle}>
                 <AppText style={styles.contentCell}>{index + 1}</AppText>
             </View>
         ),
@@ -44,19 +61,10 @@ const options = [
         key: "detail",
         title: "Chi tiết công việc",
         width: 8 * rem,
-        render: ({ item, index, defaultBlockStyle }) => {
-            const modalRef = useRef();
+        render: ({ item, index, cellStyle }) => {
             return (
-                <View key={2} style={defaultBlockStyle}>
-                    <Pressable
-                        onPress={() => {
-                            modalRef.current.open();
-                        }}
-                        style={styles.search}
-                    >
-                        <AntDesign name="arrowright" size={20} color="white" />
-                    </Pressable>
-                    <ModalReportDetail ref={modalRef} title={item.name} data={item.maintance_works} />
+                <View style={cellStyle}>
+                    <ModalReportDetailCell item={item} />
                 </View>
             );
         },
@@ -70,8 +78,8 @@ const options = [
         key: "status",
         title: "Trạng thái",
         width: 8 * rem,
-        render: ({ item, index, defaultBlockStyle }) => (
-            <View key={0} style={defaultBlockStyle}>
+        render: ({ item, index, cellStyle }) => (
+            <View key={0} style={cellStyle}>
                 {renderStatus(item.amount_percent_1)}
             </View>
         ),

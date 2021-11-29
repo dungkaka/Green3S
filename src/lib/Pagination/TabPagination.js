@@ -69,6 +69,23 @@ const calPagin8 = (page, totalPage, limit, numberShow) => {
     };
 };
 
+const ItemPag = ({ page, item, index, onChangePage }) => {
+    if (item == null)
+        return (
+            <View style={styles.dotPage}>
+                <AppText key={index}>. . .</AppText>
+            </View>
+        );
+
+    return (
+        <Pressable key={index} style={styles.pageBlock} onPress={() => onChangePage(item)}>
+            <View style={item == page ? styles.pageContainerActive : styles.pageContainer}>
+                <Text style={item == page ? styles.textPageActive : styles.textPage}>{item}</Text>
+            </View>
+        </Pressable>
+    );
+};
+
 const Pagination = ({ showDes = false, total = 0, page = 1, limit = 20, numberShow = 0, onChangePage = (page) => {} }) => {
     const totalPage = Math.ceil(total / limit);
     const flatListRef = useRef();
@@ -113,25 +130,12 @@ const Pagination = ({ showDes = false, total = 0, page = 1, limit = 20, numberSh
                         })}
                         initialNumToRender={10}
                         snapToAlignment="center"
-                        initialScrollIndex={pageArray.findIndex((_page) => _page == page) - 2}
+                        // initialScrollIndex={pageArray.findIndex((_page) => _page == page) - 2}
                         data={pageArray}
                         keyExtractor={(item, index) => index.toString()}
-                        renderItem={({ item, index }) => {
-                            if (item == null)
-                                return (
-                                    <View style={styles.dotPage}>
-                                        <AppText key={index}>. . .</AppText>
-                                    </View>
-                                );
-
-                            return (
-                                <Pressable key={index} style={styles.pageBlock} onPress={() => onChangePage(item)}>
-                                    <View style={item == page ? styles.pageContainerActive : styles.pageContainer}>
-                                        <Text style={item == page ? styles.textPageActive : styles.textPage}>{item}</Text>
-                                    </View>
-                                </Pressable>
-                            );
-                        }}
+                        renderItem={({ item, index }) => (
+                            <ItemPag page={page} item={item} index={index} onChangePage={onChangePage} />
+                        )}
                     />
                 </View>
 
@@ -143,7 +147,7 @@ const Pagination = ({ showDes = false, total = 0, page = 1, limit = 20, numberSh
     );
 };
 
-export default Pagination;
+export default React.memo(Pagination);
 
 const styles = StyleSheet.create({
     container: {

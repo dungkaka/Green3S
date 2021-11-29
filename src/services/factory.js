@@ -10,8 +10,7 @@ export const keyListPlants = API_GREEN3S.LIST_PLANTS();
 export const useListPlants = () => {
     const { data, isValidating, error } = useAPIFetcher(keyListPlants, {
         revalidateIfStale: false,
-        dedupingInterval: 2000,
-        // use: [auth],
+        use: [auth],
     });
 
     return { data, isValidating, error };
@@ -23,7 +22,6 @@ export const useSearchFactory = ({ station_name, firm } = {}) => {
         dedupingInterval: timeInterval.NORMAL,
         use: [saveActiveData, auth],
     });
-
     return res;
 };
 

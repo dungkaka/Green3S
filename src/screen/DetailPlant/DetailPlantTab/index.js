@@ -12,6 +12,7 @@ import Statistic from "./Statistic";
 import DPMaterialUsed from "./MaterialUsed";
 import DPMaterial from "./Material";
 import { AppTextMedium } from "@common-ui/AppText";
+import { useGoBackHandler } from "@utils/hooks/useGoBackHanlder";
 
 const CommingSoon = React.memo(
     () => {
@@ -30,6 +31,8 @@ const DetailPlantTab = () => {
     const { params } = useRoute();
     const navigation = useNavigation();
     const { stationName } = params ? params : {};
+
+    useGoBackHandler();
 
     useLayoutEffect(() => {
         navigation.setOptions({

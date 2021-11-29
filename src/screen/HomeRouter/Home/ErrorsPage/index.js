@@ -16,8 +16,10 @@ import ModalMiss from "./ModalMiss";
 import { JumpLogoPage } from "@common-ui/Loading/JumpLogo";
 import ErrorPage from "@common-components/ErrorPage";
 import ModalInactiveInverter from "./ModalInactiveInverter";
+import ImageLogViewer from "./ImageLogViewer";
 
 const ErrorsPage = () => {
+    const imageRef = useRef();
     const modalErrorDisconnectRef = useRef();
     const modalErrorDCRef = useRef();
     // const modalErrorResistorRef = useRef();
@@ -135,15 +137,16 @@ const ErrorsPage = () => {
                 </Fragment>
             )}
 
-            <ModalErrorDisconnect ref={modalErrorDisconnectRef} data={datas.disconnect} />
-            <ModalErrorDC ref={modalErrorDCRef} data={datas.error_dc} />
-            <ModalInactiveInverter ref={modelInactiveInverterRef} data={datas.ac?.device_in_active} />
-            <ModalPerformance ref={modalErrorPerformanceRef} data={datas.error_performance} />
+            <ModalErrorDisconnect ref={modalErrorDisconnectRef} imageRef={imageRef} data={datas.disconnect} />
+            <ModalErrorDC ref={modalErrorDCRef} imageRef={imageRef} data={datas.error_dc} />
+            <ModalInactiveInverter ref={modelInactiveInverterRef} imageRef={imageRef} data={datas.ac?.device_in_active} />
+            <ModalPerformance ref={modalErrorPerformanceRef} imageRef={imageRef} data={datas.error_performance} />
             {/* <ModalErrorResistor ref={modalErrorResistorRef} data={datas.resistor} /> */}
-            <ModalPhaseUnbalance ref={modalPhaseUnbalanceRef} data={datas.ac?.phase_unbalance} />
-            <ModalGridHigh ref={modalGrigHighRef} data={datas.ac?.["grid high"]} />
-            <ModalGridLow ref={modalGridLowRef} data={datas.ac?.["grid low"]} />
-            <ModalMiss ref={modalMissRef} data={datas.ac?.miss} />
+            <ModalPhaseUnbalance ref={modalPhaseUnbalanceRef} imageRef={imageRef} data={datas.ac?.phase_unbalance} />
+            <ModalGridHigh ref={modalGrigHighRef} imageRef={imageRef} data={datas.ac?.["grid high"]} />
+            <ModalGridLow ref={modalGridLowRef} imageRef={imageRef} data={datas.ac?.["grid low"]} />
+            <ModalMiss ref={modalMissRef} imageRef={imageRef} data={datas.ac?.miss} />
+            <ImageLogViewer ref={imageRef} />
         </ScrollView>
     );
 };

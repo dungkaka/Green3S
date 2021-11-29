@@ -11,16 +11,33 @@ import { useNavigation } from "@react-navigation/native";
 import { NAVIGATION } from "constant/navigation";
 
 const ErrorItem = React.memo(
-    ({ item, index }) => {
+    ({ item, index, imageRef }) => {
         const navigation = useNavigation();
         return (
             <View style={styles.itemListContainer}>
-                <View style={{ flex: 4, marginRight: 8 }}>
-                    <AppText style={styles.itemText}>
-                        {index}. {item.factory?.stationName}
+                <Pressable
+                    onPress={() => {
+                        navigation.push(NAVIGATION.DETAIL_PLANT, {
+                            ...item.factory,
+                        });
+                    }}
+                    style={{ flex: 4, marginRight: 8 }}
+                >
+                    <AppText style={styles.itemTextLink}>
+                        {index + 1}. {item.factory?.stationName}
                     </AppText>
-                </View>
-                <View style={{ flex: 3, flexDirection: "row", color: Color.redPastel, marginRight: 8 }}>
+                </Pressable>
+                <Pressable
+                    onPress={() => {
+                        item.images &&
+                            imageRef.current.open(
+                                item.images.map((image) => ({
+                                    url: image,
+                                }))
+                            );
+                    }}
+                    style={{ flex: 3, flexDirection: "row", color: Color.redPastel, marginRight: 8 }}
+                >
                     <AppTextMedium
                         style={[
                             styles.itemText,
@@ -35,7 +52,7 @@ const ErrorItem = React.memo(
                     >
                         {item.string}
                     </AppTextMedium>
-                </View>
+                </Pressable>
                 <Pressable
                     onPress={() => {
                         navigation.push(NAVIGATION.DETAIL_DEVICE, {
@@ -55,7 +72,7 @@ const ErrorItem = React.memo(
     () => true
 );
 
-const ModalErrorDC = forwardRef(({ data = [] }, ref) => {
+const ModalErrorDC = forwardRef(({ data = [], imageRef }, ref) => {
     const mount = useRef(true);
     const myModalRef = useRef();
 
@@ -79,7 +96,7 @@ const ModalErrorDC = forwardRef(({ data = [] }, ref) => {
     );
 
     const renderItem = ({ item, index }) => {
-        return <ErrorItem item={item} index={index} />;
+        return <ErrorItem item={item} index={index} imageRef={imageRef} />;
     };
 
     return (

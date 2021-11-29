@@ -23,8 +23,8 @@ const options = [
         key: "order",
         title: "STT",
         width: 3 * rem,
-        render: ({ item, index, defaultBlockStyle }) => (
-            <View key={0} style={defaultBlockStyle}>
+        render: ({ item, index, cellStyle }) => (
+            <View key={0} style={cellStyle}>
                 <AppText style={styles.contentCell}>{index + 1}</AppText>
             </View>
         ),
@@ -38,8 +38,8 @@ const options = [
         key: "stationName",
         title: "Nhà máy",
         width: 8 * rem,
-        render: ({ item, index, defaultBlockStyle }) => (
-            <View key={2} style={defaultBlockStyle}>
+        render: ({ item, index, cellStyle }) => (
+            <View key={2} style={cellStyle}>
                 <AppText style={styles.contentCell}>{item.factory?.stationName}</AppText>
             </View>
         ),
@@ -53,8 +53,8 @@ const options = [
         key: "userName",
         title: "Người thực hiện",
         width: 8 * rem,
-        render: ({ item, index, defaultBlockStyle }) => (
-            <View key={4} style={defaultBlockStyle}>
+        render: ({ item, index, cellStyle }) => (
+            <View key={4} style={cellStyle}>
                 <AppText style={styles.contentCell}>{item.user?.full_name}</AppText>
             </View>
         ),

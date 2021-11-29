@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "818019074360",
+    "project_id": "green3s",
+    "storage_bucket": "green3s.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:818019074360:android:43b8c18712ed717f7081cd",
+        "android_client_info": {
+          "package_name": "green3s.com"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "818019074360-iaqasdj4206r9gnaf5jn73qq3nki7umg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBt6CJAnM6oLba-hF5s64MM6nJaSTKSkgM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "818019074360-iaqasdj4206r9gnaf5jn73qq3nki7umg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

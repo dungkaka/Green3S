@@ -33,8 +33,8 @@ const options = [
         key: "order",
         title: "STT",
         width: 3 * rem,
-        render: ({ item, index, defaultBlockStyle }) => (
-            <View key={0} style={defaultBlockStyle}>
+        render: ({ item, index, cellStyle }) => (
+            <View key={0} style={cellStyle}>
                 <AppText style={styles.contentCell}>{index + 1}</AppText>
             </View>
         ),
@@ -43,8 +43,8 @@ const options = [
         key: "station",
         title: "Nhà máy",
         width: 6 * rem,
-        render: ({ item, index, defaultBlockStyle }) => (
-            <View key={1} style={defaultBlockStyle}>
+        render: ({ item, index, cellStyle }) => (
+            <View key={1} style={cellStyle}>
                 <AppText style={styles.contentCell}>{item.factory?.stationName}</AppText>
             </View>
         ),
@@ -53,8 +53,8 @@ const options = [
         key: "device",
         title: "Thiết bị",
         width: 6 * rem,
-        render: ({ item, index, defaultBlockStyle }) => (
-            <View key={2} style={defaultBlockStyle}>
+        render: ({ item, index, cellStyle }) => (
+            <View key={2} style={cellStyle}>
                 <AppText style={styles.contentCell}>{item.device?.devName}</AppText>
             </View>
         ),
@@ -63,8 +63,8 @@ const options = [
         key: "string",
         title: "String",
         width: 6 * rem,
-        render: ({ item, index, defaultBlockStyle }) => (
-            <View key={3} style={defaultBlockStyle}>
+        render: ({ item, index, cellStyle }) => (
+            <View key={3} style={cellStyle}>
                 <AppText style={styles.contentCellString}>{item.string}</AppText>
             </View>
         ),
@@ -88,8 +88,8 @@ const options = [
         key: "status",
         title: "Trạng thái sửa",
         width: 7 * rem,
-        render: ({ item, index, defaultBlockStyle }) => (
-            <View key={7} style={defaultBlockStyle}>
+        render: ({ item, index, cellStyle }) => (
+            <View key={7} style={cellStyle}>
                 {renderStatus(item.status)}
             </View>
         ),
@@ -99,8 +99,8 @@ const options = [
         key: "time_repair",
         title: "Thời gian tác động",
         width: 8 * rem,
-        render: ({ item, index, defaultBlockStyle }) => (
-            <View key={9} style={defaultBlockStyle}>
+        render: ({ item, index, cellStyle }) => (
+            <View key={9} style={cellStyle}>
                 <AppText style={styles.contentCell}>{JSON.parse(item.time_repair)?.repaired}</AppText>
             </View>
         ),

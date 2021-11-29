@@ -1,7 +1,7 @@
 import { AppText, AppTextMedium } from "@common-ui/AppText";
 import { rem, unit } from "@theme/styleContants";
-import React, { Fragment, useRef, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import React, { Fragment, useMemo, useRef, useState } from "react";
+import { Pressable, StyleSheet, View } from "react-native";
 import { Color } from "@theme/colors";
 import { time } from "@utils/helps/time";
 import { round2 } from "@utils/helps/functions";
@@ -11,6 +11,8 @@ import TableStickBasicTemplate from "@common-ui/Table/TableStickBasicTemplate";
 import ErrorPage from "@common-components/ErrorPage";
 import { useFetchAlarm } from "@services/alarm";
 import ButtonModal from "@common-ui/Modal/ButtonModal";
+import { useNavigation } from "@react-navigation/native";
+import { NAVIGATION } from "constant/navigation";
 
 const renderAlarmType = (code) => {
     switch (code) {
@@ -48,120 +50,11 @@ const renderAlarmLev = (code) => {
     }
 };
 
-const options = [
-    {
-        key: "order",
-        title: "STT",
-        width: 3 * rem,
-        render: ({ item, index, defaultBlockStyle }) => (
-            <View key={0} style={defaultBlockStyle}>
-                <AppText style={styles.contentCell}>{index + 1}</AppText>
-            </View>
-        ),
-    },
-    {
-        key: "station",
-        title: "Nhà máy",
-        width: 6 * rem,
-        render: ({ item, index, defaultBlockStyle }) => (
-            <View key={1} style={defaultBlockStyle}>
-                <AppText style={styles.contentCell}>{item.factory?.stationName}</AppText>
-            </View>
-        ),
-    },
-    {
-        key: "devName",
-        title: "Thiết bị",
-        width: 6 * rem,
-    },
-    {
-        key: "alarmType",
-        title: "Loại báo động",
-        width: 8 * rem,
-        render: ({ item, index, defaultBlockStyle }) => (
-            <View key={3} style={defaultBlockStyle}>
-                {renderAlarmType(item.alarmType)}
-            </View>
-        ),
-    },
-    {
-        key: "alarmName",
-        title: "Tên báo động",
-        width: 8 * rem,
-    },
-    {
-        key: "alarmId",
-        title: "Id báo động",
-        width: 6 * rem,
-    },
-    {
-        key: "causeId",
-        title: "POSSIBLEID",
-        width: 7 * rem,
-    },
-    {
-        key: "number",
-        title: "Number",
-        width: 6 * rem,
-    },
-    {
-        key: "lev",
-        title: "Mức độ nghiêm trọng",
-        width: 10 * rem,
-        render: ({ item, index, defaultBlockStyle }) => (
-            <View key={1} style={defaultBlockStyle}>
-                <AppText style={styles.contentCell}>{renderAlarmLev(item.lev)}</AppText>
-            </View>
-        ),
-    },
-    {
-        key: "time_repair",
-        title: "Nguyên nhân, giải pháp",
-        width: 8 * rem,
-        render: ({ item, index, defaultBlockStyle }) => (
-            <ButtonModal
-                key={9}
-                style={defaultBlockStyle}
-                lazyLoad={true}
-                title="Nguyên nhân, giải pháp"
-                renderContentModal={() => {
-                    return (
-                        <Fragment>
-                            <AppTextMedium>Nguyên nhân</AppTextMedium>
-                            <View style={styles.cellRSTitle}>
-                                <AppText>{item.warning?.reason}</AppText>
-                            </View>
-                            <AppTextMedium>Giải pháp</AppTextMedium>
-                            <View style={styles.cellRSTitle}>
-                                <AppText>
-                                    {item.warning?.solution} {item.warning?.solution}
-                                </AppText>
-                            </View>
-                        </Fragment>
-                    );
-                }}
-            >
-                <AppTextMedium style={styles.cellTextDetail}>Chi tiết</AppTextMedium>
-            </ButtonModal>
-        ),
-    },
-    { key: "timestamp", title: "Thời gian xảy ra", width: 7 * rem },
-    {
-        key: "status_accept",
-        title: "Trạng thái",
-        width: 6 * rem,
-        render: ({ item, index, defaultBlockStyle }) => (
-            <View key={11} style={defaultBlockStyle}>
-                <AppText style={styles.contentCell}>{item.status_accept == 1 ? "Đã sửa" : "Chưa sửa"}</AppText>
-            </View>
-        ),
-    },
-];
-
 const initEndDate = time().toDateObject();
 const initStartDate = { ...time().toDateObject(), day: 1 };
 
 const Alarm = () => {
+    const navigation = useNavigation();
     const [filter, setFilter] = useState({
         endDate: initEndDate,
         startDate: initStartDate,
@@ -170,6 +63,142 @@ const Alarm = () => {
     });
     const { rData, rIsValidating, error, mutate } = useFetchAlarm({ ...filter });
     const datas = rData?.datas || [];
+
+    const options = useMemo(
+        () => [
+            {
+                key: "order",
+                title: "STT",
+                width: 3 * rem,
+                render: ({ item, index, cellStyle }) => (
+                    <View key={0} style={cellStyle}>
+                        <AppText style={styles.contentCell}>{index + 1}</AppText>
+                    </View>
+                ),
+            },
+            {
+                key: "station",
+                title: "Nhà máy",
+                width: 6 * rem,
+                render: ({ item, index, cellStyle }) => (
+                    <Pressable
+                        onPress={() => {
+                            item.factory &&
+                                navigation.push(NAVIGATION.DETAIL_PLANT, {
+                                    ...item.factory,
+                                });
+                        }}
+                        key={1}
+                        style={cellStyle}
+                    >
+                        <AppText style={styles.contentCellLink}>{item.factory?.stationName}</AppText>
+                    </Pressable>
+                ),
+            },
+            {
+                key: "devName",
+                title: "Thiết bị",
+                width: 6 * rem,
+                render: ({ item, index, cellStyle }) => (
+                    <Pressable
+                        onPress={() => {
+                            item.factory &&
+                                navigation.push(NAVIGATION.DETAIL_DEVICE, {
+                                    device: item.device,
+                                });
+                        }}
+                        key={2}
+                        style={cellStyle}
+                    >
+                        <AppText style={styles.contentCellLink}>{item.device?.devName}</AppText>
+                    </Pressable>
+                ),
+            },
+            {
+                key: "alarmType",
+                title: "Loại báo động",
+                width: 8 * rem,
+                render: ({ item, index, cellStyle }) => (
+                    <View key={3} style={cellStyle}>
+                        {renderAlarmType(item.alarmType)}
+                    </View>
+                ),
+            },
+            {
+                key: "alarmName",
+                title: "Tên báo động",
+                width: 8 * rem,
+            },
+            {
+                key: "alarmId",
+                title: "Id báo động",
+                width: 6 * rem,
+            },
+            {
+                key: "causeId",
+                title: "POSSIBLEID",
+                width: 7 * rem,
+            },
+            {
+                key: "number",
+                title: "Number",
+                width: 6 * rem,
+            },
+            {
+                key: "lev",
+                title: "Mức độ nghiêm trọng",
+                width: 10 * rem,
+                render: ({ item, index, cellStyle }) => (
+                    <View key={1} style={cellStyle}>
+                        <AppText style={styles.contentCell}>{renderAlarmLev(item.lev)}</AppText>
+                    </View>
+                ),
+            },
+            {
+                key: "time_repair",
+                title: "Nguyên nhân, giải pháp",
+                width: 8 * rem,
+                render: ({ item, index, cellStyle }) => (
+                    <ButtonModal
+                        key={9}
+                        style={cellStyle}
+                        lazyLoad={true}
+                        title="Nguyên nhân, giải pháp"
+                        renderContentModal={() => {
+                            return (
+                                <Fragment>
+                                    <AppTextMedium>Nguyên nhân</AppTextMedium>
+                                    <View style={styles.cellRSTitle}>
+                                        <AppText>{item.warning?.reason}</AppText>
+                                    </View>
+                                    <AppTextMedium>Giải pháp</AppTextMedium>
+                                    <View style={styles.cellRSTitle}>
+                                        <AppText>
+                                            {item.warning?.solution} {item.warning?.solution}
+                                        </AppText>
+                                    </View>
+                                </Fragment>
+                            );
+                        }}
+                    >
+                        <AppTextMedium style={styles.cellTextDetail}>Chi tiết</AppTextMedium>
+                    </ButtonModal>
+                ),
+            },
+            { key: "timestamp", title: "Thời gian xảy ra", width: 7 * rem },
+            {
+                key: "status_accept",
+                title: "Trạng thái",
+                width: 6 * rem,
+                render: ({ item, index, cellStyle }) => (
+                    <View key={11} style={cellStyle}>
+                        <AppText style={styles.contentCell}>{item.status_accept == 1 ? "Đã sửa" : "Chưa sửa"}</AppText>
+                    </View>
+                ),
+            },
+        ],
+        [rData]
+    );
 
     const handleFilter = (filter) => {
         setFilter({
@@ -222,6 +251,12 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: "white",
+    },
+
+    contentCellLink: {
+        fontSize: 13 * unit,
+        textAlign: "center",
+        color: Color.blueDark,
     },
 
     contentCell: {

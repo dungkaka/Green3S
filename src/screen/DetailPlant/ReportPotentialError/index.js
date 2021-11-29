@@ -54,8 +54,8 @@ const DPReportPotentialError = () => {
             key: "order",
             title: "STT",
             width: 3 * rem,
-            render: ({ item, index, defaultBlockStyle }) => (
-                <View key={0} style={defaultBlockStyle}>
+            render: ({ item, index, cellStyle }) => (
+                <View key={0} style={cellStyle}>
                     <AppText style={styles.contentCell}>{index + 1}</AppText>
                 </View>
             ),
@@ -64,8 +64,8 @@ const DPReportPotentialError = () => {
             key: "created_at",
             title: "Ngày tạo",
             width: 4 * rem,
-            render: ({ item, index, defaultBlockStyle }) => (
-                <View key={1} style={defaultBlockStyle}>
+            render: ({ item, index, cellStyle }) => (
+                <View key={1} style={cellStyle}>
                     <AppText style={styles.contentCell}>{item.created_at.slice(0, 10)}</AppText>
                 </View>
             ),
@@ -79,8 +79,8 @@ const DPReportPotentialError = () => {
             key: "stationName",
             title: "Nhà máy",
             width: 8 * rem,
-            render: ({ item, index, defaultBlockStyle }) => (
-                <View key={3} style={defaultBlockStyle}>
+            render: ({ item, index, cellStyle }) => (
+                <View key={3} style={cellStyle}>
                     <AppText style={styles.contentCell}>{item.factory?.stationName}</AppText>
                 </View>
             ),
@@ -94,8 +94,8 @@ const DPReportPotentialError = () => {
             key: "image",
             title: "Ảnh",
             width: 8 * rem,
-            render: ({ item, index, defaultBlockStyle }) => {
-                if (!item.image) return <View key={5} style={defaultBlockStyle} />;
+            render: ({ item, index, cellStyle }) => {
+                if (!item.image) return <View key={5} style={cellStyle} />;
                 const imageUrl = JSON.parse(item.image)[0];
                 return (
                     <Pressable
@@ -103,7 +103,7 @@ const DPReportPotentialError = () => {
                         onPress={() =>
                             imageLogViewerRef.current.open(`https://green3s.vn/uploads/errors/${item.stationCode}/${imageUrl}`)
                         }
-                        style={defaultBlockStyle}
+                        style={cellStyle}
                     >
                         <Image
                             source={{
@@ -122,8 +122,8 @@ const DPReportPotentialError = () => {
             key: "device",
             title: "Thiết bị",
             width: 12 * rem,
-            render: ({ item, index, defaultBlockStyle }) => (
-                <View key={6} style={defaultBlockStyle}>
+            render: ({ item, index, cellStyle }) => (
+                <View key={6} style={cellStyle}>
                     <AppText style={styles.contentCell}>{item.device?.device_id}</AppText>
                 </View>
             ),
@@ -137,8 +137,8 @@ const DPReportPotentialError = () => {
             key: "reason",
             title: "Nguyên nhân",
             width: 20 * rem,
-            render: ({ item, index, defaultBlockStyle }) => (
-                <View key={8} style={defaultBlockStyle}>
+            render: ({ item, index, cellStyle }) => (
+                <View key={8} style={cellStyle}>
                     <AppText numberOfLines={8} style={styles.contentCell}>
                         {item.reason?.replace(/\n/g, "")}
                     </AppText>
@@ -154,8 +154,8 @@ const DPReportPotentialError = () => {
             key: "date_repair",
             title: "Ngày sửa",
             width: 8 * rem,
-            render: ({ item, index, defaultBlockStyle }) => (
-                <View key={10} style={defaultBlockStyle}>
+            render: ({ item, index, cellStyle }) => (
+                <View key={10} style={cellStyle}>
                     <AppText style={styles.contentCell}>{item.date_repair?.slice(0, 10)}</AppText>
                 </View>
             ),
@@ -169,8 +169,8 @@ const DPReportPotentialError = () => {
             key: "status_accept",
             title: "Tình trạng",
             width: 7 * rem,
-            render: ({ item, index, defaultBlockStyle }) => (
-                <View key={12} style={defaultBlockStyle}>
+            render: ({ item, index, cellStyle }) => (
+                <View key={12} style={cellStyle}>
                     {renderStatus(item.status_accept)}
                 </View>
             ),

@@ -4,7 +4,7 @@ import { rem, unit } from "@theme/styleContants";
 import { GoogleSansFontType } from "@theme/typography";
 import React, { useCallback, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { TabView, TabBar, SceneMap, NavigationState, SceneRendererProps } from "react-native-tab-view";
+import { TabView, TabBar, SceneMap, NavigationState, SceneRendererProps, TabBarIndicator } from "react-native-tab-view";
 import { Constants } from "react-native-unimodules";
 import ErrorsPage from "./ErrorsPage";
 import FactoriesPage from "./FactoriesPage";
@@ -52,6 +52,7 @@ const Home = () => {
     return (
         <TabView
             lazy={true}
+            initialLayout={{ width: WIDTH }}
             navigationState={state}
             renderScene={renderScene}
             renderTabBar={renderTabBar}
@@ -89,6 +90,6 @@ const styles = StyleSheet.create({
     },
     tabStyle: {
         width: "auto",
-        padding: 10,
+        minHeight: 46,
     },
 });

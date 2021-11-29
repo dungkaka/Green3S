@@ -2,19 +2,15 @@ import ModalPortal from "@common-ui/Modal/ModalPortal";
 import React, { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { Image, StyleSheet } from "react-native";
 import ImageViewer from "react-native-image-zoom-viewer";
+import { LoadingIcon } from "@common-ui/Loading/DefaultIconLoading";
 
-const ImageLogViewer = forwardRef((props, ref) => {
+const ModalImageViewer = forwardRef((props, ref) => {
     const [images, setImages] = useState([]);
     const modalRef = useRef();
 
     useImperativeHandle(ref, () => ({
-        open: (image) => {
-            setImages([
-                {
-                    url: image,
-                },
-            ]);
-
+        open: (images) => {
+            setImages(images);
             modalRef.current.open();
         },
         close: () => {
@@ -30,11 +26,17 @@ const ImageLogViewer = forwardRef((props, ref) => {
             unmountOnHide={true}
             onBackHandler={() => modalRef.current.close()}
         >
-            <ImageViewer useNativeDriver={true} imageUrls={images} />
+            <ImageViewer
+                failImageSource={"Tải thất bại !"}
+                loadingRender={() => <LoadingIcon size={32} />}
+                useNativeDriver={true}
+                imageUrls={images}
+                renderImage={(props) => <Image {...props} />}
+            />
         </ModalPortal>
     );
 });
 
-export default ImageLogViewer;
+export default ModalImageViewer;
 
 const styles = StyleSheet.create({});

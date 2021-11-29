@@ -59,8 +59,8 @@ const Device = () => {
                 return <Statistic />;
             case "error":
                 return <Error />;
-            // case "history":
-            //     return <DeviceHistory />;
+            case "history":
+                return <CommingSoon />;
             default:
                 return <CommingSoon />;
         }

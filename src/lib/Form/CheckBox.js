@@ -1,8 +1,8 @@
-import { AppColor } from "@theme";
 import { Color } from "@theme/colors";
-import React, { useLayoutEffect, useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React, { useState } from "react";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { Entypo } from "@expo/vector-icons";
+import { ColorDefault } from "@theme";
 
 const hitSlop = { top: 10, bottom: 10, left: 10, right: 10 };
 
@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
         height: 16,
         width: 16,
         borderRadius: 2,
-        backgroundColor: AppColor.primary,
+        backgroundColor: ColorDefault.primary,
         justifyContent: "center",
         alignItems: "center",
     },

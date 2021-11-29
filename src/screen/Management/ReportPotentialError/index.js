@@ -23,8 +23,8 @@ const ReportPotentialError = () => {
                 key: "order",
                 title: "STT",
                 width: 3 * rem,
-                render: ({ item, index, defaultBlockStyle }) => (
-                    <View key={0} style={defaultBlockStyle}>
+                render: ({ item, index, cellStyle }) => (
+                    <View key={0} style={cellStyle}>
                         <AppText style={styles.contentCell}>{index + 1}</AppText>
                     </View>
                 ),
@@ -33,8 +33,8 @@ const ReportPotentialError = () => {
                 key: "created_at",
                 title: "Ngày tạo",
                 width: 6 * rem,
-                render: ({ item, index, defaultBlockStyle }) => (
-                    <View key={1} style={defaultBlockStyle}>
+                render: ({ item, index, cellStyle }) => (
+                    <View key={1} style={cellStyle}>
                         <AppText style={styles.contentCell}>{item.created_at.slice(0, 10)}</AppText>
                     </View>
                 ),
@@ -53,8 +53,8 @@ const ReportPotentialError = () => {
                 key: "image",
                 title: "Ảnh",
                 width: 8 * rem,
-                render: ({ item, index, defaultBlockStyle }) => {
-                    if (!item.image) return <View key={4} style={defaultBlockStyle} />;
+                render: ({ item, index, cellStyle }) => {
+                    if (!item.image) return <View key={4} style={cellStyle} />;
                     return (
                         <Pressable
                             key={4}
@@ -63,7 +63,7 @@ const ReportPotentialError = () => {
                                     `https://green3s.vn/uploads/errors/${plant.stationCode}/${item.image}`
                                 )
                             }
-                            style={defaultBlockStyle}
+                            style={cellStyle}
                         >
                             <Image
                                 source={{
@@ -92,8 +92,8 @@ const ReportPotentialError = () => {
                 key: "reason",
                 title: "Nguyên nhân",
                 width: 20 * rem,
-                render: ({ item, index, defaultBlockStyle }) => (
-                    <View key={7} style={defaultBlockStyle}>
+                render: ({ item, index, cellStyle }) => (
+                    <View key={7} style={cellStyle}>
                         <AppText numberOfLines={8} style={styles.contentCell}>
                             {item.reason?.replace(/\n/g, "")}
                         </AppText>
@@ -109,8 +109,8 @@ const ReportPotentialError = () => {
                 key: "date_repair",
                 title: "Ngày sửa",
                 width: 7 * rem,
-                render: ({ item, index, defaultBlockStyle }) => (
-                    <View key={9} style={defaultBlockStyle}>
+                render: ({ item, index, cellStyle }) => (
+                    <View key={9} style={cellStyle}>
                         <AppText style={styles.contentCell}>{item.date_repair?.slice(0, 10)}</AppText>
                     </View>
                 ),
@@ -124,8 +124,8 @@ const ReportPotentialError = () => {
                 key: "status_accept",
                 title: "Tình trạng",
                 width: 6 * rem,
-                render: ({ item, index, defaultBlockStyle }) => (
-                    <View key={11} style={defaultBlockStyle}>
+                render: ({ item, index, cellStyle }) => (
+                    <View key={11} style={cellStyle}>
                         <AppText style={styles.contentCell}>{item.status_accept == 1 ? "Đã duyệt" : "Chưa duyệt"}</AppText>
                     </View>
                 ),

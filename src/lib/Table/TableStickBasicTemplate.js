@@ -2,16 +2,16 @@ import { AppText, AppTextMedium } from "@common-ui/AppText";
 import TableStickColumn from "@common-ui/Table/TableStickColumn";
 import { Color } from "@theme/colors";
 import { rem, unit } from "@theme/styleContants";
-import React, { Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import { StyleSheet, View } from "react-native";
 
-const _data = new Array(20).fill({
-    column1: 1,
+const _data = new Array(20).fill(0).map((item, index) => ({
+    column1: index + 1,
     column2: "A Column",
     column3: "Something",
     column4: "Test",
     column5: "Last",
-});
+}));
 
 const _options = [
     { key: "column1", title: "Col 1", width: 5 * rem },
@@ -21,14 +21,15 @@ const _options = [
     { key: "column5", title: "Col 5", width: 10 * rem },
 ];
 
-const _left = [0, 1];
+const _left = [0];
 
 const TableStickBasicTemplate = ({
     data = _data,
+    marks = {},
     keyItem = "key",
     options = _options,
     left = _left,
-    heightHeader = 64,
+    heightHeader = 60,
     heightRow = 56,
     stickPosition = 5 * rem,
     cellStyle,
@@ -54,11 +55,15 @@ const TableStickBasicTemplate = ({
         }))
     );
 
-    const leftHeader = (
+    const renderLeftHeader = () => (
         <View style={headerContainerStyle}>
             {left.map((i) => {
                 if (options[i].renderHeader) {
-                    return <View style={{ width: options[i].width }}>{options[i].renderHeader()}</View>;
+                    return (
+                        <Fragment key={i}>
+                            {options[i].renderHeader({ cellHeaderStyle: [tableStyles[i], cellHeaderStyle] })}
+                        </Fragment>
+                    );
                 }
                 return (
                     <View key={i} style={[tableStyles[i], cellHeaderStyle]}>
@@ -69,11 +74,15 @@ const TableStickBasicTemplate = ({
         </View>
     );
 
-    const rightHeader = (
+    const renderRightHeader = () => (
         <View style={headerContainerStyle}>
             {right.map((i) => {
                 if (options[i].renderHeader) {
-                    return <View style={{ width: options[i].width }}>{options[i].renderHeader()}</View>;
+                    return (
+                        <Fragment key={i}>
+                            {options[i].renderHeader({ cellHeaderStyle: [tableStyles[i], cellHeaderStyle] })}
+                        </Fragment>
+                    );
                 }
                 return (
                     <View key={i} style={[tableStyles[i], cellHeaderStyle]}>
@@ -84,14 +93,17 @@ const TableStickBasicTemplate = ({
         </View>
     );
 
-    const LeftRow = ({ item = {}, index }) => {
+    const renderLeftRow = ({ item = {}, index, isMark }) => {
         return (
             <View style={rowStyle}>
                 {left.map((i) => {
-                    if (options[i].render) return options[i].render({ item, index, defaultBlockStyle: tableStyles[i] });
+                    if (options[i].render)
+                        return (
+                            <Fragment key={i}>{options[i].render({ item, index, isMark, cellStyle: tableStyles[i] })}</Fragment>
+                        );
                     return (
                         <View key={i} style={tableStyles[i]}>
-                            <AppText numberOfLines={numberLinesContentCell} style={styles.textCenter}>
+                            <AppText numberOfLines={numberLinesContentCell} style={styles.textCell}>
                                 {item[options[i].key]}
                             </AppText>
                         </View>
@@ -101,13 +113,14 @@ const TableStickBasicTemplate = ({
         );
     };
 
-    const RightRow = ({ item = {}, index }) => (
+    const renderRightRow = ({ item = {}, index, isMark }) => (
         <View style={rowStyle}>
             {right.map((i) => {
-                if (options[i].render) return options[i].render({ item, index, defaultBlockStyle: tableStyles[i] });
+                if (options[i].render)
+                    return <Fragment key={i}>{options[i].render({ item, index, isMark, cellStyle: tableStyles[i] })}</Fragment>;
                 return (
                     <View key={i} style={tableStyles[i]}>
-                        <AppText numberOfLines={numberLinesContentCell} style={styles.textCenter}>
+                        <AppText numberOfLines={numberLinesContentCell} style={styles.textCell}>
                             {item[options[i].key]}
                         </AppText>
                     </View>
@@ -120,10 +133,11 @@ const TableStickBasicTemplate = ({
         <Fragment>
             <TableStickColumn
                 data={data}
-                leftHeader={leftHeader}
-                rightHeader={rightHeader}
-                RightRow={RightRow}
-                LeftRow={LeftRow}
+                marks={marks}
+                renderLeftHeader={renderLeftHeader}
+                renderRightHeader={renderRightHeader}
+                renderRightRow={renderRightRow}
+                renderLeftRow={renderLeftRow}
                 heightHeader={heightHeader}
                 heightRow={heightRow}
                 stickPosition={stickPosition}
@@ -140,7 +154,10 @@ const TableStickBasicTemplate = ({
     );
 };
 
-export default React.memo(TableStickBasicTemplate, (prev, next) => prev.data == next.data && prev.options == next.options);
+export default React.memo(
+    TableStickBasicTemplate,
+    (prev, next) => prev.data == next.data && prev.options == next.options && prev.marks == next.marks
+);
 
 const styles = StyleSheet.create({
     padding: {
@@ -152,7 +169,7 @@ const styles = StyleSheet.create({
         textAlign: "center",
         color: "white",
     },
-    textCenter: {
+    textCell: {
         fontSize: 13 * unit,
         textAlign: "center",
         color: Color.gray_11,
