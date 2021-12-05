@@ -1,10 +1,14 @@
-import React, { useState, useEffect, forwardRef } from "react";
+import React, { useState, useEffect, forwardRef, useImperativeHandle } from "react";
 import { Button, Image, View, Platform, Pressable } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 
 const ImagePickerOne = forwardRef(
     ({ initialValue, style, onChangeImage, type = "library", renderItem = (image) => null }, ref) => {
         const [image, setImage] = useState(initialValue);
+
+        useImperativeHandle(ref, () => ({
+            setImage: setImage,
+        }));
 
         useEffect(() => {
             (async () => {

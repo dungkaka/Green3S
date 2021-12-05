@@ -53,7 +53,7 @@ export const bottomTabs = {
         colorActive: Colors.primary,
     },
     [NAVIGATION.TAB_MAINTAIN]: {
-        label: "Bảo trì",
+        label: "Cảnh báo",
         Icon: Maintenance,
         size: ICON_SIZE,
         colorActive: Colors.primary,

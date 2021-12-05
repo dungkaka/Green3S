@@ -7,11 +7,7 @@ import { NAVIGATION } from "constant/navigation";
 import React, { useRef } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import Constants from "expo-constants";
-import { MaterialIcons } from "@expo/vector-icons";
-import { Feather } from "@expo/vector-icons";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { FontAwesome } from "@expo/vector-icons";
-
+import { MaterialIcons, Entypo, MaterialCommunityIcons, FontAwesome } from "@expo/vector-icons";
 const colorError = "#c24453";
 
 const Maintain = () => {
@@ -106,28 +102,15 @@ const Maintain = () => {
                         >
                             <AppText style={styles.textItemReport}>Lỗi tiềm ẩn</AppText>
                         </Pressable>
-                    </View>
-                </View>
-            </View>
-            <View style={styles.block}>
-                <AppTextMedium style={styles.blockTitle}>Bảo trì</AppTextMedium>
-                <View style={styles.blockContent}>
-                    <View style={styles.reportContainer}>
-                        <Feather name="tool" size={24} color={Color.blueModern_1} />
                         <Pressable
-                            onPress={() => navigation.navigate(NAVIGATION.MAINTAINANCE_CATEGORY)}
-                            style={[styles.itemReportContainer, { backgroundColor: Color.blueModern_1 }]}
+                            onPress={() => navigation.navigate(NAVIGATION.ERROR_POTENTIEL_CREATION)}
+                            style={[
+                                styles.itemReportContainer,
+                                { backgroundColor: Color.purpleDark, paddingVertical: 6 * unit },
+                            ]}
                         >
-                            <AppText style={styles.textItemReport}>Danh sách hạng mục</AppText>
-                        </Pressable>
-                    </View>
-                    <View style={styles.reportContainer}>
-                        <Feather name="tool" size={24} color={Color.blueModern_1} />
-                        <Pressable
-                            onPress={() => navigation.navigate(NAVIGATION.MAINTAINANCE_LIST_WORK)}
-                            style={[styles.itemReportContainer, { backgroundColor: Color.blueModern_1 }]}
-                        >
-                            <AppText style={styles.textItemReport}>Danh sách công việc</AppText>
+                            <Entypo name="plus" size={22} color="white" />
+                            {/* <AppText style={styles.textItemReport}>Thêm lỗi</AppText> */}
                         </Pressable>
                     </View>
                 </View>

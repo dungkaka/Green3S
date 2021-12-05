@@ -1,4 +1,4 @@
-import ImagePickerExample from "@common-ui/Image/ImagePicker";
+import ImagePickerExample from "@common-ui/Image/ImagePickerOne";
 import React from "react";
 import { View, Text } from "react-native";
 

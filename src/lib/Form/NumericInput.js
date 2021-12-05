@@ -7,7 +7,6 @@ import { GoogleSansFontType } from "@theme/typography";
 import { Color } from "@theme/colors";
 import { Int } from "@utils/helps/number";
 import { useOnlyDidUpdateLayoutEffect } from "@hooks/useOnlyDidUpdateLayoutEffetct";
-import { onChange } from "react-native-reanimated";
 
 const NumericInput = forwardRef(
     (

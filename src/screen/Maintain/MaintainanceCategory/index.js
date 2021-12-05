@@ -57,17 +57,16 @@ const MaintainanceCategory = () => {
                     <JumpLogoPage />
                 </View>
             ) : rData ? (
-                // <TableStickBasicTemplate
-                //     heightRow={60}
-                //     left={[0, 1]}
-                //     stickPosition={3 * rem}
-                //     options={options}
-                //     data={datas}
-                //     headerContainerStyle={styles.tableHeaderContainer}
-                //     textHeaderStyle={styles.tableTextHeader}
-                //     numberLinesContentCell={2}
-                // />
-                <TableStickBasicTemplate />
+                <TableStickBasicTemplate
+                    heightRow={60}
+                    left={[0, 1]}
+                    stickPosition={3 * rem}
+                    options={options}
+                    data={datas}
+                    headerContainerStyle={styles.tableHeaderContainer}
+                    textHeaderStyle={styles.tableTextHeader}
+                    numberLinesContentCell={2}
+                />
             ) : null}
         </View>
     );

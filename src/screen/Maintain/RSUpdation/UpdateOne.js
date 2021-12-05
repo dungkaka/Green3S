@@ -3,7 +3,7 @@ import Selection from "@common-ui/Form/Selection";
 import { showToast } from "@common-ui/ToastNotify/ToastManager";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import { closeIconLoadingOverlay, openIconLoadingOverlay } from "@redux/actions/app";
-import { ErrorACService } from "@services/error";
+import { useCommonErrorControl } from "@services/error";
 import { Color } from "@theme/colors";
 import { unit } from "@theme/styleContants";
 import React, { Fragment, useCallback, useEffect, useRef } from "react";
@@ -92,7 +92,7 @@ const RSUpdation = () => {
     const solutionRef = useRef();
     const statusRef = useRef(status);
 
-    const { updateError } = ErrorACService.useACErrorControl({ key });
+    const { updateError } = useCommonErrorControl({ key });
 
     useEffect(() => {
         setTimeout(() => {

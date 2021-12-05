@@ -10,6 +10,7 @@ import { Octicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { NAVIGATION } from "constant/navigation";
 import { domain, fileImageDir } from "@configs/end-points-url";
+import { format, time } from "@utils/helps/time";
 
 const ErrorItem = React.memo(
     ({ item, index, imageRef }) => {
@@ -58,6 +59,7 @@ const ErrorItem = React.memo(
                     onPress={() => {
                         navigation.push(NAVIGATION.DETAIL_DEVICE, {
                             device: item.device,
+                            initTime: item.created_at,
                         });
                     }}
                     style={{ flex: 3, marginRight: 8, flexDirection: "row", flexWrap: "wrap" }}
@@ -65,7 +67,7 @@ const ErrorItem = React.memo(
                     <AppText style={styles.itemTextLink}>{item.device?.devName}</AppText>
                 </Pressable>
                 <View style={{ flex: 3 }}>
-                    <AppText style={styles.itemText}>{item.created_at}</AppText>
+                    <AppText style={styles.itemText}>{format(item.created_at, "YYYY-MM-DD H:M:S")}</AppText>
                 </View>
             </View>
         );

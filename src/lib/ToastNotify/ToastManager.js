@@ -164,7 +164,7 @@ export const ToastManager = ({ position = "bottom" }) => {
                 title: title,
                 description,
             };
-            return [newToast, ...arrayToast];
+            return [...arrayToast, newToast];
         });
     }, []);
 
@@ -206,7 +206,7 @@ export const ToastManager = ({ position = "bottom" }) => {
                     data={valueArray}
                     ref={scrollViewRef}
                     scrollEnabled={false}
-                    removeClippedSubviews={true}
+                    // removeClippedSubviews={true}
                     contentContainerStyle={[
                         styles.flatlistContainer,
                         { flexDirection: position == "top" ? "column" : "column-reverse" },

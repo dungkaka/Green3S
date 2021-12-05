@@ -8,8 +8,7 @@ import React, { useRef } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import Constants from "expo-constants";
 import { ColorDefault } from "@theme";
-import { Ionicons } from "@expo/vector-icons";
-import { AntDesign } from "@expo/vector-icons";
+import { AntDesign, Feather, Ionicons } from "@expo/vector-icons";
 
 const Management = () => {
     const navigation = useNavigation();
@@ -65,6 +64,29 @@ const Management = () => {
                         style={[styles.itemReportContainer, { borderBottomWidth: 0 }]}
                     >
                         <AppText style={styles.textItemReport}>Danh sách vật tư</AppText>
+                    </Pressable>
+                </View>
+            </View>
+            <View style={styles.block}>
+                <View style={styles.blockTitle}>
+                    <AppTextMedium style={styles.blockTitleText}>Bảo trì</AppTextMedium>
+                </View>
+                <View style={styles.reportContainer}>
+                    <Feather name="tool" size={24} color={Color.blueModern_1} />
+                    <Pressable
+                        onPress={() => navigation.navigate(NAVIGATION.MAINTAINANCE_CATEGORY)}
+                        style={[styles.itemReportContainer, { backgroundColor: Color.blueModern_1 }]}
+                    >
+                        <AppText style={styles.textItemReport}>Danh sách hạng mục</AppText>
+                    </Pressable>
+                </View>
+                <View style={styles.reportContainer}>
+                    <Feather name="tool" size={24} color={Color.blueModern_1} />
+                    <Pressable
+                        onPress={() => navigation.navigate(NAVIGATION.MAINTAINANCE_LIST_WORK)}
+                        style={[styles.itemReportContainer, { backgroundColor: Color.blueModern_1 }]}
+                    >
+                        <AppText style={styles.textItemReport}>Danh sách công việc</AppText>
                     </Pressable>
                 </View>
             </View>

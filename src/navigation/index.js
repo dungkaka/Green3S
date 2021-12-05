@@ -35,7 +35,9 @@ import DPReportPotentialError from "screen/DetailPlant/ReportPotentialError";
 import Device from "screen/Device/index";
 import InactiveInverter from "screen/Maintain/InactiveInterver";
 import AllError from "screen/Maintain/AllError";
-import RSUpdation from "screen/Maintain/RSUpdation.js/index.js";
+import RSUpdation from "screen/Maintain/RSUpdation/UpdateOne";
+import RSMultipleUpdation from "screen/Maintain/RSUpdation/UpdateMultiple";
+import ErrorPotentialCreation from "screen/Maintain/ErrorCreation/ErrorPotentialCreation";
 
 enableAnimationExperimental();
 handleKillApp();
@@ -187,7 +189,11 @@ const AppNavigation = ({ isLogin }) => {
                         </Stack.Group>
 
                         {/* Error */}
-                        <Stack.Group screenOptions={{ ...TransitionPresets.SlideFromRightIOS }}>
+                        <Stack.Group
+                            screenOptions={{
+                                ...TransitionPresets.SlideFromRightIOS,
+                            }}
+                        >
                             <Stack.Screen
                                 name={NAVIGATION.ALLE_ERROR}
                                 component={AllError}
@@ -249,6 +255,20 @@ const AppNavigation = ({ isLogin }) => {
                                 component={RSUpdation}
                                 options={{
                                     title: "Cập nhật lỗi",
+                                }}
+                            />
+                            <Stack.Screen
+                                name={NAVIGATION.RS_UPDATE_MULTIPLE}
+                                component={RSMultipleUpdation}
+                                options={{
+                                    title: "Cập nhật lỗi",
+                                }}
+                            />
+                            <Stack.Screen
+                                name={NAVIGATION.ERROR_POTENTIEL_CREATION}
+                                component={ErrorPotentialCreation}
+                                options={{
+                                    title: "Tạo lỗi tiềm ẩn",
                                 }}
                             />
                         </Stack.Group>

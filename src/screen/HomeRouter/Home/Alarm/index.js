@@ -173,9 +173,7 @@ const Alarm = () => {
                                     </View>
                                     <AppTextMedium>Giải pháp</AppTextMedium>
                                     <View style={styles.cellRSTitle}>
-                                        <AppText>
-                                            {item.warning?.solution} {item.warning?.solution}
-                                        </AppText>
+                                        <AppText>{item.warning?.solution}</AppText>
                                     </View>
                                 </Fragment>
                             );

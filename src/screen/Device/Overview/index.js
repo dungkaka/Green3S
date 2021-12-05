@@ -14,11 +14,11 @@ import SMADevice from "./SMADevice";
 
 const Overview = () => {
     const { params } = useRoute();
-    const { device } = params ? params : {};
+    const { device, initTime } = params ? params : {};
 
     const [filter, setFilter] = useState(
         (() => {
-            const initDate = time(new Date(Date.now() - 1000 * (60 * 10))).toDateObject();
+            const initDate = time(initTime || new Date(Date.now() - 1000 * (60 * 10))).toDateObject();
             return {
                 date: { ...initDate, minute: Math.floor(initDate.minute / 5) * 5, second: 0 },
                 deviceId: device.device_id,

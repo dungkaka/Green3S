@@ -37,7 +37,7 @@ const ErrorItem = React.memo(
                     <AppText style={styles.itemText}>{item.device?.devName}</AppText>
                 </View>
                 <View style={{ flex: 3 }}>
-                    <AppText style={styles.itemText}>{item.created_at}</AppText>
+                    <AppText style={styles.itemText}>{format(item.created_at, "YYYY-MM-DD H:M:S")}</AppText>
                 </View>
             </View>
         );

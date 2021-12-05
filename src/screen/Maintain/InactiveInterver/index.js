@@ -1,15 +1,22 @@
 import { AppText } from "@common-ui/AppText";
 import { rem, unit } from "@theme/styleContants";
-import React, { useMemo, useRef, useState } from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { Color } from "@theme/colors";
 import { time } from "@utils/helps/time";
 import { JumpLogoPage } from "@common-ui/Loading/JumpLogo";
 import Filter from "./Filter";
-import { ErrorACService } from "@services/error";
+import { useCommonErrorControl, useFetchErrorAC } from "@services/error";
 import TableStickBasicTemplate from "@common-ui/Table/TableStickBasicTemplate";
 import { useNavigation } from "@react-navigation/native";
 import { NAVIGATION } from "constant/navigation";
+import { useMarkControl } from "../Common/useMarkControl";
+import ModalHintRS from "../Common/ModalHintRS";
+import { useActionHeader } from "../Common/useActionHeader";
+import EditButton from "@common-components/TableUtil/EditButton";
+import DeleteButton from "@common-components/TableUtil/DeleteButton";
+import CheckBox from "@common-ui/Form/CheckBox";
+import AddButon from "@common-components/TableUtil/AddButon";
 
 // Giống lỗi AC
 
@@ -43,8 +50,14 @@ const InactiveInverter = () => {
         error: "device_in_active",
         page: 1,
     });
-    const { rData, rIsValidating, mutate } = ErrorACService.useFetchErrorAC({ ...filter });
+    const { rData, rIsValidating, key, mutate } = useFetchErrorAC({ ...filter });
+    const { deleteErrors } = useCommonErrorControl({ key, regExpKey: "device_in_active" });
     const datas = rData?.datas || [];
+    const { marks, setMarks, arrayMarks, isAllMark } = useMarkControl({ datas });
+
+    const modalHintRSRef = useRef();
+
+    useActionHeader({ key, arrayMarks, deleteErrors });
 
     const options = useMemo(
         () => [
@@ -53,7 +66,7 @@ const InactiveInverter = () => {
                 title: "STT",
                 width: 3 * rem,
                 render: ({ item, index, cellStyle }) => (
-                    <View key={0} style={cellStyle}>
+                    <View style={cellStyle}>
                         <AppText style={styles.contentCell}>{index + 1}</AppText>
                     </View>
                 ),
@@ -64,7 +77,6 @@ const InactiveInverter = () => {
                 width: 6 * rem,
                 render: ({ item, index, cellStyle }) => (
                     <TouchableOpacity
-                        key={1}
                         onPress={() =>
                             item.factory &&
                             navigation.navigate(NAVIGATION.DETAIL_PLANT, {
@@ -79,12 +91,75 @@ const InactiveInverter = () => {
                 ),
             },
             {
+                key: "__select",
+                title: "STT",
+                width: 3 * rem,
+                renderHeader: ({ cellHeaderStyle }) => {
+                    return (
+                        <View style={cellHeaderStyle}>
+                            <CheckBox
+                                value={isAllMark}
+                                onChange={(value) => {
+                                    if (value) {
+                                        const newMarks = {};
+                                        datas.forEach((error) => (newMarks[error.id] = true));
+                                        setMarks(newMarks);
+                                    } else {
+                                        setMarks({});
+                                    }
+                                }}
+                            />
+                        </View>
+                    );
+                },
+                render: ({ item, index, isMark, cellStyle }) => {
+                    return (
+                        <View style={cellStyle}>
+                            <View style={{ padding: 4 * unit }}>
+                                <CheckBox
+                                    onChange={(value) => {
+                                        setMarks((marks) => ({
+                                            ...marks,
+                                            [item.id]: value ? true : false,
+                                        }));
+                                    }}
+                                    value={isMark}
+                                />
+                            </View>
+                        </View>
+                    );
+                },
+            },
+            {
+                key: "__control",
+                title: "Thao tác",
+                width: 5 * rem,
+                render: ({ item, index, cellStyle }) => {
+                    return (
+                        <View style={cellStyle}>
+                            <View style={{ padding: 6 * unit }}>
+                                <DeleteButton onPress={() => deleteErrors([item.id])} />
+                            </View>
+                            <View style={{ padding: 6 * unit }}>
+                                <EditButton
+                                    onPress={() => {
+                                        navigation.push(NAVIGATION.RS_UPDATION, {
+                                            error: item,
+                                            key: key,
+                                        });
+                                    }}
+                                />
+                            </View>
+                        </View>
+                    );
+                },
+            },
+            {
                 key: "device",
                 title: "Thiết bị",
                 width: 5 * rem,
                 render: ({ item, index, cellStyle }) => (
                     <TouchableOpacity
-                        key={2}
                         onPress={() =>
                             item.factory &&
                             navigation.navigate(NAVIGATION.DETAIL_DEVICE, {
@@ -102,26 +177,73 @@ const InactiveInverter = () => {
                 key: "error_name",
                 title: "Tên lỗi",
                 width: 7 * rem,
+                render: ({ item, index, cellStyle }) => (
+                    <TouchableOpacity onPress={() => modalHintRSRef.current.open()} activeOpacity={0.8} style={cellStyle}>
+                        <AppText style={styles.contentCell}>{item.error_name}</AppText>
+                    </TouchableOpacity>
+                ),
             },
             {
                 key: "reason",
                 title: "Nguyên nhân",
                 width: 16 * rem,
+                render: ({ item, index, cellStyle }) => {
+                    if (!item.reason)
+                        return (
+                            <View style={cellStyle}>
+                                <AddButon
+                                    onPress={() => {
+                                        navigation.push(NAVIGATION.RS_UPDATION, {
+                                            error: item,
+                                            key: key,
+                                        });
+                                    }}
+                                    size={18}
+                                />
+                            </View>
+                        );
+                    return (
+                        <View style={cellStyle}>
+                            <AppText numberOfLines={5} style={styles.contentCell}>
+                                {item.reason}
+                            </AppText>
+                        </View>
+                    );
+                },
             },
             {
                 key: "solution",
                 title: "Giải pháp",
                 width: 16 * rem,
+                render: ({ item, index, cellStyle }) => {
+                    if (!item.solution)
+                        return (
+                            <View style={cellStyle}>
+                                <AddButon
+                                    onPress={() => {
+                                        navigation.push(NAVIGATION.RS_UPDATION, {
+                                            error: item,
+                                            key: key,
+                                        });
+                                    }}
+                                    size={18}
+                                />
+                            </View>
+                        );
+                    return (
+                        <View style={cellStyle}>
+                            <AppText numberOfLines={5} style={styles.contentCell}>
+                                {item.solution}
+                            </AppText>
+                        </View>
+                    );
+                },
             },
             {
                 key: "status",
                 title: "Trạng thái sửa",
                 width: 7 * rem,
-                render: ({ item, index, cellStyle }) => (
-                    <View key={6} style={cellStyle}>
-                        {renderStatus(item.status)}
-                    </View>
-                ),
+                render: ({ item, index, cellStyle }) => <View style={cellStyle}>{renderStatus(item.status)}</View>,
             },
             { key: "note", title: "Ghi chú", width: 8 * rem },
             {
@@ -129,7 +251,7 @@ const InactiveInverter = () => {
                 title: "Thời gian tác động",
                 width: 7 * rem,
                 render: ({ item, index, cellStyle }) => (
-                    <View key={8} style={cellStyle}>
+                    <View style={cellStyle}>
                         <AppText style={styles.contentCell}>{JSON.parse(item.time_repair)?.repaired}</AppText>
                     </View>
                 ),
@@ -137,7 +259,7 @@ const InactiveInverter = () => {
             { key: "created_at", title: "Thời gian xuất hiện", width: 7 * rem },
             { key: "time_end", title: "Thời gian kết thúc", width: 7 * rem },
         ],
-        [rData]
+        [rData, marks]
     );
 
     const handleFilter = (filter) => {
@@ -151,6 +273,10 @@ const InactiveInverter = () => {
         });
     };
 
+    const onChangePage = useCallback((page) => {
+        setFilter({ ...filter, page: page });
+    }, []);
+
     return (
         <View style={styles.container}>
             <Filter filter={filter} handleFilter={handleFilter} />
@@ -161,6 +287,8 @@ const InactiveInverter = () => {
                 </View>
             ) : rData ? (
                 <TableStickBasicTemplate
+                    keyItem="id"
+                    marks={marks}
                     heightRow={100}
                     left={[0, 1]}
                     stickPosition={3 * rem}
@@ -175,12 +303,11 @@ const InactiveInverter = () => {
                         page: filter.page,
                         pageSize: 20,
                         currentPageSize: datas.length,
-                        onChangePage: (page) => {
-                            setFilter({ ...filter, page: page });
-                        },
+                        onChangePage: onChangePage,
                     }}
                 />
             ) : null}
+            <ModalHintRS modalRef={modalHintRSRef} />
         </View>
     );
 };

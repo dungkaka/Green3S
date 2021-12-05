@@ -1,163 +1,48 @@
-import React, { forwardRef, useImperativeHandle, useRef, useState } from "react";
-import { StyleSheet, View } from "react-native";
-import { Feather } from "@expo/vector-icons";
-import { TextInput } from "react-native-gesture-handler";
-import { rem, unit } from "@theme/styleContants";
-import { GoogleSansFontType } from "@theme/typography";
+import { AppText } from "@common-ui/AppText";
+import { usePrevious } from "@hooks/usePrevious";
 import { Color } from "@theme/colors";
-import { Int } from "@utils/helps/number";
-import { useOnlyDidUpdateLayoutEffect } from "@hooks/useOnlyDidUpdateLayoutEffetct";
+import { unit } from "@theme/styleContants";
+import { GoogleSansFontType } from "@theme/typography";
+import React, { useEffect } from "react";
+import { StyleSheet, Text, View } from "react-native";
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 
-const NumericInput = forwardRef(
-    (
-        { initialValue = "0", size = 17, maxLength = 5, minValue = "0", maxValue = "99999", onChange = (value) => {}, value },
-        ref
-    ) => {
-        const min = useRef(Int(minValue)).current;
-        const max = useRef(Int(maxValue)).current;
-        const [VALUE, setValue] = useState(initialValue);
+const FormErrorMessage = ({ error = undefined }) => {
+    const showErrorAnimated = useSharedValue(0);
+    const preMessage = usePrevious(error?.message);
 
-        useImperativeHandle(ref, () => ({
-            getValue: () => Int(VALUE),
-            setValue: (value) => onChangeText(value.toString()),
-        }));
-
-        useOnlyDidUpdateLayoutEffect(() => {
-            onChange(VALUE);
-        }, [VALUE]);
-
-        const inputTranform = (text) => {
-            if (text == "") return "0";
-            else if (Int(text) < min) return minValue;
-            else if (Int(text) > max) return maxValue;
-            else return text.replace(/[^0-9|-]/g, "");
-        };
-
-        const onChangeText = (text) => {
-            setValue(inputTranform(text));
-        };
-
-        if (value != undefined) {
-            return (
-                <View style={[styles.container, { width: (size / 3 + 4) * rem }]}>
-                    <View style={styles.leftIconContainer}>
-                        <Feather
-                            onPress={() => {
-                                onChange((Int(value) - 1).toString());
-                            }}
-                            style={styles.leftIcon}
-                            name="minus"
-                            size={size}
-                            color={VALUE <= min ? Color.gray_6 : "black"}
-                        />
-                    </View>
-
-                    <TextInput
-                        value={value}
-                        onChangeText={(text) => onChange(inputTranform(text))}
-                        style={[styles.input, { fontSize: size }]}
-                        keyboardType="numeric"
-                        defaultValue={VALUE}
-                        textAlign="center"
-                        maxLength={maxLength}
-                    />
-
-                    <View style={styles.rightIconContainer}>
-                        <Feather
-                            onPress={() => {
-                                onChange((Int(value) + 1).toString());
-                            }}
-                            style={styles.rightIcon}
-                            name="plus"
-                            size={size}
-                            color={VALUE >= max ? Color.gray_6 : "black"}
-                        />
-                    </View>
-                </View>
-            );
+    useEffect(() => {
+        if (error) {
+            showErrorAnimated.value = withTiming(1, { duration: 250 });
+        } else {
+            showErrorAnimated.value = withTiming(0, { duration: 250 });
         }
+    }, [!error]);
 
-        return (
-            <View style={[styles.container, { width: (size / 3 + 4) * rem }]}>
-                <View style={styles.leftIconContainer}>
-                    <Feather
-                        onPress={() => {
-                            const intValue = Int(VALUE);
-                            if (intValue > min) {
-                                const newValue = intValue - 1;
-                                setValue(newValue.toString());
-                            }
-                        }}
-                        style={styles.leftIcon}
-                        name="minus"
-                        size={size}
-                        color={VALUE <= min ? Color.gray_6 : "black"}
-                    />
-                </View>
+    const errorAnimated = useAnimatedStyle(() => ({
+        opacity: showErrorAnimated.value,
+        transform: [
+            {
+                translateX: 10 * showErrorAnimated.value,
+            },
+        ],
+    }));
 
-                <TextInput
-                    value={VALUE}
-                    onChangeText={onChangeText}
-                    style={[styles.input, { fontSize: size }]}
-                    keyboardType="numeric"
-                    defaultValue={VALUE}
-                    textAlign="center"
-                    maxLength={maxLength}
-                />
+    return (
+        <View style={styles.errorContainer}>
+            <Animated.Text style={[styles.textError, errorAnimated]}>{error ? error.message : preMessage}</Animated.Text>
+        </View>
+    );
+};
 
-                <View style={styles.rightIconContainer}>
-                    <Feather
-                        onPress={() => {
-                            const intValue = Int(VALUE);
-                            if (intValue < max) {
-                                const newValue = intValue + 1;
-                                setValue(newValue.toString());
-                            }
-                        }}
-                        style={styles.rightIcon}
-                        name="plus"
-                        size={size}
-                        color={VALUE >= max ? Color.gray_6 : "black"}
-                    />
-                </View>
-            </View>
-        );
-    }
-);
-
-export default NumericInput;
+export default FormErrorMessage;
 
 const styles = StyleSheet.create({
-    container: {
-        flexDirection: "row",
-        alignItems: "center",
-        backgroundColor: "white",
-        width: 9 * rem,
-        borderRadius: 6 * unit,
-        borderColor: Color.gray_3,
-        borderWidth: 1,
+    errorContainer: {
+        paddingLeft: 2 * unit,
     },
-    input: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        fontFamily: GoogleSansFontType.medium,
-        fontSize: 16 * unit,
-    },
-    leftIconContainer: {
-        borderRightColor: Color.gray_3,
-        borderRightWidth: 1,
-    },
-    leftIcon: {
-        paddingVertical: 8 * unit,
-        paddingHorizontal: 10 * unit,
-    },
-    rightIconContainer: {
-        borderLeftColor: Color.gray_3,
-        borderLeftWidth: 1,
-    },
-    rightIcon: {
-        paddingVertical: 8 * unit,
-        paddingHorizontal: 10 * unit,
+    textError: {
+        color: "red",
+        fontFamily: GoogleSansFontType.regular,
     },
 });

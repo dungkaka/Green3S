@@ -32,13 +32,7 @@ const ButtonModal = ({
     return (
         <Pressable style={style} disabled={disabled} onPress={() => modalRef.current.open()}>
             {children}
-            <ModalPortal
-                lazyLoad={lazyLoad}
-                unmountOnHide={unmountOnHide}
-                ref={modalRef}
-                unmountOnHide={true}
-                modalStyle={styles.modalStyle}
-            >
+            <ModalPortal lazyLoad={lazyLoad} unmountOnHide={unmountOnHide} ref={modalRef} modalStyle={styles.modalStyle}>
                 <View style={styles.modalContainer}>
                     {/* Title */}
                     <View style={styles.headerModal}>

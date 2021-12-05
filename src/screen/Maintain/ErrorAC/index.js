@@ -1,24 +1,22 @@
 import { AppText } from "@common-ui/AppText";
 import { rem, unit } from "@theme/styleContants";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Pressable, StyleSheet, TouchableOpacity, View } from "react-native";
 import { Color } from "@theme/colors";
 import { time } from "@utils/helps/time";
-import { JumpLogoPage, JumpLogoPageOverlay } from "@common-ui/Loading/JumpLogo";
+import { JumpLogoPageOverlay } from "@common-ui/Loading/JumpLogo";
 import Filter from "./Filter";
-import { ErrorACService } from "@services/error";
+import { ErrorACService, useCommonErrorControl, useFetchErrorAC } from "@services/error";
 import TableStickBasicTemplate from "@common-ui/Table/TableStickBasicTemplate";
 import { useNavigation } from "@react-navigation/native";
 import { NAVIGATION } from "constant/navigation";
 import AddButon from "@common-components/TableUtil/AddButon";
 import CheckBox from "@common-ui/Form/CheckBox";
-import { confirmAlert } from "@common-ui/Alert/ConfirmAlert";
-import { useDispatch } from "react-redux";
-import { closeIconLoadingOverlay, openIconLoadingOverlay } from "@redux/actions/app";
-import { showToast } from "@common-ui/ToastNotify/ToastManager";
 import DeleteButton from "@common-components/TableUtil/DeleteButton";
 import EditButton from "@common-components/TableUtil/EditButton";
-import { Feather } from "@expo/vector-icons";
+import ModalHintRS from "../Common/ModalHintRS";
+import { useActionHeader } from "../Common/useActionHeader";
+import { useMarkControl } from "../Common/useMarkControl";
 
 const renderStatus = (code) => {
     switch (code) {
@@ -42,7 +40,6 @@ const initStartDate = { ...time().toDateObject(), day: 1 };
 
 const ErrorAC = () => {
     const navigation = useNavigation();
-    const dispatch = useDispatch();
     const [filter, setFilter] = useState({
         endDate: initEndDate,
         startDate: initStartDate,
@@ -51,67 +48,13 @@ const ErrorAC = () => {
         error: "",
         page: 1,
     });
-    const { rData, rIsValidating, key, mutate } = ErrorACService.useFetchErrorAC({ ...filter });
-    const { deleteErrors: cDeleteErrors } = ErrorACService.useACErrorControl({ key });
+    const { rData, rIsValidating, key, mutate } = useFetchErrorAC({ ...filter });
+    const { deleteErrors } = useCommonErrorControl({ key, regExpKey: "/error/ac" });
     const datas = rData?.datas || [];
+    const { marks, setMarks, arrayMarks, isAllMark } = useMarkControl({ datas });
+    const modalHintRSRef = useRef();
 
-    const [marks, setMarks] = useState({});
-    const arrayMarks = Object.keys(marks).filter((errorId) => marks[errorId] == true);
-    const isAllMark = datas.length > 0 && arrayMarks.length == datas.length;
-
-    useEffect(() => {
-        if (Object.keys(marks).length != 0) setMarks({});
-    }, [datas]);
-
-    useEffect(() => {
-        navigation.setOptions({
-            headerRight: () => {
-                if (arrayMarks.length > 0)
-                    return (
-                        <Pressable
-                            style={{
-                                flexDirection: "row",
-                                justifyContent: "center",
-                                alignItems: "center",
-                                marginRight: 14 * unit,
-                            }}
-                            onPress={() => deleteErrors(arrayMarks)}
-                        >
-                            <AppText style={{ color: "white", paddingRight: 8 * unit }}>( Chọn {arrayMarks.length} )</AppText>
-                            <Feather name="trash-2" size={20} color="white" />
-                        </Pressable>
-                    );
-                return null;
-            },
-        });
-    }, [marks]);
-
-    const deleteErrors = (errorIds) => {
-        confirmAlert({
-            title: "Xóa lỗi",
-            content: `Bạn chắc chắn muốn xóa ${errorIds.length} lỗi này chứ, không thể khôi phục sau khi đã xóa !`,
-            onOk: async (loading, unloading, close) => {
-                try {
-                    dispatch(openIconLoadingOverlay());
-                    await cDeleteErrors(errorIds);
-                    dispatch(closeIconLoadingOverlay);
-                    close();
-                    showToast({
-                        type: "success",
-                        title: "Xóa lỗi",
-                        description: "Thành công !",
-                    });
-                } catch (e) {
-                    dispatch(closeIconLoadingOverlay);
-                    showToast({
-                        type: "error",
-                        title: "Xóa lỗi",
-                        description: "Lỗi: " + e.message,
-                    });
-                }
-            },
-        });
-    };
+    useActionHeader({ key, arrayMarks, deleteErrors });
 
     const options = useMemo(
         () => [
@@ -231,6 +174,11 @@ const ErrorAC = () => {
                 key: "error_name",
                 title: "Tên lỗi",
                 width: 7 * rem,
+                render: ({ item, index, cellStyle }) => (
+                    <TouchableOpacity onPress={() => modalHintRSRef.current.open()} activeOpacity={0.8} style={cellStyle}>
+                        <AppText style={styles.contentCell}>{item.error_name}</AppText>
+                    </TouchableOpacity>
+                ),
             },
             {
                 key: "reason",
@@ -352,6 +300,7 @@ const ErrorAC = () => {
                     onChangePage: onChangePage,
                 }}
             />
+            <ModalHintRS modalRef={modalHintRSRef} />
         </View>
     );
 };

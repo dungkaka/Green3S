@@ -4,18 +4,14 @@ import { DocumentStorage } from "@utils/local-file-sytem";
 import { useSWRConfig } from "swr";
 
 class ConfigService {
-    _version = 1041;
+    _version = 1045;
     key = "__CONFIG";
     shouldShowNotification = true;
 
     versionUpdateContent = {
-        title: "Cập nhật phiên bản 1.0.4_beta.2",
+        title: "Cập nhật phiên bản 1.0.5_beta.2",
         content: `
-•  Sửa lỗi nhấp nháy tab trang chủ !
-
-•  Lỗi AC: 
-    → Thêm nhập liệu: Nguyên nhân, giải pháp, cập nhật trạng thái.
-    → Xóa lỗi.
+•  Thêm nhập liệu: Nguyên nhân, giải pháp, cập nhật trạng thái, xóa lỗi !
         
 •  Chỉnh sửa giao diện, trình bày các màn hình hiển thị lỗi.
         `,

@@ -1,6 +1,6 @@
 import { AppText } from "@common-ui/AppText";
 import { rem, unit } from "@theme/styleContants";
-import React, { useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Image, Pressable, StyleSheet, TouchableOpacity, View } from "react-native";
 import { Color } from "@theme/colors";
 import { time } from "@utils/helps/time";
@@ -11,6 +11,8 @@ import TableStickBasicTemplate from "@common-ui/Table/TableStickBasicTemplate";
 import { useNavigation } from "@react-navigation/native";
 import { NAVIGATION } from "constant/navigation";
 import ModalImageViewer from "@common-ui/Image/ModalImageViewer";
+import { Entypo } from "@expo/vector-icons";
+import { WIDTH } from "@theme/scale";
 
 const initEndDate = time().toDateObject();
 
@@ -202,6 +204,35 @@ const PotentialError = () => {
         ],
         [rData]
     );
+
+    // useEffect(() => {
+    //     navigation.setOptions({
+    //         headerTitleContainerStyle: {
+    //             maxWidth: WIDTH - 150,
+    //         },
+    //         headerRight: () => {
+    //             return (
+    //                 <View
+    //                     style={{
+    //                         flexDirection: "row",
+    //                         justifyContent: "center",
+    //                         alignItems: "center",
+    //                         marginRight: 16 * unit,
+    //                     }}
+    //                 >
+    //                     <Pressable
+    //                         style={{ paddingLeft: 12 * unit }}
+    //                         onPress={() => {
+    //                             navigation.push(NAVIGATION.ERROR_POTENTIEL_CREATION, {});
+    //                         }}
+    //                     >
+    //                         <Entypo name="plus" size={24} color="white" />
+    //                     </Pressable>
+    //                 </View>
+    //             );
+    //         },
+    //     });
+    // }, []);
 
     return (
         <View style={styles.container}>

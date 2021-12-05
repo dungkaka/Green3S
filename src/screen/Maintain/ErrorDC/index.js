@@ -1,17 +1,23 @@
 import { AppText } from "@common-ui/AppText";
 import { rem, unit } from "@theme/styleContants";
-import React, { Fragment, useMemo, useRef, useState } from "react";
+import React, { Fragment, useCallback, useMemo, useRef, useState } from "react";
 import { StyleSheet, View, TouchableOpacity, Pressable } from "react-native";
 import { Color } from "@theme/colors";
 import { time } from "@utils/helps/time";
 import { round2 } from "@utils/helps/functions";
-import { JumpLogoPage } from "@common-ui/Loading/JumpLogo";
+import { JumpLogoPage, JumpLogoPageOverlay } from "@common-ui/Loading/JumpLogo";
 import Filter from "./Filter";
-import { useFetchErrorDC } from "@services/error";
+import { useCommonErrorControl, useFetchErrorDC } from "@services/error";
 import TableStickBasicTemplate from "@common-ui/Table/TableStickBasicTemplate";
 import { useNavigation } from "@react-navigation/native";
 import { NAVIGATION } from "constant/navigation";
 import ModalImageViewer from "@common-ui/Image/ModalImageViewer";
+import { useMarkControl } from "../Common/useMarkControl";
+import { useActionHeader } from "../Common/useActionHeader";
+import DeleteButton from "@common-components/TableUtil/DeleteButton";
+import EditButton from "@common-components/TableUtil/EditButton";
+import CheckBox from "@common-ui/Form/CheckBox";
+import ModalHintRS from "../Common/ModalHintRS";
 
 const renderStatus = (code) => {
     switch (code) {
@@ -43,9 +49,15 @@ const ErrorDC = () => {
         status: -1,
         page: 1,
     });
-    const { rData, rIsValidating, mutate } = useFetchErrorDC({ ...filter });
+    const { rData, rIsValidating, key, mutate } = useFetchErrorDC({ ...filter });
     const datas = rData?.datas || [];
     const counts = rData?.counts || {};
+
+    const { deleteErrors } = useCommonErrorControl({ key, regExpKey: "/error/dc" });
+    const { marks, setMarks, arrayMarks, isAllMark } = useMarkControl({ datas });
+    const modalHintRSRef = useRef();
+
+    useActionHeader({ key, arrayMarks, deleteErrors });
 
     const options = useMemo(
         () => [
@@ -77,6 +89,70 @@ const ErrorDC = () => {
                         <AppText style={styles.contentCellPress}>{item.factory?.stationName}</AppText>
                     </TouchableOpacity>
                 ),
+            },
+            {
+                key: "__select",
+                title: "STT",
+                width: 3 * rem,
+                renderHeader: ({ cellHeaderStyle }) => {
+                    return (
+                        <View style={cellHeaderStyle}>
+                            <CheckBox
+                                value={isAllMark}
+                                onChange={(value) => {
+                                    if (value) {
+                                        const newMarks = {};
+                                        datas.forEach((error) => (newMarks[error.id] = true));
+                                        setMarks(newMarks);
+                                    } else {
+                                        setMarks({});
+                                    }
+                                }}
+                            />
+                        </View>
+                    );
+                },
+                render: ({ item, index, isMark, cellStyle }) => {
+                    return (
+                        <View style={cellStyle}>
+                            <View style={{ padding: 4 * unit }}>
+                                <CheckBox
+                                    onChange={(value) => {
+                                        setMarks((marks) => ({
+                                            ...marks,
+                                            [item.id]: value ? true : false,
+                                        }));
+                                    }}
+                                    value={isMark}
+                                />
+                            </View>
+                        </View>
+                    );
+                },
+            },
+            {
+                key: "__control",
+                title: "Thao tác",
+                width: 5 * rem,
+                render: ({ item, index, cellStyle }) => {
+                    return (
+                        <View style={cellStyle}>
+                            <View style={{ padding: 6 * unit }}>
+                                <DeleteButton onPress={() => deleteErrors([item.id])} />
+                            </View>
+                            <View style={{ padding: 6 * unit }}>
+                                <EditButton
+                                    onPress={() => {
+                                        navigation.push(NAVIGATION.RS_UPDATION, {
+                                            error: item,
+                                            key: key,
+                                        });
+                                    }}
+                                />
+                            </View>
+                        </View>
+                    );
+                },
             },
             {
                 key: "device",
@@ -121,6 +197,11 @@ const ErrorDC = () => {
                 key: "error_name",
                 title: "Tên lỗi",
                 width: 7 * rem,
+                render: ({ item, index, cellStyle }) => (
+                    <TouchableOpacity onPress={() => modalHintRSRef.current.open()} activeOpacity={0.8} style={cellStyle}>
+                        <AppText style={styles.contentCell}>{item.error_name}</AppText>
+                    </TouchableOpacity>
+                ),
             },
             {
                 key: "reason",
@@ -162,7 +243,7 @@ const ErrorDC = () => {
             { key: "created_at", title: "Thời gian xuất hiện", width: 7 * rem },
             { key: "time_end", title: "Thời gian kết thúc", width: 7 * rem },
         ],
-        [rData]
+        [rData, marks]
     );
 
     const handleFilter = (filter) => {
@@ -175,39 +256,39 @@ const ErrorDC = () => {
         });
     };
 
+    const onChangePage = useCallback((page) => {
+        setFilter({ ...filter, page: page });
+    }, []);
+
     return (
         <View style={styles.container}>
             <Filter filter={filter} handleFilter={handleFilter} />
 
-            {rIsValidating ? (
-                <View style={{ flex: 1, backgroundColor: "white" }}>
-                    <JumpLogoPage />
-                </View>
-            ) : rData ? (
-                <Fragment>
-                    <TableStickBasicTemplate
-                        heightRow={100}
-                        left={[0, 1]}
-                        stickPosition={3 * rem}
-                        options={options}
-                        data={datas}
-                        headerContainerStyle={styles.tableHeaderContainer}
-                        textHeaderStyle={styles.tableTextHeader}
-                        numberLinesContentCell={5}
-                        showPagination={true}
-                        paginationInfo={{
-                            total: rData.total_page * 20 || 0,
-                            page: filter.page,
-                            pageSize: 20,
-                            currentPageSize: datas.length,
-                            onChangePage: (page) => {
-                                setFilter({ ...filter, page: page });
-                            },
-                        }}
-                    />
-                </Fragment>
-            ) : null}
+            {rIsValidating && <JumpLogoPageOverlay />}
+
+            <TableStickBasicTemplate
+                keyItem="id"
+                heightRow={100}
+                left={[0, 1]}
+                marks={marks}
+                stickPosition={3 * rem}
+                options={options}
+                data={datas}
+                headerContainerStyle={styles.tableHeaderContainer}
+                textHeaderStyle={styles.tableTextHeader}
+                numberLinesContentCell={5}
+                showPagination={true}
+                paginationInfo={{
+                    total: rData?.total_page * 20 || 0,
+                    page: filter.page,
+                    pageSize: 20,
+                    currentPageSize: datas.length,
+                    onChangePage: onChangePage,
+                }}
+            />
+
             <ModalImageViewer ref={imageRef} />
+            <ModalHintRS modalRef={modalHintRSRef} />
         </View>
     );
 };

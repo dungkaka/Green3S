@@ -5,6 +5,7 @@ import { rem, unit } from "@theme/styleContants";
 import { emptyObject } from "@utils/helps/functions";
 import React, { Fragment, useState } from "react";
 import { StyleSheet, View } from "react-native";
+import TableStickColumn2 from "./TableStickColumn2";
 
 const _data = new Array(20).fill(0).map((item, index) => ({
     column1: index + 1,
@@ -22,9 +23,9 @@ const _options = [
     { key: "column5", title: "Col 5", width: 10 * rem },
 ];
 
-const _left = [0];
+const _left = [0, 1];
 
-const TableStickBasicTemplate = ({
+const TableStickBasicTemplate2 = ({
     data = _data,
     marks = emptyObject,
     keyItem = "key",
@@ -132,7 +133,7 @@ const TableStickBasicTemplate = ({
 
     return (
         <Fragment>
-            <TableStickColumn
+            <TableStickColumn2
                 data={data}
                 marks={marks}
                 renderLeftHeader={renderLeftHeader}
@@ -155,10 +156,7 @@ const TableStickBasicTemplate = ({
     );
 };
 
-export default React.memo(
-    TableStickBasicTemplate,
-    (prev, next) => prev.data == next.data && prev.options == next.options && prev.marks == next.marks
-);
+export default React.memo(TableStickBasicTemplate2, (prev, next) => false);
 
 const styles = StyleSheet.create({
     padding: {
