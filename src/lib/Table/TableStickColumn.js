@@ -141,7 +141,7 @@ const TableStickColumn = ({
                                     offset: heightRow * index,
                                     index,
                                 })}
-                                initialNumToRender={heightRow > 80 ? 6 : 10}
+                                initialNumToRender={heightRow > 80 ? 8 : 12}
                                 contentContainerStyle={{ paddingLeft: leftWidth }}
                                 windowSize={7}
                                 bounces={false}
@@ -166,7 +166,7 @@ const TableStickColumn = ({
                             index,
                         })}
                         windowSize={7}
-                        initialNumToRender={10}
+                        initialNumToRender={heightRow > 80 ? 8 : 12}
                         showsVerticalScrollIndicator={false}
                         keyExtractor={(item, index) => (item?.[keyItem] || index).toString()}
                         data={data}

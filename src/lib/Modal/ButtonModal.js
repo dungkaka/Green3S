@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
     modalContainer: {
         flex: 1,
         backgroundColor: "white",
-        borderRadius: 8 * unit,
+        borderRadius: 12 * unit,
     },
     headerModal: {
         flexDirection: "row",

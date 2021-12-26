@@ -3,9 +3,9 @@ import { rem, unit } from "@theme/styleContants";
 import React, { useMemo, useRef, useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { Color } from "@theme/colors";
-import { time } from "@utils/helps/time";
+import { format, time } from "@utils/helps/time";
 import { round2 } from "@utils/helps/functions";
-import { JumpLogoPage } from "@common-ui/Loading/JumpLogo";
+import { JumpLogoPage, JumpLogoPageOverlay } from "@common-ui/Loading/JumpLogo";
 import Filter from "./Filter";
 import { useFetchErrorDisconnect } from "@services/error";
 import TableStickBasicTemplate from "@common-ui/Table/TableStickBasicTemplate";
@@ -72,7 +72,16 @@ const ErrorDisconnect = () => {
                     </TouchableOpacity>
                 ),
             },
-            { key: "created_at", title: "Thời gian xuất hiện", width: 16 * rem },
+            {
+                key: "created_at",
+                title: "Thời gian xuất hiện",
+                width: 16 * rem,
+                render: ({ item, index, cellStyle }) => (
+                    <View style={cellStyle}>
+                        <AppText style={styles.contentCell}>{format(item.created_at, "YYYY-MM-DD H:M:S")}</AppText>
+                    </View>
+                ),
+            },
         ],
         []
     );
@@ -87,22 +96,18 @@ const ErrorDisconnect = () => {
         <View style={styles.container}>
             <Filter filter={filter} handleFilter={handleFilter} />
 
-            {rIsValidating ? (
-                <View style={{ flex: 1, backgroundColor: "white" }}>
-                    <JumpLogoPage />
-                </View>
-            ) : rData ? (
-                <TableStickBasicTemplate
-                    heightRow={100}
-                    left={[0, 1]}
-                    stickPosition={3 * rem}
-                    options={options}
-                    data={datas}
-                    headerContainerStyle={styles.tableHeaderContainer}
-                    textHeaderStyle={styles.tableTextHeader}
-                    numberLinesContentCell={5}
-                />
-            ) : null}
+            {rIsValidating && <JumpLogoPageOverlay />}
+
+            <TableStickBasicTemplate
+                heightRow={100}
+                left={[0, 1]}
+                stickPosition={3 * rem}
+                options={options}
+                data={datas}
+                headerContainerStyle={styles.tableHeaderContainer}
+                textHeaderStyle={styles.tableTextHeader}
+                numberLinesContentCell={5}
+            />
         </View>
     );
 };

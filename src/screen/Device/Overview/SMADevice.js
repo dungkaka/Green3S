@@ -4,6 +4,11 @@ import React, { Fragment } from "react";
 import { StyleSheet, View } from "react-native";
 import { Color } from "@theme/colors";
 import TableStickBasicTemplate from "@common-ui/Table/TableStickBasicTemplate";
+import { round2 } from "@utils/helps/functions";
+
+const TagStatus = ({ status }) => {
+    return <AppText style={styles.contentCellTag}>{status}</AppText>;
+};
 
 const options = [
     {
@@ -11,7 +16,7 @@ const options = [
         title: "STT",
         width: 3 * rem,
         render: ({ item, index, cellStyle }) => (
-            <View key={0} style={cellStyle}>
+            <View style={cellStyle}>
                 <AppText style={styles.contentCell}>{index + 1}</AppText>
             </View>
         ),
@@ -45,10 +50,12 @@ const options = [
     {
         key: "status",
         title: "Trạng thái",
-        width: 10 * rem,
+        width: 19 * rem,
         render: ({ item, index, cellStyle }) => (
-            <View key={6} style={cellStyle}>
-                <AppText style={styles.contentCell}>{item.numString == 0 ? "Không dùng" : "Bình thường"}</AppText>
+            <View style={[cellStyle, { flexDirection: "row", justifyContent: "flex-start" }]}>
+                {item.status.map((status, index) => (
+                    <TagStatus key={index} status={status} />
+                ))}
             </View>
         ),
     },
@@ -87,6 +94,8 @@ const SMADevice = ({ data }) => {
         reactive_power,
     } = data?.data_device || {};
 
+    const { devName, devTypeId, factory, esnCode, invType, softwareVersion } = data?.device;
+
     return (
         <Fragment>
             <TableStickBasicTemplate
@@ -102,35 +111,30 @@ const SMADevice = ({ data }) => {
             <View style={styles.block}>
                 <View style={styles.detailContainer}>
                     <AppTextMedium style={{ fontSize: 15 * unit }}>Chi tiết</AppTextMedium>
-                    <DetailItem title="Dòng điện pha A" value={a_i} />
-                    <DetailItem title="Điện áp pha A" value={a_u - ab_u} />
-                    <DetailItem title="Dòng điện pha B" value={b_i} />
-                    <DetailItem title="Điện áp pha B" value={b_u - bc_u} />
-                    <DetailItem title="Dòng điện pha C" value={c_i} />
-                    <DetailItem title="Điện áp pha C" value={c_u - ca_u} />
-                    <DetailItem title="Công suất thực" value={active_power} />
-                    <DetailItem title="Công suất vô công" value={reactive_power} />
-                    <DetailItem title="Apparent power" value={apparent_power} />
-                    <DetailItem title="Tần số lưới điện" value={grid_frequency} />
-                    <DetailItem title="PV Generation" value={pvGeneration} />
-                    <DetailItem title="Tổng sản lượng" value={mppt_total_cap} />
+                    <DetailItem title="Dòng điện pha A" value={round2(a_i)} />
+                    <DetailItem title="Điện áp pha A" value={round2(a_u) + "-" + round2(ab_u)} />
+                    <DetailItem title="Dòng điện pha B" value={round2(b_i)} />
+                    <DetailItem title="Điện áp pha B" value={round2(b_u) + "-" + round2(bc_u)} />
+                    <DetailItem title="Dòng điện pha C" value={round2(c_i)} />
+                    <DetailItem title="Điện áp pha C" value={round2(c_u) + "-" + round2(ca_u)} />
+                    <DetailItem title="Công suất thực" value={round2(active_power)} />
+                    <DetailItem title="Công suất vô công" value={round2(reactive_power)} />
+                    <DetailItem title="Apparent power" value={round2(apparent_power)} />
+                    <DetailItem title="Tần số lưới điện" value={round2(grid_frequency)} />
+                    <DetailItem title="PV Generation" value={round2(pvGeneration)} />
+                    <DetailItem title="Tổng sản lượng" value={round2(mppt_total_cap)} />
                 </View>
             </View>
             <View style={styles.block}>
                 <View style={styles.detailContainer}>
-                    <AppTextMedium style={{ fontSize: 15 * unit }}>Chi tiết</AppTextMedium>
-                    <DetailItem title="Dòng điện pha A" value={a_i} />
-                    <DetailItem title="Điện áp pha A" value={a_u - ab_u} />
-                    <DetailItem title="Dòng điện pha B" value={b_i} />
-                    <DetailItem title="Điện áp pha B" value={b_u - bc_u} />
-                    <DetailItem title="Dòng điện pha C" value={c_i} />
-                    <DetailItem title="Điện áp pha C" value={c_u - ca_u} />
-                    <DetailItem title="Công suất thực" value={active_power} />
-                    <DetailItem title="Công suất vô công" value={reactive_power} />
-                    <DetailItem title="Apparent power" value={apparent_power} />
-                    <DetailItem title="Tần số lưới điện" value={grid_frequency} />
-                    <DetailItem title="PV Generation" value={pvGeneration} />
-                    <DetailItem title="Tổng sản lượng" value={mppt_total_cap} />
+                    <AppTextMedium style={{ fontSize: 15 * unit }}>Thông tin cơ bản</AppTextMedium>
+                    <DetailItem title="Tên thiết bị" value={devName} />
+                    <DetailItem title="Loại thiết bị" value={data.type_devices?.[devTypeId]} />
+                    <DetailItem title="Tên nhà máy" value={factory?.stationName} />
+                    <DetailItem title="Số seri" value={esnCode} />
+                    <DetailItem title="Địa chỉ nhà máy" value={factory?.stationAddr} />
+                    <DetailItem title="Model" value={invType} />
+                    <DetailItem title="Phiên bản phần mềm" value={softwareVersion} />
                 </View>
             </View>
         </Fragment>
@@ -141,12 +145,24 @@ export default SMADevice;
 
 const styles = StyleSheet.create({
     tableHeaderContainer: {
+        flex: 1,
         flexDirection: "row",
         justifyContent: "center",
         backgroundColor: Color.gray_2,
     },
     tableTextHeader: {
         color: Color.gray_11,
+    },
+    contentCellTag: {
+        fontSize: 12 * unit,
+        textAlign: "center",
+        color: "white",
+        backgroundColor: Color.blueModern_1,
+        borderRadius: 6 * unit,
+        paddingHorizontal: 8 * unit,
+        paddingVertical: 4 * unit,
+        marginRight: 8 * unit,
+        marginVertical: 3 * unit,
     },
     contentCell: {
         fontSize: 13 * unit,

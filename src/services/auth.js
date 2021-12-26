@@ -25,8 +25,9 @@ export const useLogin = () => {
 
     const revalidateRemoteUser = async (user, onSuccess = () => {}) => {
         const token = await getExpoPushToken();
+        console.log("TOKEN", token);
         const data = await requester({
-            requestFunc: () => Request.Server.post(key, { ...user, chinh: undefined, dung: null, deviceToken: token }),
+            requestFunc: () => Request.Server.post(key, { ...user, deviceToken: token }),
         })();
 
         onSuccess();
@@ -40,6 +41,7 @@ export const useLogin = () => {
         await DocumentStorage.deleteAsync("auth", "user");
         await res.mutate(null, false);
         const token = await getExpoPushToken();
+
         requester({
             requestFunc: () =>
                 Request.Server.post(API_GREEN3S.LOGOUT(), {

@@ -18,9 +18,11 @@ const Overview = () => {
 
     const [filter, setFilter] = useState(
         (() => {
-            const initDate = time(initTime || new Date(Date.now() - 1000 * (60 * 10))).toDateObject();
+            const initDate = initTime
+                ? time(initTime).toDateObject()
+                : time(new Date(Date.now() - 1000 * (60 * 10))).toDateObject();
             return {
-                date: { ...initDate, minute: Math.floor(initDate.minute / 5) * 5, second: 0 },
+                date: initTime ? initDate : { ...initDate, minute: Math.floor(initDate.minute / 5) * 5, second: 0 },
                 deviceId: device.device_id,
             };
         })()

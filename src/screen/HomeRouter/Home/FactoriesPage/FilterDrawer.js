@@ -9,13 +9,17 @@ import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 
 import { Constants } from "react-native-unimodules";
 import { useForm, Controller } from "react-hook-form";
 import { Feather } from "@expo/vector-icons";
-import { debounce, throttle } from "@utils/helps/functions";
 
 const firms = [
     { key: "", value: "Tất cả" },
     { key: "1", value: "HUAWEI" },
     { key: "2", value: "SMA" },
 ];
+
+const power = ["", "0-10kWp", "10-50kWp", "50-100kWp", "100kWp-1MWp", ">1MWp"].map((el) => ({
+    key: el,
+    value: el == "" ? "Tất cả" : el,
+}));
 
 const Tag = React.memo(
     ({ getValues, onChange, item = { key, value }, isActive }) => {
@@ -50,7 +54,7 @@ const FilterDrawer = ({ drawerRef, onConfirm, onReset }) => {
         defaultValues: {
             station_name: "",
             firm: firms[0],
-            gender: { key: "0-10kWp", value: "0-10kWp" },
+            power: power[0],
         },
     });
     const onSubmit = (data) => {
@@ -58,6 +62,7 @@ const FilterDrawer = ({ drawerRef, onConfirm, onReset }) => {
         onConfirm({
             station_name: { key: data.station_name, value: data.station_name },
             firm: data.firm,
+            power: data.power,
         });
     };
 
@@ -131,7 +136,7 @@ const FilterDrawer = ({ drawerRef, onConfirm, onReset }) => {
                         <View style={{ flexDirection: "row", flexWrap: "wrap", paddingVertical: 8 * unit }}>
                             <Controller
                                 control={control}
-                                name="gender"
+                                name="power"
                                 rules={{
                                     required: { value: true, message: "Cần chọn ít nhất 1 giới tính!" },
                                 }}
@@ -142,19 +147,17 @@ const FilterDrawer = ({ drawerRef, onConfirm, onReset }) => {
                                 }) => {
                                     return (
                                         <Fragment>
-                                            {["Tất cả", "0-10kWp", "10-50kWp", "50-100kWp", "100kWp-1MWp", ">1MWp"].map(
-                                                (item, index) => {
-                                                    return (
-                                                        <Tag
-                                                            key={index}
-                                                            getValues={getValues}
-                                                            onChange={onChange}
-                                                            item={{ key: item, value: item }}
-                                                            isActive={item == value.value}
-                                                        />
-                                                    );
-                                                }
-                                            )}
+                                            {power.map((item, index) => {
+                                                return (
+                                                    <Tag
+                                                        key={index}
+                                                        getValues={getValues}
+                                                        onChange={onChange}
+                                                        item={item}
+                                                        isActive={item.key == value.key}
+                                                    />
+                                                );
+                                            })}
                                         </Fragment>
                                     );
                                 }}

@@ -5,13 +5,14 @@ import { unit } from "@theme/styleContants";
 import React, { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useOnlyDidUpdateEffect } from "@utils/hooks/useOnlyDidUpdateEffect";
+import MultipleSelect from "./MultipleSelect";
 
-function Selection({
+function MultipleSelection({
     data,
     required = true,
     disabled = false,
-    initialOption = undefined,
-    initialOptionOnChangeData = undefined,
+    initialOptions = [],
+    initialOptionsOnChangeData = [],
     emptyOption = "Chọn",
     title = "Selection",
     containerStyle = styles.displaySelectValueContainer,
@@ -20,14 +21,14 @@ function Selection({
     ...otherProps
 }) {
     const selectRef = useRef();
-    const [select, setSelect] = useState(initialOption);
+    const [selects, setSelects] = useState(initialOptions);
 
     useOnlyDidUpdateEffect(() => {
-        onChange(select);
-    }, [select]);
+        onChange(selects);
+    }, [selects]);
 
     useOnlyDidUpdateEffect(() => {
-        setSelect(initialOptionOnChangeData);
+        setSelects(initialOptionsOnChangeData);
     }, [data]);
 
     return (
@@ -35,26 +36,28 @@ function Selection({
             <Pressable
                 disabled={disabled}
                 onPress={() => {
-                    selectRef.current.open(select?.key);
+                    selectRef.current.open(selects);
                 }}
                 style={containerStyle}
             >
-                {renderValueComponent ? (
-                    renderValueComponent(select)
-                ) : (
-                    <AppText style={styles.textSelectDisplay}>{select ? select.value : emptyOption}</AppText>
-                )}
+                {renderValueComponent
+                    ? renderValueComponent(selects)
+                    : selects.map((select) => (
+                          <AppText key={select.key} style={styles.textSelectDisplay}>
+                              {select ? select.value : emptyOption} ,{" "}
+                          </AppText>
+                      ))}
             </Pressable>
 
-            <Select
+            <MultipleSelect
                 required={required}
-                initialOption={initialOption}
+                initialOptions={initialOptions}
                 itemHeight={48}
                 options={data}
                 ref={selectRef}
                 onOk={() => {
                     selectRef.current.close();
-                    setSelect(selectRef.current.getSelection());
+                    setSelects(selectRef.current.getSelection());
                 }}
                 title={title}
                 {...otherProps}
@@ -63,7 +66,7 @@ function Selection({
     );
 }
 
-export default Selection;
+export default MultipleSelection;
 
 const styles = StyleSheet.create({
     displaySelectValueContainer: {

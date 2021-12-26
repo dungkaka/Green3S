@@ -1,6 +1,6 @@
 import { AppText } from "@common-ui/AppText";
 import TableStickBasicTemplate from "@common-ui/Table/TableStickBasicTemplate";
-import { ErrorACService } from "@services/error";
+import { useFetchErrorAC } from "@services/error";
 import { Color } from "@theme/colors";
 import { rem, unit } from "@theme/styleContants";
 import React, { Fragment } from "react";
@@ -96,7 +96,7 @@ const options = [
 ];
 
 const TabErrorAC = ({ filter = {} }) => {
-    const { rData, rIsValidating, mutate } = ErrorACService.useFetchErrorAC({
+    const { rData, rIsValidating, mutate } = useFetchErrorAC({
         deviceId: filter.deviceId,
         startDate: filter.date,
         endDate: filter.date,

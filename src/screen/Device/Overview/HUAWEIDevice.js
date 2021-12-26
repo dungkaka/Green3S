@@ -4,6 +4,11 @@ import React, { Fragment } from "react";
 import { StyleSheet, View } from "react-native";
 import { Color } from "@theme/colors";
 import TableStickBasicTemplate from "@common-ui/Table/TableStickBasicTemplate";
+import { round2 } from "@utils/helps/functions";
+
+const TagStatus = ({ status }) => {
+    return <AppText style={styles.contentCellTag}>{status}</AppText>;
+};
 
 const options = [
     {
@@ -11,7 +16,7 @@ const options = [
         title: "STT",
         width: 3 * rem,
         render: ({ item, index, cellStyle }) => (
-            <View key={0} style={cellStyle}>
+            <View style={cellStyle}>
                 <AppText style={styles.contentCell}>{index + 1}</AppText>
             </View>
         ),
@@ -55,10 +60,12 @@ const options = [
     {
         key: "status",
         title: "Trạng thái",
-        width: 10 * rem,
+        width: 19 * rem,
         render: ({ item, index, cellStyle }) => (
-            <View key={6} style={cellStyle}>
-                <AppText style={styles.contentCell}>{item.numString == 0 ? "Không dùng" : "Bình thường"}</AppText>
+            <View style={[cellStyle, { flexDirection: "row", justifyContent: "flex-start" }]}>
+                {item.status.map((status, index) => (
+                    <TagStatus key={index} status={status} />
+                ))}
             </View>
         ),
     },
@@ -112,22 +119,22 @@ const HUAWEIDevice = ({ data }) => {
                 <View style={styles.detailContainer}>
                     <AppTextMedium style={{ fontSize: 15 * unit }}>Chi tiết</AppTextMedium>
                     <DetailItem title="Trạng thái bộ biến tần" value="On-grid" />
-                    <DetailItem title="Công suất thực" value={active_power} />
-                    <DetailItem title="Hệ số công suất" value={power_factor} />
+                    <DetailItem title="Công suất thực" value={round2(active_power)} />
+                    <DetailItem title="Hệ số công suất" value={round2(power_factor)} />
                     <DetailItem title="Thời gian tắt bộ biến tần" value={close_time} />
-                    <DetailItem title="Dòng điện pha B" value={b_i} />
-                    <DetailItem title="Điện áp pha B" value={b_u} />
-                    <DetailItem title="Sản lượng hôm nay" value={day_cap} />
-                    <DetailItem title="Công suất vô công" value={reactive_power} />
-                    <DetailItem title="Tần số lưới điện" value={elec_freq} />
+                    <DetailItem title="Dòng điện pha B" value={round2(b_i)} />
+                    <DetailItem title="Điện áp pha B" value={round2(b_u)} />
+                    <DetailItem title="Sản lượng hôm nay" value={round2(day_cap)} />
+                    <DetailItem title="Công suất vô công" value={round2(reactive_power)} />
+                    <DetailItem title="Tần số lưới điện" value={round2(elec_freq)} />
                     <DetailItem title="Chế độ đầu ra" value="" />
-                    <DetailItem title="Dòng điện pha C" value={c_i} />
-                    <DetailItem title="Điện áp pha C" value={c_u} />
-                    <DetailItem title="Tổng sản lượng" value={total_cap} />
-                    <DetailItem title="Công suất định mức của bộ biến tần (kW)" value={data?.device.inverter_power} />
+                    <DetailItem title="Dòng điện pha C" value={round2(c_i)} />
+                    <DetailItem title="Điện áp pha C" value={round2(c_u)} />
+                    <DetailItem title="Tổng sản lượng" value={round2(total_cap)} />
+                    <DetailItem title="Công suất định mức của bộ biến tần (kW)" value={round2(data?.device.inverter_power)} />
                     <DetailItem title="Thời gian khởi động bộ biến tiền" value={open_time} />
-                    <DetailItem title="Dòng điện pha A" value={a_i} />
-                    <DetailItem title="Điện áp pha A" value={a_u} />
+                    <DetailItem title="Dòng điện pha A" value={round2(a_i)} />
+                    <DetailItem title="Điện áp pha A" value={round2(a_u)} />
                 </View>
             </View>
             <View style={styles.block}>
@@ -156,6 +163,17 @@ const styles = StyleSheet.create({
     },
     tableTextHeader: {
         color: Color.gray_11,
+    },
+    contentCellTag: {
+        fontSize: 12 * unit,
+        textAlign: "center",
+        color: "white",
+        backgroundColor: Color.blueModern_1,
+        borderRadius: 6 * unit,
+        paddingHorizontal: 8 * unit,
+        paddingVertical: 4 * unit,
+        marginRight: 8 * unit,
+        marginVertical: 3 * unit,
     },
     contentCell: {
         fontSize: 13 * unit,

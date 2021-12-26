@@ -1,6 +1,8 @@
+import { useFocusEffect } from "@react-navigation/native";
 import { fetcher as defaultFetcher } from "@utils/helps/request";
-import { useEffect, useRef } from "react";
-import useSWR, { unstable_serialize, useSWRConfig } from "swr";
+import { useCallback, useEffect, useRef } from "react";
+import useSWR, { mutate, unstable_serialize, useSWRConfig } from "swr";
+import { useOnlyDidUpdateFocusEffect } from "./useOnlyDidUpdateFocusEffect";
 import { usePrevious } from "./usePrevious";
 
 export const useAPIFetcher = (key, options, fetcher) => {
@@ -51,7 +53,7 @@ export const timeInterval = {
 
 /* ----------------------------------------------------------------------------------------------- */
 
-// Suggest order of middleware: [auth, expiredTime(20000), listen, saveActiveData]
+// Suggest order of middleware: [auth, expiredTime(20000), revalidateFocusEffect(true), listen, saveActiveData]
 
 // Hook for middleware return addition activeData, that is lastest recently fetch success;
 export const saveActiveData = (useSWRNext) => (key, fetcher, config) => {
@@ -92,6 +94,7 @@ export const expiredTime = (time) => (useSWRNext) => (key, fetcher, config) => {
     const preKey = usePrevious(sKey);
     let revalidateIfStale = false;
 
+    // Just for case key change in component
     if (sKey != preKey) {
         const isExpiredTime = cache.get("TIME_" + sKey) ? cache.get("TIME_" + sKey) < Date.now() : true;
         if (isExpiredTime) {
@@ -110,6 +113,32 @@ export const expiredTime = (time) => (useSWRNext) => (key, fetcher, config) => {
 
     return swr;
 };
+
+// if have expiredTime, use this hook after expiredTime
+export const revalidateFocusEffect =
+    (verifyExpired = true) =>
+    (useSWRNext) =>
+    (key, fetcher, config) => {
+        const { cache } = useSWRConfig();
+        const sKey = unstable_serialize(key);
+        const swr = useSWRNext(key, fetcher, config);
+        const revalidate = useRef();
+        revalidate.current = () => {
+            if (!verifyExpired) swr.mutate(key);
+            else {
+                const isExpiredTime = cache.get("TIME_" + sKey) ? cache.get("TIME_" + sKey) < Date.now() : true;
+                if (isExpiredTime) {
+                    swr.mutate(sKey);
+                }
+            }
+        };
+
+        useOnlyDidUpdateFocusEffect(() => {
+            revalidate.current();
+        }, []);
+
+        return swr;
+    };
 
 export const resetExpiredTime = (cache, keyPart) => {
     const regex = new RegExp(`TIME_.+${keyPart}`);

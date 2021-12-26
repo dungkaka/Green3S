@@ -44,7 +44,9 @@ function TabNavigation() {
                     options={{
                         title: "Báo động",
                         headerStyle: {
-                            backgroundColor: Color.redPastelDark,
+                            backgroundColor: "#c94234",
+                            elevation: 0,
+                            shadowColor: "transparent",
                         },
                     }}
                     name={NAVIGATION.TAB_ALARM}

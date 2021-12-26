@@ -6,7 +6,7 @@ import { Color } from "@theme/colors";
 import { time } from "@utils/helps/time";
 import { JumpLogoPage } from "@common-ui/Loading/JumpLogo";
 import Filter from "./Filter";
-import { ErrorACService } from "@services/error";
+import { useFetchErrorAC } from "@services/error";
 import TableStickBasicTemplate from "@common-ui/Table/TableStickBasicTemplate";
 import { useRoute } from "@react-navigation/native";
 
@@ -112,7 +112,7 @@ const DPReportAC = () => {
         status: -1,
         error: "",
     });
-    const { rData, rIsValidating, mutate } = ErrorACService.useFetchErrorAC({ ...filter });
+    const { rData, rIsValidating, mutate } = useFetchErrorAC({ ...filter });
     const datas = rData?.datas || [];
 
     const handleFilter = (filter) => {

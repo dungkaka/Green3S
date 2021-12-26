@@ -8,12 +8,10 @@ import { API_GREEN3S } from "@configs/end-points-url";
 
 export const keyListPlants = API_GREEN3S.LIST_PLANTS();
 export const useListPlants = () => {
-    const { data, isValidating, error } = useAPIFetcher(keyListPlants, {
+    return useAPIFetcher(keyListPlants, {
         revalidateIfStale: false,
         use: [auth],
     });
-
-    return { data, isValidating, error };
 };
 
 export const useSearchFactory = ({ station_name, firm } = {}) => {

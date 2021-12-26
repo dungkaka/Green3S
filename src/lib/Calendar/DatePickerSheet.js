@@ -134,8 +134,8 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: "white",
         paddingHorizontal: 8 * unit,
-        borderTopLeftRadius: 8 * unit,
-        borderTopRightRadius: 8 * unit,
+        borderTopLeftRadius: 12 * unit,
+        borderTopRightRadius: 12 * unit,
         paddingBottom: HEIGHT * 0.1,
     },
 

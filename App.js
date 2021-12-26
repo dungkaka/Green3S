@@ -8,6 +8,7 @@ import { Provider } from "react-redux";
 import { store } from "@redux/store";
 import { configService } from "@services/config";
 let AppContainer = require("@navigation/index").default;
+import * as Notifications from "expo-notifications";
 
 function App() {
     const [isReady, setIsReady] = useState(false);

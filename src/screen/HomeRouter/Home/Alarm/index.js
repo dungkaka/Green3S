@@ -71,7 +71,7 @@ const Alarm = () => {
                 title: "STT",
                 width: 3 * rem,
                 render: ({ item, index, cellStyle }) => (
-                    <View key={0} style={cellStyle}>
+                    <View style={cellStyle}>
                         <AppText style={styles.contentCell}>{index + 1}</AppText>
                     </View>
                 ),
@@ -88,7 +88,6 @@ const Alarm = () => {
                                     ...item.factory,
                                 });
                         }}
-                        key={1}
                         style={cellStyle}
                     >
                         <AppText style={styles.contentCellLink}>{item.factory?.stationName}</AppText>
@@ -107,7 +106,6 @@ const Alarm = () => {
                                     device: item.device,
                                 });
                         }}
-                        key={2}
                         style={cellStyle}
                     >
                         <AppText style={styles.contentCellLink}>{item.device?.devName}</AppText>
@@ -118,11 +116,7 @@ const Alarm = () => {
                 key: "alarmType",
                 title: "Loại báo động",
                 width: 8 * rem,
-                render: ({ item, index, cellStyle }) => (
-                    <View key={3} style={cellStyle}>
-                        {renderAlarmType(item.alarmType)}
-                    </View>
-                ),
+                render: ({ item, index, cellStyle }) => <View style={cellStyle}>{renderAlarmType(item.alarmType)}</View>,
             },
             {
                 key: "alarmName",
@@ -140,6 +134,11 @@ const Alarm = () => {
                 width: 7 * rem,
             },
             {
+                key: "message",
+                title: "Event",
+                width: 14 * rem,
+            },
+            {
                 key: "number",
                 title: "Number",
                 width: 6 * rem,
@@ -149,7 +148,7 @@ const Alarm = () => {
                 title: "Mức độ nghiêm trọng",
                 width: 10 * rem,
                 render: ({ item, index, cellStyle }) => (
-                    <View key={1} style={cellStyle}>
+                    <View style={cellStyle}>
                         <AppText style={styles.contentCell}>{renderAlarmLev(item.lev)}</AppText>
                     </View>
                 ),
@@ -160,7 +159,6 @@ const Alarm = () => {
                 width: 8 * rem,
                 render: ({ item, index, cellStyle }) => (
                     <ButtonModal
-                        key={9}
                         style={cellStyle}
                         lazyLoad={true}
                         title="Nguyên nhân, giải pháp"
@@ -189,7 +187,7 @@ const Alarm = () => {
                 title: "Trạng thái",
                 width: 6 * rem,
                 render: ({ item, index, cellStyle }) => (
-                    <View key={11} style={cellStyle}>
+                    <View style={cellStyle}>
                         <AppText style={styles.contentCell}>{item.status_accept == 1 ? "Đã sửa" : "Chưa sửa"}</AppText>
                     </View>
                 ),

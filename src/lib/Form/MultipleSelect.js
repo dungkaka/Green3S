@@ -10,17 +10,20 @@ import { ColorDefault } from "@theme";
 import { useOnlyDidUpdateLayoutEffect } from "@hooks/useOnlyDidUpdateLayoutEffetct";
 
 const MemoSelectItem = React.memo(
-    ({ children = null, required, itemHeight, option, isActive, setActiveOption }) => {
+    ({ children = null, required, itemHeight, option, isActive, setActiveOptions }) => {
         return (
             <TouchableOpacity
                 activeOpacity={0.5}
                 onPress={() => {
-                    if (isActive && !required) {
-                        setActiveOption(undefined);
-                        return;
-                    } else {
-                        setActiveOption(option);
-                    }
+                    setActiveOptions((options) => {
+                        if (isActive) {
+                            if (!required || (required && options.length > 1))
+                                return options.filter((o) => o.key != option.key);
+                            return options;
+                        } else {
+                            return [...options, option];
+                        }
+                    });
                 }}
                 style={[styles.itemMemoSelectContainer, itemHeight ? { height: itemHeight } : { minHeight: 38 }]}
             >
@@ -46,11 +49,11 @@ const _options = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => ({
 }));
 
 // Should care itemHeight when data length > 10
-const Select = forwardRef(
+const MultipleSelect = forwardRef(
     (
         {
             options = _options,
-            initialOption = undefined,
+            initialOptions = [],
             required = false,
             OptionItem = _OptionItem,
             onOk,
@@ -71,20 +74,18 @@ const Select = forwardRef(
 
         const modalRef = useRef();
         const flatlistRef = useRef();
-        const [activeOption, setActiveOption] = useState(initialOption);
+        const [activeOptions, setActiveOptions] = useState(initialOptions);
 
         useOnlyDidUpdateLayoutEffect(() => {
-            setActiveOption(undefined);
+            setActiveOptions([]);
         }, [options]);
 
         useImperativeHandle(ref, () => ({
-            open: (key) => {
-                const option = optionByKey[key];
-                if (option) {
-                    if (option.key != activeOption?.key) setActiveOption(option);
-                    flatlistRef.current.scrollToIndex({ index: option.index, animated: false, viewPosition: 0.5 });
+            open: (options) => {
+                if (options) {
+                    setActiveOptions(options);
                 } else {
-                    setActiveOption(undefined);
+                    setActiveOptions([]);
                 }
 
                 modalRef.current.open();
@@ -92,18 +93,18 @@ const Select = forwardRef(
             close: () => {
                 modalRef.current.close();
             },
-            getSelection: () => activeOption,
+            getSelection: () => activeOptions,
         }));
 
         const renderItem = ({ item, index }) => {
-            const isActive = item.key == activeOption?.key;
+            const isActive = activeOptions.some((option) => option.key == item.key);
             return (
                 <MemoSelectItem
                     required={required}
                     itemHeight={itemHeight}
                     isActive={isActive}
                     option={item}
-                    setActiveOption={setActiveOption}
+                    setActiveOptions={setActiveOptions}
                 >
                     <OptionItem option={item} index={index} isActive={isActive} />
                 </MemoSelectItem>
@@ -138,7 +139,6 @@ const Select = forwardRef(
                                   })
                                 : undefined
                         }
-                        initialScrollIndex={activeOption ? optionByKey[activeOption.key]?.index : 0}
                         keyExtractor={(item, i) => item.key.toString()}
                         data={options}
                         renderItem={renderItem}
@@ -173,7 +173,7 @@ const Select = forwardRef(
     }
 );
 
-export default React.memo(Select, (prev, next) => prev.options == next.options);
+export default React.memo(MultipleSelect, (prev, next) => prev.options == next.options);
 
 const styles = StyleSheet.create({
     modalStyle: {

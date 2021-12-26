@@ -86,7 +86,7 @@ export const useFetchAllError = ({ startDate, endDate, stationCode, deviceId, er
     };
 };
 
-export const useCommonErrorControl = ({ key, regExpKey = "/error/" }) => {
+export const useCommonErrorControl = ({ key, regExpKey = "/error/" } = {}) => {
     const dispatch = useDispatch();
     const { cache, mutate } = useSWRConfig();
 
@@ -135,20 +135,32 @@ export const useCommonErrorControl = ({ key, regExpKey = "/error/" }) => {
     };
 
     const updateError = async (newError) => {
-        await requester({
+        let formData = new FormData();
+
+        formData.append("ids", JSON.stringify([newError.id]));
+        formData.append("reason", newError.reason || "");
+        formData.append("solution", newError.solution || "");
+        formData.append("status", newError.status);
+
+        let nameFiles = "";
+
+        const imagesLength = newError.images?.length;
+        newError.images?.forEach((image, index) => {
+            if (image) {
+                nameFiles = nameFiles + "file" + index + (index == imagesLength - 1 ? "" : ",");
+                formData.append("file" + index, image);
+            }
+        });
+
+        formData.append("nameFiles", nameFiles);
+
+        const res = await requester({
             requestFunc: () =>
-                Request.Server.post(
-                    API_GREEN3S.ERROR_UPDATE(),
-                    objectClean(
-                        {
-                            ids: [newError.id],
-                            reason: newError.reason || "",
-                            solution: newError.solution || "",
-                            status: newError.status,
-                        },
-                        false
-                    )
-                ),
+                Request.Server.post(API_GREEN3S.ERROR_UPDATE(), formData, {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                }),
         })();
 
         if (!key) return;
@@ -157,7 +169,7 @@ export const useCommonErrorControl = ({ key, regExpKey = "/error/" }) => {
             (data) => {
                 if (!data?.datas) return null;
                 const errorIndex = data.datas.findIndex((error) => error.id == newError.id);
-                if (errorIndex >= 0) data.datas[errorIndex] = { ...data.datas[errorIndex], ...newError };
+                if (errorIndex >= 0) data.datas[errorIndex] = { ...data.datas[errorIndex], ...res.datas[0] };
                 return { ...data, datas: [...data.datas] };
             },
             false
@@ -194,10 +206,136 @@ export const useCommonErrorControl = ({ key, regExpKey = "/error/" }) => {
         );
     };
 
+    const addPotentialError = async (newPotentialError) => {
+        let formData = new FormData();
+
+        formData.append("name", newPotentialError.errorName);
+        formData.append("reason", newPotentialError.reason);
+        formData.append("idea", newPotentialError.idea);
+        formData.append("device_id", newPotentialError.deviceId);
+        formData.append("stationCode", newPotentialError.stationCode);
+        formData.append("string", JSON.stringify(newPotentialError.string));
+
+        newPotentialError.status && formData.append("status_name", newPotentialError.status);
+        newPotentialError.other_device && formData.append("other_device", newPotentialError.other_device);
+
+        let nameFiles = "";
+
+        const imagesLength = newPotentialError.images?.length;
+        newPotentialError.images?.forEach((image, index) => {
+            if (image) {
+                nameFiles = nameFiles + "file" + index + (index == imagesLength - 1 ? "" : ",");
+                formData.append("file" + index, image);
+            }
+        });
+
+        formData.append("nameFiles", nameFiles);
+
+        await requester({
+            requestFunc: () =>
+                Request.Server.post(API_GREEN3S.CREATE_POTENTIAL_ERROR(), formData, {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                }),
+        })();
+
+        if (!key) return;
+
+        mutate(key);
+
+        resetExpiredTime(cache, "/error/potential");
+    };
+
+    const deletePotentialErrors = async (errorIds) => {
+        confirmAlert({
+            title: "Xóa lỗi",
+            content: `Bạn chắc chắn muốn xóa ${errorIds.length} lỗi này chứ, không thể khôi phục sau khi đã xóa !`,
+            onOk: async (loading, unloading, close) => {
+                try {
+                    dispatch(openIconLoadingOverlay());
+                    await requester({
+                        requestFunc: () =>
+                            Request.Server.post(API_GREEN3S.DELETE_POTENTIAL_ERROR(), {
+                                ids: errorIds,
+                            }),
+                    })();
+
+                    if (!key) return;
+                    mutate(
+                        key,
+                        (data) => {
+                            if (!data?.datas) return null;
+                            data.datas = data.datas.filter((error) => !errorIds.includes(error.id.toString()));
+                            return { ...data };
+                        },
+                        true
+                    );
+                    resetExpiredTime(cache, "/error/potential");
+                    dispatch(closeIconLoadingOverlay);
+                    close();
+                    showToast({
+                        type: "success",
+                        title: "Xóa lỗi",
+                        description: "Thành công !",
+                    });
+                } catch (e) {
+                    dispatch(closeIconLoadingOverlay);
+                    showToast({
+                        type: "error",
+                        title: "Xóa lỗi",
+                        description: "Lỗi: " + e.message,
+                    });
+                }
+            },
+        });
+    };
+
+    const updatePotentialError = async (updatePotentialError) => {
+        let formData = new FormData();
+
+        formData.append("error_id", updatePotentialError.id);
+        formData.append("name", updatePotentialError.errorName);
+        formData.append("reason", updatePotentialError.reason);
+        formData.append("idea", updatePotentialError.idea);
+        formData.append("device_id", updatePotentialError.deviceId);
+        formData.append("stationCode", updatePotentialError.stationCode);
+        formData.append("status_accept", updatePotentialError.status_accept);
+        formData.append("string", JSON.stringify(updatePotentialError.string));
+
+        updatePotentialError.date_repair && formData.append("date_repair", updatePotentialError.date_repair);
+        updatePotentialError.status && formData.append("status_name", updatePotentialError.status);
+        updatePotentialError.other_device && formData.append("other_device", updatePotentialError.other_device);
+
+        const updatedError = await requester({
+            requestFunc: () =>
+                Request.Server.post(API_GREEN3S.UPDATE_POTENTIAL_ERROR(), formData, {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                }),
+        })();
+
+        if (!key) return;
+        mutate(
+            key,
+            (data) => {
+                if (!data?.datas) return null;
+                const errorIndex = data.datas.findIndex((error) => error.id == updatedError?.data.id);
+                if (errorIndex >= 0) data.datas[errorIndex] = { ...data.datas[errorIndex], ...updatedError.data };
+                return { ...data, datas: [...data.datas] };
+            },
+            false
+        );
+    };
+
     return {
         updateError,
         deleteErrors,
+        addPotentialError,
         updateMultipeRSError,
+        deletePotentialErrors,
+        updatePotentialError,
     };
 };
 
@@ -302,18 +440,18 @@ export const useFetchPotentialError = ({ month, year, stationCode, name }) => {
     const [isReady, setIsReady] = useState(false);
 
     const res = useAPIFetcher(API_GREEN3S.POTENTIAL_ERROR(`${(month < 10 ? "0" : "") + month}`, year, stationCode, name), {
-        dedupingInterval: timeInterval.LONG,
-        use: [noCache, auth],
+        use: [auth, expiredTime(timeInterval.NORMAL)],
     });
 
     useEffect(() => {
         setTimeout(() => {
             setIsReady(true);
-        }, 300);
+        }, 500);
     }, []);
 
     return {
         ...res,
+        key: res.key,
         rData: isReady ? res.data : undefined,
         rIsValidating: isReady ? res.isValidating : true,
     };
@@ -348,8 +486,7 @@ export const useFetchErrorDisconnect = ({ stationCode }) => {
     const [isReady, setIsReady] = useState(false);
 
     const res = useAPIFetcher(API_GREEN3S.ERROR_DISCONNECT(stationCode), {
-        dedupingInterval: timeInterval.LONG,
-        use: [noCache, auth],
+        use: [auth, expiredTime(timeInterval.NORMAL)],
     });
 
     useEffect(() => {
@@ -360,6 +497,7 @@ export const useFetchErrorDisconnect = ({ stationCode }) => {
 
     return {
         ...res,
+        key: res.key,
         rData: isReady ? res.data : undefined,
         rIsValidating: isReady ? res.isValidating : true,
     };

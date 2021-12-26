@@ -7,8 +7,11 @@ import { round2 } from "@utils/helps/functions";
 import { NAVIGATION } from "constant/navigation";
 import React, { Fragment, useCallback, useRef } from "react";
 import { FlatList, Image, Pressable, StyleSheet, Text, View } from "react-native";
+import Animated, { useAnimatedScrollHandler } from "react-native-reanimated";
 import Svg, { Circle } from "react-native-svg";
 import ModalRealTimeDevice from "./ModalRealtimeDevice";
+
+const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
 const Factory = React.memo(({ item = {}, index, navigation, showDetailPlant }) => {
     const {
@@ -97,7 +100,7 @@ const Factory = React.memo(({ item = {}, index, navigation, showDetailPlant }) =
     );
 });
 
-const Factories = ({ plants = [] }) => {
+const Factories = ({ plants = [], scrollValue, paddingTop }) => {
     const modalRef = useRef();
     const navigation = useNavigation();
 
@@ -109,16 +112,26 @@ const Factories = ({ plants = [] }) => {
         modalRef.current.open({ plant });
     }, []);
 
+    const scrollHandler = useAnimatedScrollHandler((event) => {
+        scrollValue.value = event.contentOffset.y;
+    });
+
     return (
         <Fragment>
-            <FlatList
+            <AnimatedFlatList
                 windowSize={5}
                 initialNumToRender={6}
-                style={{ paddingBottom: rem, paddingHorizontal: rem }}
+                contentContainerStyle={{
+                    backgroundColor: "white",
+                    paddingTop: paddingTop,
+                    paddingBottom: rem,
+                    paddingHorizontal: rem,
+                }}
                 data={plants}
                 keyExtractor={(plant, i) => plant.stationCode}
                 renderItem={renderItem}
                 initialNumToRender={8}
+                onScroll={scrollHandler}
             />
 
             <ModalRealTimeDevice ref={modalRef} />

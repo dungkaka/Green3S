@@ -1,4 +1,4 @@
-import { AppText, AppTextBold } from "@common-ui/AppText";
+import { AppText, AppTextBold, AppTextMedium } from "@common-ui/AppText";
 import ModalPortal from "@common-ui/Modal/ModalPortal";
 import { configService } from "@services/config";
 import { Color } from "@theme/colors";
@@ -28,7 +28,13 @@ const ModalVersion = () => {
     }, []);
 
     return (
-        <ModalPortal lazyLoad={false} unmountOnHide={true} ref={modalRef} modalStyle={styles.modalStyle}>
+        <ModalPortal
+            onPressBackdrop={() => {}}
+            lazyLoad={false}
+            unmountOnHide={true}
+            ref={modalRef}
+            modalStyle={styles.modalStyle}
+        >
             <View style={styles.modalContainer}>
                 {/* Title */}
                 <View style={styles.headerModal}>
@@ -37,7 +43,31 @@ const ModalVersion = () => {
 
                 {/* Content */}
                 <ScrollView contentContainerStyle={styles.content}>
-                    <AppText>{configService.versionUpdateContent.content}</AppText>
+                    {configService.versionUpdateContent.content.map((item, index) => {
+                        return (
+                            <View key={index} style={{ paddingBottom: 24 * unit }}>
+                                <AppTextBold style={{ fontSize: 15 * unit, color: Color.gray_10 }}>
+                                    Version {item.version}
+                                </AppTextBold>
+                                {item.content.map((item, index) => {
+                                    return (
+                                        <Text
+                                            style={{
+                                                color: item.red ? Color.redOrange : Color.gray_10,
+                                                fontFamily: item.strong
+                                                    ? GoogleSansFontType.medium
+                                                    : GoogleSansFontType.regular,
+                                                paddingVertical: 6 * unit,
+                                            }}
+                                            key={index}
+                                        >
+                                            {item.text}
+                                        </Text>
+                                    );
+                                })}
+                            </View>
+                        );
+                    })}
                 </ScrollView>
                 {/* Footer */}
                 <View style={styles.footerModal}>
@@ -63,7 +93,7 @@ const styles = StyleSheet.create({
         width: 23 * rem,
         minWidth: "60%",
         minHeight: 23 * rem,
-        maxHeight: "65%",
+        maxHeight: "70%",
         flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
@@ -71,7 +101,7 @@ const styles = StyleSheet.create({
     modalContainer: {
         flex: 1,
         backgroundColor: "white",
-        borderRadius: 8 * unit,
+        borderRadius: 12 * unit,
     },
     headerModal: {
         flexDirection: "row",

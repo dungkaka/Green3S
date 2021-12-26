@@ -6,41 +6,36 @@ import { Color } from "@theme/colors";
 import { ModalDatePicker } from "@common-ui/Calendar/DatePickerModal";
 import { unit } from "@theme/styleContants";
 import { ColorDefault } from "@theme";
-import Select from "@common-ui/Form/Select";
-import { MaterialIcons } from "@expo/vector-icons";
-import { useListPlants } from "@services/factory";
-import { DatePickerSheet } from "@common-ui/Calendar/DatePickerSheet";
-import { format } from "@utils/helps/time";
-
-const minutes = new Array(12).fill(0).map((_, i) => ({ value: i * 5, label: `${i * 5}` }));
 
 const Filter = ({ filter, handleFilter = () => {} }) => {
-    const modalStartDatePickerRef = useRef();
-    const [startDate, setStartDate] = useState(filter.date);
+    const modalDatePickerRef = useRef();
+    const [date, setDate] = useState(filter.date);
 
     return (
         <View style={{ elevation: 0.5, backgroundColor: "white" }}>
             <ScrollView horizontal contentContainerStyle={styles.dateSelectionContainer} showsHorizontalScrollIndicator={false}>
                 <View style={styles.dateContainer}>
-                    <AppTextMedium>Chọn thời gian :</AppTextMedium>
+                    <AppTextMedium>Chọn ngày :</AppTextMedium>
+                </View>
+
+                <View style={styles.dateContainer}>
                     <Pressable
                         onPress={() => {
-                            modalStartDatePickerRef.current.open(startDate);
+                            modalDatePickerRef.current.open(date);
                         }}
                         style={styles.displayDate}
                     >
                         <AntDesign name="calendar" size={18} color={Color.gray_8} />
                         <AppTextMedium style={styles.textDateDisplay}>
-                            {format(startDate, "DD/MM/YYYY")} - {format(startDate, "H:M:S")}
+                            {date.day}/{date.month}/{date.year}
                         </AppTextMedium>
                     </Pressable>
                 </View>
 
                 <View style={styles.dateContainer}>
-                    <AppTextMedium> </AppTextMedium>
                     <Pressable
                         onPress={() => {
-                            handleFilter({ date: startDate });
+                            handleFilter({ date });
                         }}
                         style={styles.search}
                     >
@@ -49,17 +44,13 @@ const Filter = ({ filter, handleFilter = () => {} }) => {
                 </View>
             </ScrollView>
 
-            <DatePickerSheet
-                mode="minute"
-                ref={modalStartDatePickerRef}
-                initialDate={startDate}
-                delayRender={500}
+            <ModalDatePicker
+                ref={modalDatePickerRef}
+                initialDate={date}
+                delayRender={600}
                 onOk={() => {
-                    modalStartDatePickerRef.current.close();
-                    setStartDate({ ...modalStartDatePickerRef.current.getData().date, second: 0 });
-                }}
-                dateData={{
-                    minutes: minutes,
+                    modalDatePickerRef.current.close();
+                    setDate(modalDatePickerRef.current.getData().date);
                 }}
             />
         </View>
@@ -72,6 +63,7 @@ const styles = StyleSheet.create({
     dateSelectionContainer: {
         paddingHorizontal: 8 * unit,
         paddingVertical: 8 * unit,
+        alignItems: "center",
     },
 
     dateContainer: {

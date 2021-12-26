@@ -1,3 +1,5 @@
+import { Float, Int } from "./number";
+
 export const objectClean = (object, allowNull = true) => {
     const newObject = { ...object };
     Object.keys(newObject).forEach(function (key) {
@@ -9,6 +11,13 @@ export const objectClean = (object, allowNull = true) => {
     return newObject;
 };
 
+export const arrayClean = (array, allowNull = false) => {
+    return array.filter((el) => {
+        if (allowNull) return el !== undefined;
+        else return el !== undefined && el !== null;
+    });
+};
+
 export const emptyObject = {};
 
 export const emptyFunc = () => {};
@@ -18,15 +27,19 @@ export function randomItem(items) {
 }
 
 export function numberWithCommas(x, character = ".") {
-    return x?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, character);
+    return Int(x)
+        ?.toString()
+        .replace(/\B(?=(\d{3})+(?!\d))/g, character);
 }
 
 export function round(x) {
-    return Math.round(x);
+    if (x != 0 && !x) return undefined;
+    return Math.round(Float(x));
 }
 
 export function round2(x) {
-    return Math.round(x * 100) / 100;
+    if (x != 0 && !x) return undefined;
+    return Math.round(Float(x) * 100) / 100;
 }
 
 export function isUndefined(value) {

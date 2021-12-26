@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: "white",
         paddingHorizontal: 8 * unit,
-        borderRadius: 8 * unit,
+        borderRadius: 12 * unit,
     },
 
     headerModal: {

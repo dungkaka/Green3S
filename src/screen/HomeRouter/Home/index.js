@@ -2,23 +2,31 @@ import { Color } from "@theme/colors";
 import { WIDTH } from "@theme/scale";
 import { rem, unit } from "@theme/styleContants";
 import { GoogleSansFontType } from "@theme/typography";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useLayoutEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { TabView, TabBar, SceneMap, NavigationState, SceneRendererProps, TabBarIndicator } from "react-native-tab-view";
 import { Constants } from "react-native-unimodules";
 import ErrorsPage from "./ErrorsPage";
 import FactoriesPage from "./FactoriesPage";
 import ReportPlantYield from "./ReportPlantYield";
+import { useRoute } from "@react-navigation/native";
 
 const Home = () => {
+    const { params } = useRoute();
     const [state, setState] = useState({
         index: 1,
         routes: [
             { key: "errors", title: "Tổng quan lỗi" },
-            { key: "factories", title: "Nhà máy" },
+            { key: "factories", title: "Dashboard" },
             { key: "statistics", title: "Thống kê" },
         ],
     });
+
+    useLayoutEffect(() => {
+        if (params?.fromErrorNotification) {
+            setState({ ...state, index: 0 });
+        }
+    }, [params]);
 
     const renderScene = useCallback(
         SceneMap({

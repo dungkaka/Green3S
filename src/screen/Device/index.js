@@ -11,6 +11,9 @@ import Statistic from "./Statistic";
 import { AppTextMedium } from "@common-ui/AppText";
 import { useGoBackHandler } from "@utils/hooks/useGoBackHanlder";
 import DeviceHistory from "./DeviceHistory";
+import StringAnalysis from "./StringAnalysis";
+import Setting from "./Setting";
+import { useSettingController } from "@services/device";
 
 const CommingSoon = React.memo(
     () => {
@@ -29,6 +32,7 @@ const Device = () => {
     const { params } = useRoute();
     const navigation = useNavigation();
     const { device } = params ? params : {};
+    const { keyTab } = useSettingController();
 
     useGoBackHandler();
 
@@ -45,6 +49,14 @@ const Device = () => {
             { key: "statistic", title: "Thống kê" },
             { key: "error", title: "Lỗi" },
             {
+                key: "stringAnalysis",
+                title: "Phân tích PV",
+            },
+            {
+                key: "setting",
+                title: "Cài đặt",
+            },
+            {
                 key: "history",
                 title: "Lịch sử thay thế thiết bị",
             },
@@ -54,11 +66,15 @@ const Device = () => {
     const renderScene = ({ route }) => {
         switch (route.key) {
             case "overview":
-                return <Overview />;
+                return <Overview key={keyTab} />;
             case "statistic":
                 return <Statistic />;
             case "error":
                 return <Error />;
+            case "stringAnalysis":
+                return <StringAnalysis />;
+            case "setting":
+                return <Setting />;
             case "history":
                 return <CommingSoon />;
             default:

@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: "white",
         padding: 16 * unit,
-        borderRadius: 8 * unit,
+        borderRadius: 12 * unit,
     },
     titleModal: {
         fontSize: 20 * unit,

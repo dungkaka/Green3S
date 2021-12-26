@@ -38,6 +38,8 @@ import AllError from "screen/Maintain/AllError";
 import RSUpdation from "screen/Maintain/RSUpdation/UpdateOne";
 import RSMultipleUpdation from "screen/Maintain/RSUpdation/UpdateMultiple";
 import ErrorPotentialCreation from "screen/Maintain/ErrorCreation/ErrorPotentialCreation";
+import SettingPV from "screen/Device/Setting/SettingPV";
+import SettingDirection from "screen/Device/Setting/SettingDirection";
 
 enableAnimationExperimental();
 handleKillApp();
@@ -293,6 +295,20 @@ const AppNavigation = ({ isLogin }) => {
                                     headerBackgroundContainerStyle: {
                                         height: "101%",
                                     },
+                                }}
+                            />
+                            <Stack.Screen
+                                name={NAVIGATION.DEVICE_SETTING_PV}
+                                component={SettingPV}
+                                options={{
+                                    title: "Cài đặt PV",
+                                }}
+                            />
+                            <Stack.Screen
+                                name={NAVIGATION.DEVICE_SETTING_DIRECTION}
+                                component={SettingDirection}
+                                options={{
+                                    title: "Cài đặt hướng",
                                 }}
                             />
                         </Stack.Group>

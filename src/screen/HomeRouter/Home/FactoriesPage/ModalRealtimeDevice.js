@@ -50,8 +50,8 @@ const ModalRealTimeDevice = forwardRef(({}, ref) => {
 
         try {
             const decodedData = JSON.parse(data);
-            active_power = decodedData.active_power;
-            day_cap = decodedData.active_power;
+            active_power = decodedData.active_power || 0;
+            day_cap = decodedData.day_cap || 0;
         } catch (e) {}
 
         return (
@@ -72,11 +72,11 @@ const ModalRealTimeDevice = forwardRef(({}, ref) => {
                 </TouchableOpacity>
                 <View style={{ flex: 4, flexDirection: "row", flexWrap: "wrap" }}>
                     <AppTextMedium style={{ color: Color.redPastel, fontSize: 13 * unit }}>
-                        {round2(active_power)}
+                        {round2(active_power) || 0}
                     </AppTextMedium>
                     <Text> / </Text>
                     <AppTextMedium style={{ color: Color.blueModernDark, fontSize: 13 * unit }}>
-                        {round2(day_cap)}
+                        {round2(day_cap) || 0}
                     </AppTextMedium>
                 </View>
 
@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
     modal: {
         flex: 1,
         backgroundColor: "white",
-        borderRadius: 8 * unit,
+        borderRadius: 12 * unit,
         paddingBottom: HEIGHT * 0.1,
     },
     blockTitle: {

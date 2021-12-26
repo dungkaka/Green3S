@@ -4,17 +4,62 @@ import { DocumentStorage } from "@utils/local-file-sytem";
 import { useSWRConfig } from "swr";
 
 class ConfigService {
-    _version = 1045;
+    _version = 1303;
+    _versionText = "1.4-beta_2";
     key = "__CONFIG";
     shouldShowNotification = true;
 
     versionUpdateContent = {
-        title: "Cập nhật phiên bản 1.0.5_beta.2",
-        content: `
-•  Thêm nhập liệu: Nguyên nhân, giải pháp, cập nhật trạng thái, xóa lỗi !
-        
-•  Chỉnh sửa giao diện, trình bày các màn hình hiển thị lỗi.
-        `,
+        title: `Cập nhật phiên bản ${this._versionText}`,
+        content: [
+            {
+                version: "1.4-beta_2",
+                content: [
+                    {
+                        text: `•   Sửa lỗi hiện thị điện áp pha trong chi tiết thiết bị
+•   Cho phép thêm nhiều string trong lỗi tiềm ẩn
+•   Thêm ảnh trong cập nhật lỗi (AC, DC, Inverter, Hiệu suất)`,
+                    },
+                ],
+            },
+            {
+                version: "1.4-beta_1",
+                content: [
+                    {
+                        text: `•   Chuyển tới trang Tổng quan lỗi khi click vào thông báo`,
+                    },
+                ],
+            },
+            {
+                version: "1.3",
+                content: [
+                    {
+                        text: `•   Thêm lỗi tiềm ẩn: 
+    - Cho phép thêm ảnh trực tiếp từ camera
+    - Cho phép thêm nhiều ảnh`,
+                        strong: true,
+                    },
+
+                    { text: `•   Thêm phân tích PV trong thiết bị`, strong: true, red: true },
+
+                    { text: `•   Sửa lỗi hiển thị trạng thái không chính xác trong chi tiết thiết bị` },
+
+                    { text: `•   Chỉnh sửa lại giao diện phân quyền cho Employee (thêm lối tắt)` },
+
+                    { text: `•   Sửa lỗi crash (thoát) app` },
+                ],
+            },
+            {
+                version: "1.2",
+                content: [
+                    {
+                        text: `•   Cập nhật phân quyền. Các tài khoản Admin và Employee cần phải đăng nhập lại để cập nhật các chức năng có sự phân quyền`,
+                        red: true,
+                        strong: true,
+                    },
+                ],
+            },
+        ],
     };
 
     initData = {

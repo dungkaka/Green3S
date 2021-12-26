@@ -54,7 +54,7 @@ const ErrorsPage = () => {
                             <View style={styles.blockContainer}>
                                 <View style={[styles.lineDiv, { backgroundColor: PairColor.red.dark }]} />
                                 <AppTextMedium style={[styles.title, { color: PairColor.red.dark }]}>
-                                    Lỗi Dc ({datas.count_dc || 0})
+                                    Cảnh báo Dc ({datas.count_dc || 0})
                                 </AppTextMedium>
                             </View>
                         </Pressable>

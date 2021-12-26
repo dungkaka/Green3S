@@ -1,5 +1,6 @@
 import { useAPIFetcher } from "@hooks/useAPIFetcher";
 import { fileRequester } from "@utils/helps/request";
+import { DocumentStorage } from "@utils/local-file-sytem";
 
 export const keyUseUser = "USER_INFOR";
 export const useUser = () => {
@@ -13,9 +14,16 @@ export const useUser = () => {
         })
     );
 
+    const user = res.data?.user;
+
     return {
         data: res.data,
-        user: res.data?.user,
+        user: user,
+        userName: user?.username,
+        email: user?.email,
+        isAdmin: user?.roles?.some((role) => role == "Admin"),
+        isEmployee: user?.roles?.some((role) => role == "Employee" || role == "Admin"),
+        isCustomer: true,
     };
 };
 

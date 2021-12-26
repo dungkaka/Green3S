@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
     modal: {
         flex: 1,
         backgroundColor: "white",
-        borderRadius: 8 * unit,
+        borderRadius: 12 * unit,
         paddingBottom: HEIGHT * 0.1,
     },
     titleModal: {

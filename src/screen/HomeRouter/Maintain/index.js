@@ -8,6 +8,7 @@ import React, { useRef } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import Constants from "expo-constants";
 import { MaterialIcons, Entypo, MaterialCommunityIcons, FontAwesome } from "@expo/vector-icons";
+import { CRUD } from "constant/crud";
 const colorError = "#c24453";
 
 const Maintain = () => {
@@ -16,7 +17,7 @@ const Maintain = () => {
     return (
         <ScrollView style={styles.container}>
             <View style={styles.headerBlock}>
-                <AppTextMedium style={styles.headerTitle}>Bảo trì</AppTextMedium>
+                <AppTextMedium style={styles.headerTitle}>Cảnh báo</AppTextMedium>
             </View>
 
             <View style={[styles.block, { marginTop: 0 }]}>
@@ -40,7 +41,7 @@ const Maintain = () => {
                             onPress={() => navigation.navigate(NAVIGATION.ERROR_AC)}
                             style={[styles.itemReportContainer, { backgroundColor: colorError }]}
                         >
-                            <AppText style={styles.textItemReport}>Lỗi AC</AppText>
+                            <AppText style={styles.textItemReport}>Cảnh báo AC</AppText>
                         </Pressable>
                     </View>
                     <View style={styles.reportContainer}>
@@ -49,7 +50,7 @@ const Maintain = () => {
                             onPress={() => navigation.navigate(NAVIGATION.ERROR_DC)}
                             style={[styles.itemReportContainer, { backgroundColor: colorError }]}
                         >
-                            <AppText style={styles.textItemReport}>Lỗi DC</AppText>
+                            <AppText style={styles.textItemReport}>Cảnh báo DC</AppText>
                         </Pressable>
                     </View>
                     {/* <View style={styles.reportContainer}>
@@ -102,16 +103,19 @@ const Maintain = () => {
                         >
                             <AppText style={styles.textItemReport}>Lỗi tiềm ẩn</AppText>
                         </Pressable>
-                        <Pressable
-                            onPress={() => navigation.navigate(NAVIGATION.ERROR_POTENTIEL_CREATION)}
+                        {/* <Pressable
+                            onPress={() =>
+                                navigation.navigate(NAVIGATION.ERROR_POTENTIEL_CREATION, {
+                                    type: CRUD.CREATE,
+                                })
+                            }
                             style={[
                                 styles.itemReportContainer,
                                 { backgroundColor: Color.purpleDark, paddingVertical: 6 * unit },
                             ]}
                         >
                             <Entypo name="plus" size={22} color="white" />
-                            {/* <AppText style={styles.textItemReport}>Thêm lỗi</AppText> */}
-                        </Pressable>
+                        </Pressable> */}
                     </View>
                 </View>
             </View>
