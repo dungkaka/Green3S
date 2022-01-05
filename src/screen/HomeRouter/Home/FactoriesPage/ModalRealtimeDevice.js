@@ -38,6 +38,7 @@ const ModalRealTimeDevice = forwardRef(({}, ref) => {
             },
             close: () => {
                 myModalRef.current.close();
+                setTimeout(() => setPlant(null), 300);
             },
         }),
         []

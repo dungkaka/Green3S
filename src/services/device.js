@@ -14,6 +14,7 @@ import { auth } from "./user";
 import { tempData } from "screen/Device/StringAnalysis/tempData";
 import { useSWRConfig } from "swr";
 import { useGlobalState } from "@hooks/useGlobalState";
+import { Request } from "@utils/helps/axios";
 
 export const useListDevice = ({ stationCode = "" } = {}) => {
     return useAPIFetcher(stationCode ? API_GREEN3S.FETCH_LIST_DEVICE(stationCode) : null, {
@@ -133,7 +134,7 @@ export const useStringAnalysis = ({ deviceId, date }) => {
         API_GREEN3S.DEVICE_STRING_ANALYSIS(deviceId, format(date, "YYYY-MM-DD")),
         {
             dedupingInterval: timeInterval.LONG,
-            use: [auth, expiredTime(timeInterval.NORMAL)],
+            use: [auth, expiredTime(timeInterval.NORMAL), revalidateFocusEffect()],
         },
         requester({
             handleData: (data) => {
@@ -187,19 +188,130 @@ export const useStringAnalysis = ({ deviceId, date }) => {
     };
 };
 
-export const useSettingController = () => {
-    const { cache } = useSWRConfig();
+export const useValueSetting = ({ deviceId }) => {
+    const [isReady, setIsReady] = useState(false);
 
-    const { data, mutate } = useGlobalState("KEY_TAB_DEVICE", {
-        initData: Date.now(),
-    });
+    const res = useAPIFetcher(
+        API_GREEN3S.GET_DEVICE_SETTING_VALUE(deviceId),
+        {
+            dedupingInterval: timeInterval.SHORT,
+            use: [auth, expiredTime(timeInterval.NORMAL)],
+        },
+        requester({
+            handleData: (data) => {
+                const shades = {};
+                data.datas.value_hours.forEach((shade) => {
+                    shades[shade.string] = {
+                        string: shade.string,
+                        value: shade.from_hour + "-" + shade.to_hour,
+                    };
+                });
 
-    const updateStrings = () => {
+                return {
+                    strings: data.datas.value_strings,
+                    directions: data.datas.value_directions,
+                    shades: shades,
+                    totalString: data.datas.total_string,
+                };
+            },
+        })
+    );
+
+    useEffect(() => {
+        setTimeout(() => {
+            setIsReady(true);
+        }, 300);
+    }, []);
+
+    return {
+        ...res,
+        key: res.key,
+        strings: isReady ? res.data?.strings : undefined,
+        directions: isReady ? res.data?.directions : undefined,
+        shades: isReady ? res.data?.shades : undefined,
+        totalString: isReady ? res.data?.totalString : undefined,
+        rIsValidating: isReady ? res.isValidating : true,
+    };
+};
+
+export const useSettingController = ({ deviceId, key } = {}) => {
+    const { cache, mutate } = useSWRConfig();
+
+    const updateStrings = async (strings) => {
+        const dStrings = {};
+
+        strings.forEach((string) => (dStrings[string.string] = string.value));
+
+        await requester({
+            requestFunc: () =>
+                Request.Server.post(API_GREEN3S.DEVICE_SETING_STRING_DIRECTION(), {
+                    type: "string",
+                    device_id: deviceId,
+                    strings: dStrings,
+                }),
+        })();
+
+        mutate(
+            key,
+            (data) => {
+                return { ...data, strings: strings };
+            },
+            false
+        );
+
         resetExpiredTime(cache, `/device/.+/(overview|analysis-string)`);
     };
 
+    const updateDirections = async (strings) => {
+        const dStrings = {};
+
+        strings.forEach((string) => (dStrings[string.string] = string.value));
+
+        await requester({
+            requestFunc: () =>
+                Request.Server.post(API_GREEN3S.DEVICE_SETING_STRING_DIRECTION(), {
+                    type: "direction",
+                    device_id: deviceId,
+                    strings: dStrings,
+                }),
+        })();
+
+        mutate(
+            key,
+            (data) => {
+                return { ...data, directions: strings };
+            },
+            false
+        );
+
+        // resetExpiredTime(cache, `/device/.+/(overview|analysis-string)`);
+    };
+
+    const updateShades = async (strings) => {
+        const dStrings = {};
+
+        strings.forEach((string) => (dStrings[string.string] = string.value || ""));
+
+        await requester({
+            requestFunc: () =>
+                Request.Server.post(API_GREEN3S.DEVICE_SETTING_SHADES(), {
+                    device_id: deviceId,
+                    strings: dStrings,
+                }),
+        })();
+
+        mutate(
+            key,
+            (data) => {
+                return { ...data, shades: strings };
+            },
+            false
+        );
+    };
+
     return {
-        keyTab: data,
         updateStrings,
+        updateDirections,
+        updateShades,
     };
 };

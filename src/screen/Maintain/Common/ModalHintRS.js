@@ -8,8 +8,8 @@ import { Pressable, StyleSheet, Text, TouchableOpacity, View, ScrollView } from 
 import { useHintRS } from "@services/error";
 import ModalPortal from "@common-ui/Modal/ModalPortal";
 
-const HintRS = () => {
-    const { reason, solution } = useHintRS();
+const HintRS = ({ type }) => {
+    const { reason, solution } = useHintRS({ type });
     return (
         <ScrollView contentContainerStyle={styles.content}>
             <AppTextMedium>Nguyên nhân</AppTextMedium>
@@ -24,7 +24,7 @@ const HintRS = () => {
     );
 };
 
-const ModalHintRS = ({ modalRef = useRef() }) => {
+const ModalHintRS = ({ modalRef = useRef(), type }) => {
     return (
         <ModalPortal ref={modalRef} modalStyle={styles.modalStyle}>
             <View style={styles.modalContainer}>
@@ -34,7 +34,7 @@ const ModalHintRS = ({ modalRef = useRef() }) => {
                 </View>
 
                 {/* Content */}
-                <HintRS />
+                <HintRS type={type} />
 
                 {/* Footer */}
                 <View style={styles.footerModal}>

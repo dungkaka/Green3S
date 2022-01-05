@@ -304,7 +304,7 @@ const ErrorAC = () => {
                 }}
             />
             <ModalImageViewer ref={imageRef} />
-            <ModalHintRS modalRef={modalHintRSRef} />
+            <ModalHintRS modalRef={modalHintRSRef} type="ac" />
         </View>
     );
 };

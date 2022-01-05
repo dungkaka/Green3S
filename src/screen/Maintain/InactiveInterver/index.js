@@ -1,7 +1,7 @@
 import { AppText } from "@common-ui/AppText";
 import { rem, unit } from "@theme/styleContants";
 import React, { useCallback, useMemo, useRef, useState } from "react";
-import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
+import { Image, Pressable, StyleSheet, TouchableOpacity, View } from "react-native";
 import { Color } from "@theme/colors";
 import { format, time } from "@utils/helps/time";
 import { JumpLogoPage, JumpLogoPageOverlay } from "@common-ui/Loading/JumpLogo";

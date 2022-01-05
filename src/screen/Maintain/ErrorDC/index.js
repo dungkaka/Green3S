@@ -334,7 +334,7 @@ const ErrorDC = () => {
             />
 
             <ModalImageViewer ref={imageRef} />
-            <ModalHintRS modalRef={modalHintRSRef} />
+            <ModalHintRS modalRef={modalHintRSRef} type="dc" />
         </View>
     );
 };

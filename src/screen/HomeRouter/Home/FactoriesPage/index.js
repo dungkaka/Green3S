@@ -94,7 +94,7 @@ const FactoriesPage = () => {
 
                 {/* Statistic */}
                 <View onLayout={(e) => measureY(e, 1)} style={styles.headContainer}>
-                    <Pressable onPress={() => mutate()}>
+                    <Pressable>
                         <AppTextMedium>Tổng: {plants.length}</AppTextMedium>
                     </Pressable>
 
@@ -131,7 +131,13 @@ const FactoriesPage = () => {
                 {/* Loading for fetch data */}
                 {isValidating ? <JumpLogoPageOverlay /> : null}
                 {viewLayoutY && (
-                    <Factories plants={plants} scrollValue={scrollValue} paddingTop={viewLayoutY[1].y + viewLayoutY[1].h} />
+                    <Factories
+                        isValidating={isValidating}
+                        revalidate={mutate}
+                        plants={plants}
+                        scrollValue={scrollValue}
+                        paddingTop={viewLayoutY[1].y + viewLayoutY[1].h}
+                    />
                 )}
             </View>
 

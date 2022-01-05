@@ -17,7 +17,7 @@ const ModalVersion = () => {
 
     useEffect(() => {
         setTimeout(() => {
-            if (version && configService._version != Int(version)) {
+            if (version && configService._version > Int(version)) {
                 configService.shouldShowNotification && modalRef.current.open();
                 updateConfig({ version: configService._version });
             }
@@ -50,6 +50,7 @@ const ModalVersion = () => {
                                     Version {item.version}
                                 </AppTextBold>
                                 {item.content.map((item, index) => {
+                                    const space = item.space == undefined ? 6 : item.space;
                                     return (
                                         <Text
                                             style={{
@@ -57,7 +58,7 @@ const ModalVersion = () => {
                                                 fontFamily: item.strong
                                                     ? GoogleSansFontType.medium
                                                     : GoogleSansFontType.regular,
-                                                paddingVertical: 6 * unit,
+                                                paddingVertical: space * unit,
                                             }}
                                             key={index}
                                         >

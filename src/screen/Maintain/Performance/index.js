@@ -319,7 +319,7 @@ const Performance = () => {
                 }}
             />
             <ModalImageViewer ref={imageRef} />
-            <ModalHintRS modalRef={modalHintRSRef} />
+            <ModalHintRS modalRef={modalHintRSRef} type="performance_low" />
         </View>
     );
 };

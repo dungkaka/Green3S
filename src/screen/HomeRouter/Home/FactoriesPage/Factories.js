@@ -6,7 +6,7 @@ import { GoogleSansFontType } from "@theme/typography";
 import { round2 } from "@utils/helps/functions";
 import { NAVIGATION } from "constant/navigation";
 import React, { Fragment, useCallback, useRef } from "react";
-import { FlatList, Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { FlatList, Image, Platform, Pressable, RefreshControl, StyleSheet, Text, View } from "react-native";
 import Animated, { useAnimatedScrollHandler } from "react-native-reanimated";
 import Svg, { Circle } from "react-native-svg";
 import ModalRealTimeDevice from "./ModalRealtimeDevice";
@@ -44,7 +44,8 @@ const Factory = React.memo(({ item = {}, index, navigation, showDetailPlant }) =
 
     const status = toStatus();
 
-    const image = Math.floor(Math.random() * 2) + 1;
+    const image = Math.floor(Math.random() * 3) + 1;
+
     return (
         <Pressable style={styles.itemContainer} onPress={() => showDetailPlant(item)}>
             <Pressable
@@ -58,7 +59,11 @@ const Factory = React.memo(({ item = {}, index, navigation, showDetailPlant }) =
             >
                 <Image
                     source={
-                        image == 1 ? require("@assets/images/factory_thumb.jpg") : require("@assets/images/factory_thumb_1.jpg")
+                        image == 1
+                            ? require("@assets/images/factory_thumb.jpg")
+                            : image == 2
+                            ? require("@assets/images/factory_thumb_1.jpg")
+                            : require("@assets/images/factory_thumb_2.jpg")
                     }
                     style={styles.facImage}
                     resizeMode="cover"
@@ -100,7 +105,7 @@ const Factory = React.memo(({ item = {}, index, navigation, showDetailPlant }) =
     );
 });
 
-const Factories = ({ plants = [], scrollValue, paddingTop }) => {
+const Factories = ({ plants = [], scrollValue, paddingTop, revalidate = () => {} }) => {
     const modalRef = useRef();
     const navigation = useNavigation();
 
@@ -121,9 +126,10 @@ const Factories = ({ plants = [], scrollValue, paddingTop }) => {
             <AnimatedFlatList
                 windowSize={5}
                 initialNumToRender={6}
+                scrollEventThrottle={16}
                 contentContainerStyle={{
                     backgroundColor: "white",
-                    paddingTop: paddingTop,
+                    paddingTop: Platform.OS == "ios" ? 0 : paddingTop,
                     paddingBottom: rem,
                     paddingHorizontal: rem,
                 }}
@@ -132,6 +138,14 @@ const Factories = ({ plants = [], scrollValue, paddingTop }) => {
                 renderItem={renderItem}
                 initialNumToRender={8}
                 onScroll={scrollHandler}
+                contentInset={{ top: Platform.OS == "ios" ? paddingTop : 0 }}
+                refreshControl={
+                    <RefreshControl
+                        progressViewOffset={Platform.OS == "ios" ? 50 : paddingTop}
+                        refreshing={false}
+                        onRefresh={revalidate}
+                    />
+                }
             />
 
             <ModalRealTimeDevice ref={modalRef} />

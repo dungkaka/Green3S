@@ -124,9 +124,7 @@ const Login = () => {
                                             placeholderTextColor={Color.gray_6}
                                             style={styles.input}
                                             onBlur={onBlur}
-                                            // onChangeText={(text) =>
-                                            //     throttle(timeOutTextInputRef, () => onChange(text), 300)
-                                            // }
+                                            secureTextEntry={true}
                                             onChangeText={onChange}
                                             value={value}
                                         />

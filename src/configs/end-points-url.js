@@ -81,6 +81,7 @@ export const API_GREEN3S = {
     CREATE_POTENTIAL_ERROR: () => preUrl + `/error/store-potential`,
     DELETE_POTENTIAL_ERROR: () => preUrl + `/error/potential/delete`,
     UPDATE_POTENTIAL_ERROR: () => preUrl + `/error/update-error-potential`,
+    GET_REASON_SOLUTION: () => preUrl + `/get-reason-solution`,
 
     // ErrorOverview
     ERROR_PREVIEW_ALL: () => preUrl + `/error/home`,
@@ -105,4 +106,7 @@ export const API_GREEN3S = {
     DEVICE_ERROR: (deviceId = "", date = "") => preUrl + `/device/${deviceId}/error?date=${date}`,
     FETCH_DEVICE_POWER: (deviceId = "", date = "") => preUrl + `/device/${deviceId}/chart-power?date=${date}`,
     DEVICE_STRING_ANALYSIS: (deviceId = "", date = "") => preUrl + `/device/${deviceId}/analysis-string?date=${date}`,
+    GET_DEVICE_SETTING_VALUE: (deviceId = "") => preUrl + `/device/${deviceId}/get-value-setting`,
+    DEVICE_SETING_STRING_DIRECTION: (deviceId = "") => preUrl + `/device/setting-string-direction`,
+    DEVICE_SETTING_SHADES: (deviceId = "") => preUrl + `/device/setting-shade`,
 };

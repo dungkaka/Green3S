@@ -2,7 +2,7 @@ import { Int } from "@utils/helps/number";
 import { fetcher, requester } from "@utils/helps/request";
 import { useEffect, useState } from "react";
 import { auth } from "./user";
-const { useAPIFetcher, saveActiveData, noCache, timeInterval } = require("@hooks/useAPIFetcher");
+const { useAPIFetcher, saveActiveData, noCache, timeInterval, expiredTime } = require("@hooks/useAPIFetcher");
 import useSWR, { useSWRConfig } from "swr";
 import { API_GREEN3S } from "@configs/end-points-url";
 
@@ -26,8 +26,7 @@ export const useSearchFactory = ({ station_name, firm } = {}) => {
 export const useFetchRealtimeDevices = ({ station_code } = {}) => {
     const key = API_GREEN3S.FETCH_REALTIME_DEVICES_FACTORY(station_code);
     const res = useAPIFetcher(station_code ? key : null, {
-        dedupingInterval: timeInterval.NORMAL,
-        use: [auth],
+        use: [auth, expiredTime(timeInterval.NORMAL)],
     });
 
     return res;

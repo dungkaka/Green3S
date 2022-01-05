@@ -15,15 +15,13 @@ import { useValueSetting } from "@services/device";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import { CRUD } from "constant/crud";
 import { useSettingController } from "@services/device";
-import LoadingOverlay from "@common-components/AppModal/LoadingOverlay";
 import { Int } from "@utils/helps/number";
 import { JumpLogoPage } from "@common-ui/Loading/JumpLogo";
 
-const SettingDirectionForm = React.memo(
-    ({ directions, deviceId, deviceAPIKey }) => {
+const SettingShadeForm = React.memo(
+    ({ strings, totalString = 0, deviceId, deviceAPIKey }) => {
         const dispatch = useDispatch();
-        const { params } = useRoute();
-        const { updateDirections } = useSettingController({ deviceId: deviceId, key: deviceAPIKey });
+        const { updateShades } = useSettingController({ deviceId: deviceId, key: deviceAPIKey });
         const scrollRef = useAnimatedRef();
         const formLayout = useRef({});
 
@@ -37,7 +35,10 @@ const SettingDirectionForm = React.memo(
             mode: "onTouched",
             reValidateMode: "onChange",
             defaultValues: {
-                strings: directions,
+                strings: new Array(totalString).fill(0).map((_, i) => {
+                    const string = "pv" + (i + 1);
+                    return { string: string, value: strings[string]?.value };
+                }),
             },
         });
 
@@ -60,12 +61,13 @@ const SettingDirectionForm = React.memo(
         const onSubmit = async (data, e) => {
             try {
                 dispatch(openIconLoadingOverlay());
-                await updateDirections(data.strings);
+
+                await updateShades(data.strings);
                 dispatch(closeIconLoadingOverlay);
-                showToast({ type: "success", title: "Cập nhật Hướng", description: "Thành công !" });
+                showToast({ type: "success", title: "Cập nhật PV", description: "Thành công !" });
             } catch (e) {
                 dispatch(closeIconLoadingOverlay);
-                showToast({ type: "error", title: "Cập nhật Hướng", description: "Lỗi: " + e.message });
+                showToast({ type: "error", title: "Cập nhật PV", description: "Lỗi: " + e.message });
             }
         };
 
@@ -93,7 +95,12 @@ const SettingDirectionForm = React.memo(
                                                 control={control}
                                                 rules={{
                                                     validate: {
-                                                        checkEmpty: (value) => value.value != undefined || "Bắt buộc !",
+                                                        checkTimeRegex: (value) =>
+                                                            !value.value ||
+                                                            /^(0?[1-9]|1[0-2]):[0-5][0-9]-(0?[1-9]|1[0-2]):[0-5][0-9]$/i.test(
+                                                                value.value
+                                                            ) ||
+                                                            "Sai định dạng !",
                                                     },
                                                 }}
                                                 render={({
@@ -106,11 +113,11 @@ const SettingDirectionForm = React.memo(
                                                             <Fragment>
                                                                 <View style={styles.titleInput}>
                                                                     <AppTextMedium>{string}</AppTextMedium>
-                                                                    <AppText style={styles.requireIcon}>*</AppText>
+                                                                    <AppText style={styles.requireIcon}></AppText>
                                                                     <FormErrorMessage error={error} />
                                                                 </View>
                                                                 <TextInput
-                                                                    placeholder="Nhập giá trị"
+                                                                    placeholder="HH:mm-HH:mm"
                                                                     placeholderTextColor={Color.gray_6}
                                                                     style={styles.input}
                                                                     onBlur={onBlur}
@@ -118,11 +125,10 @@ const SettingDirectionForm = React.memo(
                                                                     onChangeText={(text) =>
                                                                         onChange({
                                                                             string: string,
-                                                                            value: Int(text),
+                                                                            value: text,
                                                                         })
                                                                     }
                                                                     value={value.value?.toString()}
-                                                                    keyboardType="numeric"
                                                                 />
                                                             </Fragment>
                                                         );
@@ -147,10 +153,10 @@ const SettingDirectionForm = React.memo(
     () => true
 );
 
-const SettingDirection = () => {
+const SettingShade = () => {
     const { params } = useRoute();
     const { device } = params ? params : {};
-    const { key, directions, rIsValidating } = useValueSetting({ deviceId: device.device_id });
+    const { key, shades, totalString, rIsValidating } = useValueSetting({ deviceId: device.device_id });
 
     if (rIsValidating)
         return (
@@ -159,10 +165,10 @@ const SettingDirection = () => {
             </View>
         );
 
-    return <SettingDirectionForm directions={directions} deviceId={device.device_id} deviceAPIKey={key} />;
+    return <SettingShadeForm strings={shades} totalString={totalString} deviceId={device.device_id} deviceAPIKey={key} />;
 };
 
-export default SettingDirection;
+export default SettingShade;
 
 const styles = StyleSheet.create({
     container: {

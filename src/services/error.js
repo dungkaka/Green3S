@@ -12,44 +12,29 @@ import { useDispatch } from "react-redux";
 import { useSWRConfig } from "swr";
 import { auth } from "./user";
 
-export const useHintRS = () => {
+export const useHintRS = ({ type } = {}) => {
+    const { data } = useAPIFetcher(
+        [type, API_GREEN3S.GET_REASON_SOLUTION()],
+        {
+            revalidateIfStale: false,
+        },
+        requester({
+            requestFunc: () =>
+                Request.Server.post(API_GREEN3S.GET_REASON_SOLUTION(), {
+                    type: type,
+                }),
+            handleData: (data) => {
+                return {
+                    reason: data.data.reason.replace(/<br>/g, "\n"),
+                    solution: data.data.solution.replace(/<br>/g, "\n"),
+                };
+            },
+        })
+    );
+
     return {
-        reason: `1. LỖI MẤT ĐIỆN LƯỚI:
-        <br>- Mất điện từ lưới điện địa phương do Điện lực địa phương quản lý đóng cắt.
-        <br>- Lỗi Máy biến áp 
-        <br>- Lỗi đường dây điện AC trong hệ thống đến các thiết bị
-        <br>
-        2. LỖI MẤT CÂN BẰNG PHA:
-        <br>- Chênh lệch điện áp trên lưới điện địa phương ( Trung thế ) cao 
-        <br>- Chênh lệch điện áp hạ thế sau Máy Biến Áp cao.
-        <br>
-        3. CẢNH BÁO ĐIỆN ÁP CAO :
-        <br>- Điện áp 3 pha tại thiết bị > 450 VAC
-        <br>- Điện áp 1 pha tại thiết bị > 250VAC
-        <br>
-        4. CẢNH BÁO ĐIỆN ÁP THẤP
-        <br>- Điện áp 3 pha tại thiết bị < 360 VAC
-        <br>- Điện áp 3 pha tại thiết bị < 200VAC`.replace(/<br>|  +/g, "\r"),
-        solution: `1. LỖI MẤT ĐIỆN LƯỚI:
-        <br>- Kiểm tra lịch cắt điện, sự cố của lưới điện địa phương, liên hệ với Điện lực địa phương về sự cố ( nếu có ) 
-        <br>- Kiểm tra cầu chì Trung thế tại cột của nhà máy và liên hệ với Điện lực địa phương ( nếu có )
-        <br>- Kiểm tra tình trạng hoạt động của máy Biến Áp, nếu có lỗi liên hệ với nhà sản xuất, và Điện lực địa phương hỗ trợ. 
-        <br>- Kiểm tra điện trở cách điện hệ thống đường dây AC. 
-        <br>- Kiểm tra hoạt động của các thiết bị, ACB, MCCB, máy cắt, Inverter 
-        <br>- Kiểm tra điện trở đất của các thiết bị nối đất. 
-        <br>
-        2. LỖI MẤT CÂN BẰNG PHA:
-        <br>- Kiểm tra điện áp của các pha sau máy Biến áp
-        <br>- Liên hệ với nhà sản xuất hoặc điện lực địa phương nếu sự chênh lệch điện áp cao
-        <br>
-        3. CẢNH BÁO ĐIỆN ÁP CAO.
-        <br>- Kiểm tra điện áp 3 pha hạ thế nếu > 450 VAC , liên hệ Điện lực địa phương để điều chỉnh.
-        <br>
-        4. CẢNH BÁO ĐIỆN ÁP THẤP.
-        <br>- Kiểm tra điện áp 3 pha hạ thế nếu < 360 VAC , liên hệ Điện lực địa phương để điều chỉnh.`.replace(
-            /<br>|  +/g,
-            "\r"
-        ),
+        reason: data?.reason,
+        solution: data?.solution,
     };
 };
 

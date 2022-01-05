@@ -25,7 +25,6 @@ export const useLogin = () => {
 
     const revalidateRemoteUser = async (user, onSuccess = () => {}) => {
         const token = await getExpoPushToken();
-        console.log("TOKEN", token);
         const data = await requester({
             requestFunc: () => Request.Server.post(key, { ...user, deviceToken: token }),
         })();

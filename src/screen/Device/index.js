@@ -32,7 +32,6 @@ const Device = () => {
     const { params } = useRoute();
     const navigation = useNavigation();
     const { device } = params ? params : {};
-    const { keyTab } = useSettingController();
 
     useGoBackHandler();
 
@@ -66,7 +65,7 @@ const Device = () => {
     const renderScene = ({ route }) => {
         switch (route.key) {
             case "overview":
-                return <Overview key={keyTab} />;
+                return <Overview />;
             case "statistic":
                 return <Statistic />;
             case "error":

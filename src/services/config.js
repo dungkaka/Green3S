@@ -4,8 +4,8 @@ import { DocumentStorage } from "@utils/local-file-sytem";
 import { useSWRConfig } from "swr";
 
 class ConfigService {
-    _version = 1303;
-    _versionText = "1.4-beta_2";
+    _version = 1400;
+    _versionText = "1.4";
     key = "__CONFIG";
     shouldShowNotification = true;
 
@@ -13,21 +13,39 @@ class ConfigService {
         title: `Cập nhật phiên bản ${this._versionText}`,
         content: [
             {
-                version: "1.4-beta_2",
+                version: "1.4",
                 content: [
                     {
-                        text: `•   Sửa lỗi hiện thị điện áp pha trong chi tiết thiết bị
-•   Cho phép thêm nhiều string trong lỗi tiềm ẩn
-•   Thêm ảnh trong cập nhật lỗi (AC, DC, Inverter, Hiệu suất)`,
+                        text: `•   Cải thiện tương tác.
+Tổng quan lỗi, Dashboard: Vuốt màn hình xuống để làm mới dữ liệu`,
+                        strong: true,
                     },
-                ],
-            },
-            {
-                version: "1.4-beta_1",
-                content: [
                     {
-                        text: `•   Chuyển tới trang Tổng quan lỗi khi click vào thông báo`,
+                        text: `•   Cải thiện hiệu năng\n`,
+                        space: 0,
                     },
+                    { text: `1.4-beta_3` },
+                    {
+                        text: `•   Thêm Setting PV & Hướng && Bóng che trong chi tiết thiết bị`,
+                        strong: true,
+                        red: true,
+                        space: 0,
+                    },
+
+                    { text: `•   Sửa lỗi crash app trong lỗi interver\n`, space: 0 },
+                    {
+                        text: `1.4-beta_2`,
+                    },
+                    { text: `•   Sửa lỗi hiển thị điện áp pha trong chi tiết thiết bị`, space: 0 },
+                    { text: `•   Cho phép thêm nhiều string trong lỗi tiềm ẩn`, strong: true, red: true, space: 0 },
+                    {
+                        text: `•   Thêm ảnh trong cập nhật lỗi (AC, DC, Inverter, Hiệu suất)\n`,
+                        strong: true,
+                        red: true,
+                        space: 0,
+                    },
+                    { text: `1.4-beta_1` },
+                    { text: `•   Chuyển tới trang Tổng quan lỗi khi click vào thông báo`, strong: true, space: 0 },
                 ],
             },
             {

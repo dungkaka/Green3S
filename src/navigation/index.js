@@ -40,6 +40,7 @@ import RSMultipleUpdation from "screen/Maintain/RSUpdation/UpdateMultiple";
 import ErrorPotentialCreation from "screen/Maintain/ErrorCreation/ErrorPotentialCreation";
 import SettingPV from "screen/Device/Setting/SettingPV";
 import SettingDirection from "screen/Device/Setting/SettingDirection";
+import SettingShade from "screen/Device/Setting/SettingShade";
 
 enableAnimationExperimental();
 handleKillApp();
@@ -309,6 +310,13 @@ const AppNavigation = ({ isLogin }) => {
                                 component={SettingDirection}
                                 options={{
                                     title: "Cài đặt hướng",
+                                }}
+                            />
+                            <Stack.Screen
+                                name={NAVIGATION.DEVICE_SETTING_SHADE}
+                                component={SettingShade}
+                                options={{
+                                    title: "Cài đặt bóng che",
                                 }}
                             />
                         </Stack.Group>
