@@ -9,6 +9,19 @@ import ModalPortal from "@common-ui/Modal/ModalPortal";
 import DatePicker from "./DatePicker";
 import { MODE, validateDate } from "./utils";
 
+const renderTitle = (mode) => {
+    switch (mode) {
+        case "day":
+            return "Chọn ngày";
+        case "month":
+            return "Chọn tháng";
+        case "year":
+            return "Chọn năm";
+        default:
+            return "Chọn ngày";
+    }
+};
+
 const _ModalDatePicker = forwardRef(({ onOk, mode = "day", initialDate, delayRender = 200 }, ref) => {
     const modalRef = useRef();
     const [date, setDate] = useState(delayRender > 0 ? undefined : initialDate);
@@ -33,22 +46,7 @@ const _ModalDatePicker = forwardRef(({ onOk, mode = "day", initialDate, delayRen
         getData: () => ({ date: date, isValid: isValidDate }),
     }));
 
-    if (!date) return null;
-
-    const isValidDate = validateDate(mode, date.year, date.month, date.day);
-
-    const renderTitle = () => {
-        switch (mode) {
-            case "day":
-                return "Chọn ngày";
-            case "month":
-                return "Chọn tháng";
-            case "year":
-                return "Chọn năm";
-            default:
-                return "Chọn ngày";
-        }
-    };
+    const isValidDate = validateDate(mode, date?.year, date?.month, date?.day);
 
     return (
         <ModalPortal
@@ -58,62 +56,64 @@ const _ModalDatePicker = forwardRef(({ onOk, mode = "day", initialDate, delayRen
             lazyLoad={false}
             unmountOnHide={false}
         >
-            <View style={styles.modalContainer}>
-                <View style={styles.headerModal}>
-                    <AppTextBold style={styles.leftTitleHeader}>{renderTitle()}</AppTextBold>
-                    <View style={styles.rightTitleContainerHeader}>
-                        {isValidDate ? null : <FontAwesome name="exclamation" size={20} color={Color.redPastel} />}
+            {date && (
+                <View style={styles.modalContainer}>
+                    <View style={styles.headerModal}>
+                        <AppTextBold style={styles.leftTitleHeader}>{renderTitle(mode)}</AppTextBold>
+                        <View style={styles.rightTitleContainerHeader}>
+                            {isValidDate ? null : <FontAwesome name="exclamation" size={20} color={Color.redPastel} />}
 
-                        <View style={styles.rightTitleHeader}>
-                            <AntDesign name="calendar" size={18} color={Color.gray_8} />
+                            <View style={styles.rightTitleHeader}>
+                                <AntDesign name="calendar" size={18} color={Color.gray_8} />
 
-                            <AppTextMedium style={styles.rightTitleText}>
-                                {MODE[mode] <= MODE.day && date.day + "/"}
-                                {MODE[mode] <= MODE.month && date.month + "/"}
-                                {date.year}
-                                {MODE[mode] <= MODE.hour
-                                    ? " - " +
-                                      (date.hour < 10 ? "0" + date.hour : date.hour) +
-                                      ":" +
-                                      (date.minute < 10 ? "0" + date.minute : date.minute) +
-                                      ":00"
-                                    : "  "}
-                            </AppTextMedium>
+                                <AppTextMedium style={styles.rightTitleText}>
+                                    {MODE[mode] <= MODE.day && date.day + "/"}
+                                    {MODE[mode] <= MODE.month && date.month + "/"}
+                                    {date.year}
+                                    {MODE[mode] <= MODE.hour
+                                        ? " - " +
+                                          (date.hour < 10 ? "0" + date.hour : date.hour) +
+                                          ":" +
+                                          (date.minute < 10 ? "0" + date.minute : date.minute) +
+                                          ":00"
+                                        : "  "}
+                                </AppTextMedium>
+                            </View>
                         </View>
                     </View>
-                </View>
 
-                <View style={styles.datePickerContainer}>
-                    <DatePicker mode={mode} value={date} inititalValue={date} onDateChange={setDate} />
-                </View>
+                    <View style={styles.datePickerContainer}>
+                        <DatePicker mode={mode} value={date} inititalValue={date} onDateChange={setDate} />
+                    </View>
 
-                {/* Footer */}
-                <View style={styles.footerModal}>
-                    {/* Cancel */}
-                    <TouchableOpacity
-                        style={styles.buttonFooterModal}
-                        onPress={() => {
-                            modalRef.current.close();
-                        }}
-                    >
-                        <AppText style={styles.textButtonFooterModal}> Cancel </AppText>
-                    </TouchableOpacity>
+                    {/* Footer */}
+                    <View style={styles.footerModal}>
+                        {/* Cancel */}
+                        <TouchableOpacity
+                            style={styles.buttonFooterModal}
+                            onPress={() => {
+                                modalRef.current.close();
+                            }}
+                        >
+                            <AppText style={styles.textButtonFooterModal}> Cancel </AppText>
+                        </TouchableOpacity>
 
-                    {/* OK */}
-                    <TouchableOpacity
-                        style={styles.buttonFooterModal}
-                        onPress={() => {
-                            onOk
-                                ? onOk(() => {
-                                      modalRef.current.close();
-                                  })
-                                : modalRef.current.close();
-                        }}
-                    >
-                        <Text style={styles.textButtonFooterModal}> OK </Text>
-                    </TouchableOpacity>
+                        {/* OK */}
+                        <TouchableOpacity
+                            style={styles.buttonFooterModal}
+                            onPress={() => {
+                                onOk
+                                    ? onOk(() => {
+                                          modalRef.current.close();
+                                      })
+                                    : modalRef.current.close();
+                            }}
+                        >
+                            <Text style={styles.textButtonFooterModal}> OK </Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
-            </View>
+            )}
         </ModalPortal>
     );
 });

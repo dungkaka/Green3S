@@ -67,7 +67,7 @@ const WheelPicker = ({
     return (
         <View style={{ height: n * h, width: "100%" }}>
             <MaskedView
-                pointerEvents={"none"}
+                // pointerEvents={"none"}
                 style={styles.maskedView}
                 maskElement={
                     <Fragment>
@@ -99,7 +99,7 @@ const WheelPicker = ({
                     renderItem={renderItem}
                     decelerationRate={decelerationRate}
                     onScroll={scrollHandler}
-                    removeClippedSubviews={true}
+                    // removeClippedSubviews={true} bug on IOS
                     showsVerticalScrollIndicator={false}
                     fadingEdgeLength={h}
                 />

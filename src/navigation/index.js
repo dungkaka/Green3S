@@ -81,6 +81,7 @@ const AppNavigation = ({ isLogin }) => {
                             component={HomeRouter}
                             options={{
                                 headerShown: false,
+                                title: "",
                             }}
                         />
 

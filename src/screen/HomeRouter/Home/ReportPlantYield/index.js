@@ -1,12 +1,11 @@
 import { AppText } from "@common-ui/AppText";
 import { rem, unit } from "@theme/styleContants";
 import React, { useMemo, useRef, useState } from "react";
-import { StyleSheet, ScrollView, View, LayoutAnimation, Pressable } from "react-native";
+import { StyleSheet, ScrollView, View } from "react-native";
 import { Color } from "@theme/colors";
 import { time } from "@utils/helps/time";
 import { round2 } from "@utils/helps/functions";
-import { JumpLogo, JumpLogoPage } from "@common-ui/Loading/JumpLogo";
-import { useOnlyDidUpdateLayoutEffect } from "@hooks/useOnlyDidUpdateLayoutEffetct";
+import { JumpLogoPage } from "@common-ui/Loading/JumpLogo";
 import Filter from "./Filter";
 import { useReportPlantYield } from "@services/report";
 import AllPlants from "./AllPlants";
@@ -138,7 +137,7 @@ const ReportPlantYield = () => {
             ) : error ? (
                 <ErrorPage />
             ) : rData ? (
-                <ScrollView style={styles.scrollContainer}>
+                <ScrollView style={styles.scrollContainer} removeClippedSubviews={true}>
                     <AllPlants
                         rangeDate={rangeDate}
                         plants={plants}

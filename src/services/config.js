@@ -4,14 +4,27 @@ import { DocumentStorage } from "@utils/local-file-sytem";
 import { useSWRConfig } from "swr";
 
 class ConfigService {
-    _version = 1400;
-    _versionText = "1.4";
+    _version = 1402;
+    _versionText = "1.5-beta_1";
     key = "__CONFIG";
     shouldShowNotification = true;
 
     versionUpdateContent = {
         title: `Cập nhật phiên bản ${this._versionText}`,
         content: [
+            {
+                version: "1.5-beta_1",
+                content: [
+                    {
+                        text: `•   Sửa lỗi crash app trên android 12`,
+                        strong: true,
+                    },
+                    {
+                        text: `•   Chỉnh sửa giao diện iOS`,
+                        strong: true,
+                    },
+                ],
+            },
             {
                 version: "1.4",
                 content: [

@@ -421,6 +421,7 @@ const styles = StyleSheet.create({
         marginTop: 10 * unit,
         backgroundColor: "white",
         elevation: 0.5,
+        overflow: "hidden",
     },
 
     tableHeaderContainer: {

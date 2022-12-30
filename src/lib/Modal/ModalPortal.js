@@ -1,6 +1,6 @@
 import { HEIGHT } from "@theme/scale";
 import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useLayoutEffect, useRef, useState } from "react";
-import { BackHandler, InteractionManager, Pressable, StyleSheet, TouchableWithoutFeedback, View } from "react-native";
+import { BackHandler, InteractionManager, Platform, Pressable, StyleSheet, TouchableWithoutFeedback, View } from "react-native";
 import Animated, {
     Easing,
     interpolate,
@@ -17,6 +17,8 @@ const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 // Only use this component wrapped inside a <Portal.Host> component.
 // <Portal.Host> component should be inside a full screen component.
+
+// Bug on IOS, sometime, modal onIOS is scale not expect on somewhere first rerender on parent view because of modalAnimated (unknow reason), so please alway render Modal at the first time and control render child inside, see ModalDatePicker to see example ({date && ...}). 
 
 const ModalPortal = forwardRef(
     (

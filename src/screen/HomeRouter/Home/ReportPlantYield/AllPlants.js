@@ -74,7 +74,7 @@ const AllPlants = ({ rangeDate, plants, datas, plantTableOptions, filter }) => {
 
     return (
         <Fragment>
-            <View style={{ width: "100%", height: 600, backgroundColor: "white", elevation: 0.5 }}>
+            <View style={{ width: "100%", height: 600, backgroundColor: "white", elevation: 0.5, overflow: "hidden" }}>
                 <AppTextMedium style={styles.titleBlock}>Biểu đồ sản lượng từng ngày mỗi nhà máy</AppTextMedium>
                 <EchartsWebView ref={chartRef} option={options} delayRender={100} />
             </View>

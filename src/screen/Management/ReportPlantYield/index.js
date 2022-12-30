@@ -172,7 +172,7 @@ const ReportPlantYield = () => {
             ) : error ? (
                 <ErrorPage />
             ) : rData ? (
-                <ScrollView style={styles.scrollContainer}>
+                <ScrollView style={styles.scrollContainer} removeClippedSubviews={true}>
                     {filter.plant.stationCode == "" ? (
                         <AllPlants
                             rangeDate={rangeDate}

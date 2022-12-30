@@ -909,12 +909,12 @@ const styles = StyleSheet.create({
         fontSize: 15 * unit,
         color: Color.gray_9,
         backgroundColor: Color.gray_1,
-        borderRadius: 16,
+        borderRadius: 16 * unit,
+        overflow: "hidden",
     },
     activeItemStringSelect: {
         flex: 1,
         color: "white",
         backgroundColor: ColorDefault.primary,
-        borderRadius: 24 * unit,
     },
 });

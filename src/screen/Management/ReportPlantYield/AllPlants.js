@@ -7,6 +7,7 @@ import { rem, unit } from "@theme/styleContants";
 import { GoogleSansFontType } from "@theme/typography";
 import React, { Fragment, useRef } from "react";
 import { StyleSheet, Text, View } from "react-native";
+import WebView from "react-native-webview";
 
 const AllPlants = ({ rangeDate, plants, datas, plantTableOptions, filter }) => {
     const chartRef = useRef();
@@ -86,7 +87,16 @@ const AllPlants = ({ rangeDate, plants, datas, plantTableOptions, filter }) => {
                     textHeaderStyle={styles.tableTextHeader}
                 />
             </View>
-            <View style={{ width: "100%", height: 600, marginTop: 10 * unit, backgroundColor: "white", elevation: 0.5 }}>
+            <View
+                style={{
+                    width: "100%",
+                    height: 600,
+                    marginTop: 10 * unit,
+                    backgroundColor: "white",
+                    elevation: 0.5,
+                    overflow: "hidden",
+                }}
+            >
                 <AppTextMedium style={styles.titleBlock}>Biểu đồ sản lượng từng ngày mỗi nhà máy</AppTextMedium>
                 <EchartsWebView ref={chartRef} option={options} delayRender={100} />
             </View>

@@ -3,7 +3,7 @@ import { Color } from "@theme/colors";
 import { rem, unit } from "@theme/styleContants";
 import { GoogleSansFontType } from "@theme/typography";
 import React, { forwardRef, useImperativeHandle, useMemo, useRef, useState } from "react";
-import { FlatList, Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { FlatList, Platform, Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import ModalPortal from "@common-ui/Modal/ModalPortal";
 import { MaterialIcons } from "@expo/vector-icons";
 import { ColorDefault } from "@theme";
@@ -116,7 +116,7 @@ const MultipleSelect = forwardRef(
                 ref={modalRef}
                 onBackHandler={() => modalRef.current.close()}
                 modalStyle={styles.modalStyle}
-                lazyLoad={false}
+                lazyLoad={Platform.OS == "ios" ? true : false}
                 unmountOnHide={false}
             >
                 <View style={styles.modalContainer}>
@@ -244,7 +244,8 @@ const styles = StyleSheet.create({
         paddingHorizontal: 12 * unit,
         color: "white",
         backgroundColor: ColorDefault.primary,
-        borderRadius: 24 * unit,
+        borderRadius: 16 * unit,
+        overflow: "hidden",
     },
     iconActive: {
         marginLeft: 6 * unit,

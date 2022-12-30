@@ -34,9 +34,7 @@ const _DatePickerSheet = forwardRef(({ onOk, mode = "day", initialDate, delayRen
         getData: () => ({ date: date, isValid: isValidDate }),
     }));
 
-    if (!date) return null;
-
-    const isValidDate = validateDate(mode, date.year, date.month, date.day);
+    const isValidDate = validateDate(mode, date?.year, date?.month, date?.day);
 
     const renderTitle = () => {
         switch (mode) {
@@ -62,63 +60,65 @@ const _DatePickerSheet = forwardRef(({ onOk, mode = "day", initialDate, delayRen
             lazyLoad={false}
             unmountOnHide={false}
         >
-            <View style={styles.modalContainer}>
-                <View style={styles.headerModal}>
-                    <AppTextBold style={styles.leftTitleHeader}>{renderTitle()}</AppTextBold>
+            {date && (
+                <View style={styles.modalContainer}>
+                    <View style={styles.headerModal}>
+                        <AppTextBold style={styles.leftTitleHeader}>{renderTitle()}</AppTextBold>
 
-                    <View style={styles.rightTitleContainerHeader}>
-                        {isValidDate ? null : <FontAwesome name="exclamation" size={20} color={Color.redPastel} />}
+                        <View style={styles.rightTitleContainerHeader}>
+                            {isValidDate ? null : <FontAwesome name="exclamation" size={20} color={Color.redPastel} />}
 
-                        <View style={styles.rightTitleHeader}>
-                            <AntDesign name="calendar" size={18} color={Color.gray_8} />
+                            <View style={styles.rightTitleHeader}>
+                                <AntDesign name="calendar" size={18} color={Color.gray_8} />
 
-                            <AppTextMedium style={styles.rightTitleText}>
-                                {MODE[mode] <= MODE.day && date.day + "/"}
-                                {MODE[mode] <= MODE.month && date.month + "/"}
-                                {date.year}
-                                {MODE[mode] <= MODE.hour
-                                    ? " - " +
-                                      (date.hour < 10 ? "0" + date.hour : date.hour) +
-                                      ":" +
-                                      (date.minute < 10 ? "0" + date.minute : date.minute) +
-                                      ":00"
-                                    : "  "}
-                            </AppTextMedium>
+                                <AppTextMedium style={styles.rightTitleText}>
+                                    {MODE[mode] <= MODE.day && date.day + "/"}
+                                    {MODE[mode] <= MODE.month && date.month + "/"}
+                                    {date.year}
+                                    {MODE[mode] <= MODE.hour
+                                        ? " - " +
+                                          (date.hour < 10 ? "0" + date.hour : date.hour) +
+                                          ":" +
+                                          (date.minute < 10 ? "0" + date.minute : date.minute) +
+                                          ":00"
+                                        : "  "}
+                                </AppTextMedium>
+                            </View>
                         </View>
                     </View>
-                </View>
 
-                <View style={styles.datePickerContainer}>
-                    <DatePicker mode={mode} value={date} inititalValue={date} onDateChange={setDate} {...dateData} />
-                </View>
+                    <View style={styles.datePickerContainer}>
+                        <DatePicker mode={mode} value={date} inititalValue={date} onDateChange={setDate} {...dateData} />
+                    </View>
 
-                {/* Footer */}
-                <View style={styles.footerModal}>
-                    {/* Cancel */}
-                    <TouchableOpacity
-                        style={styles.buttonFooterModal}
-                        onPress={() => {
-                            modalRef.current.close();
-                        }}
-                    >
-                        <AppText style={styles.textButtonFooterModal}> Cancel </AppText>
-                    </TouchableOpacity>
+                    {/* Footer */}
+                    <View style={styles.footerModal}>
+                        {/* Cancel */}
+                        <TouchableOpacity
+                            style={styles.buttonFooterModal}
+                            onPress={() => {
+                                modalRef.current.close();
+                            }}
+                        >
+                            <AppText style={styles.textButtonFooterModal}> Cancel </AppText>
+                        </TouchableOpacity>
 
-                    {/* OK */}
-                    <TouchableOpacity
-                        style={styles.buttonFooterModal}
-                        onPress={() => {
-                            onOk
-                                ? onOk(() => {
-                                      modalRef.current.close();
-                                  })
-                                : modalRef.current.close();
-                        }}
-                    >
-                        <Text style={styles.textButtonFooterModal}> OK </Text>
-                    </TouchableOpacity>
+                        {/* OK */}
+                        <TouchableOpacity
+                            style={styles.buttonFooterModal}
+                            onPress={() => {
+                                onOk
+                                    ? onOk(() => {
+                                          modalRef.current.close();
+                                      })
+                                    : modalRef.current.close();
+                            }}
+                        >
+                            <Text style={styles.textButtonFooterModal}> OK </Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
-            </View>
+            )}
         </BottomSheet>
     );
 });
